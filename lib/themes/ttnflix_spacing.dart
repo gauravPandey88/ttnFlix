@@ -85,4 +85,8 @@ class TtnflixSpacing {
   static const double spacing200 = 200;
 
   static const double spacing23 = 23;
+
+  static const double spacing300 = 300;
+
+  static const double spacing215 = 215;
 }

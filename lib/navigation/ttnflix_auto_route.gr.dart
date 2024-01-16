@@ -18,7 +18,7 @@ abstract class _$TtnflixAppRouter extends RootStackRouter {
     HomeScreenRoute.name: (routeData) {
       return AutoRoutePage<dynamic>(
         routeData: routeData,
-        child: const HomeScreen(),
+        child: HomeScreen(),
       );
     }
   };

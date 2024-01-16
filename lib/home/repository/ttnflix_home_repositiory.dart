@@ -8,10 +8,11 @@ class TtnflixHomeRepository {
 
   TtnflixHomeRepository() : _apiService = SL.get<TtnflixApiClient>();
 
-  Future<TtnflixMoviesModel> getHomePageDate() async {
+  Future<TtnflixMoviesModel> getHomePageDate(int? pageNo) async {
     final response = await _apiService.getHomeDataApi(
         endpoint: TtnflixApiUrl.getMovieList,
-        converter: TtnflixMoviesModel.fromJson);
+        converter: TtnflixMoviesModel.fromJson,
+        queryParams:{"page": pageNo});
     return response;
   }
 }
