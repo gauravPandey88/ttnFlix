@@ -92,6 +92,7 @@ class TtnflixColors {
   static const Color _redBorderColor = Color(0xFFD68080);
   static const Color _dataTableCellRedColor = Color(0xFFF7E5E5);
   static const Color _borderOutlineColor = Color(0xFFE9E9E9);
+  static const Color greyColor = Color(0xFF1A1A1A);
 
   static final Map<Brightness, Color> transparent = _buildColor(
       lightColor: TtnflixColors._transparent, darkColor: TtnflixColors._transparent);

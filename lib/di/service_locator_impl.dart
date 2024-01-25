@@ -1,23 +1,41 @@
 
 
 import 'package:get_it/get_it.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:ttn_flix/di/service_locator.dart';
+import 'package:ttn_flix/utils/database_Manager.dart';
 
 class ServiceLocatorImpl implements ServiceLocator {
-  static final _serviceLocator = GetIt.instance;
+  static final serviceLocator = GetIt.instance;
 
   @override
-  void initialise() {
+  Future<void> initialise() async {
+
     if (!isRegistered<ServiceLocator>()) {
-      _serviceLocator.registerSingleton<ServiceLocator>(
+      serviceLocator.registerSingleton<ServiceLocator>(
           ServiceLocator.ttnflixServiceLocator);
     }
+
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+
+     _initSharedPref();
+
+    serviceLocator.registerSingleton<DBManager>(DBManager());
+
+  }
+  Future<void> _initSharedPref() async {
+    final sharedPreferences = await SharedPreferences.getInstance();
+    if (!isRegistered<SharedPreferences>()) {
+      serviceLocator.registerSingleton<SharedPreferences>(
+          sharedPreferences);
+    }
+    // _serviceLocator.registerSingleton<SharedPreferences>(sharedPreferences);
   }
 
   @override
   bool isRegistered<T extends Object>(
       {Object? instance, String? instanceName}) {
-    return _serviceLocator.isRegistered<T>(instance: instance);
+    return serviceLocator.isRegistered<T>(instance: instance);
   }
 
   @override
@@ -26,7 +44,7 @@ class ServiceLocatorImpl implements ServiceLocator {
     String? instanceName,
     DisposingFunc<T>? dispose,
   }) {
-    _serviceLocator.registerLazySingleton<T>(factoryFunc,
+    serviceLocator.registerLazySingleton<T>(factoryFunc,
         instanceName: instanceName, dispose: dispose);
   }
 
@@ -36,7 +54,7 @@ class ServiceLocatorImpl implements ServiceLocator {
     String? instanceName,
     DisposingFunc<T>? dispose,
   }) {
-    _serviceLocator.registerLazySingletonAsync<T>(factoryFunc,
+    serviceLocator.registerLazySingletonAsync<T>(factoryFunc,
         instanceName: instanceName, dispose: dispose);
   }
 
@@ -47,7 +65,7 @@ class ServiceLocatorImpl implements ServiceLocator {
     bool? signalsReady,
     DisposingFunc<T>? dispose,
   }) {
-    _serviceLocator.registerSingleton<T>(instance,
+    serviceLocator.registerSingleton<T>(instance,
         instanceName: instanceName,
         signalsReady: signalsReady,
         dispose: dispose);
@@ -61,7 +79,7 @@ class ServiceLocatorImpl implements ServiceLocator {
     bool? signalsReady,
     DisposingFunc<T>? dispose,
   }) {
-    _serviceLocator.registerSingletonWithDependencies<T>(factoryFunc,
+    serviceLocator.registerSingletonWithDependencies<T>(factoryFunc,
         instanceName: instanceName,
         dependsOn: dependsOn,
         signalsReady: signalsReady,
@@ -74,7 +92,7 @@ class ServiceLocatorImpl implements ServiceLocator {
     dynamic param1,
     dynamic param2,
   }) {
-    return _serviceLocator.get<T>(
+    return serviceLocator.get<T>(
         instanceName: instanceName, param1: param1, param2: param2);
   }
 
@@ -84,7 +102,7 @@ class ServiceLocatorImpl implements ServiceLocator {
     dynamic param1,
     dynamic param2,
   }) {
-    return _serviceLocator.getAsync<T>(
+    return serviceLocator.getAsync<T>(
         instanceName: instanceName, param1: param1, param2: param2);
   }
 
@@ -95,7 +113,7 @@ class ServiceLocatorImpl implements ServiceLocator {
     Duration? timeout,
     Object? callee,
   }) {
-    return _serviceLocator.isReady<T>(
+    return serviceLocator.isReady<T>(
         instance: instance,
         instanceName: instanceName,
         timeout: timeout,
@@ -107,7 +125,7 @@ class ServiceLocatorImpl implements ServiceLocator {
     Object? instance,
     String? instanceName,
   }) {
-    return _serviceLocator.isReadySync<T>(
+    return serviceLocator.isReadySync<T>(
         instance: instance, instanceName: instanceName);
   }
 }

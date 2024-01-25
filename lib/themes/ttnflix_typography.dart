@@ -24,7 +24,7 @@ class TtnFlixTextStyle {
 
   static TextStyle _getHeading7() => GoogleFonts.inter(
         fontSize: 28,
-        fontWeight: FontWeight.w400,
+        fontWeight: FontWeight.w600,
         letterSpacing: 0.2,
       );
 
@@ -36,13 +36,13 @@ class TtnFlixTextStyle {
 
   static TextStyle _getHeading5() => GoogleFonts.inter(
         fontSize: 24,
-        fontWeight: FontWeight.w600,
+        fontWeight: FontWeight.w800,
         letterSpacing: 0.24,
       );
 
   static TextStyle _getHeading6() => GoogleFonts.inter(
         fontSize: 20,
-        fontWeight: FontWeight.w600,
+        fontWeight: FontWeight.w800,
         letterSpacing: 0.2,
       );
 

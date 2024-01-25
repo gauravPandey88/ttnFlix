@@ -12,14 +12,18 @@ class HomeLoadingState extends HomeState {
 class HomeLoadedState extends HomeState {
   final List<Movie>? movieCarouselList;
   final List<Movie>? gridMovieList;
+  final List<int> favourite;
   final int currentPage;
   final int totalPages;
   final bool showNextPage;
+  final bool? selectIcon;
   final int? carousalMovieCurrentpage;
 
-   const HomeLoadedState(
+  const HomeLoadedState(
       {this.movieCarouselList,
       this.gridMovieList,
+      required this.favourite,
+      this.selectIcon,
       required this.currentPage,
       required this.totalPages,
       required this.showNextPage,
@@ -28,29 +32,36 @@ class HomeLoadedState extends HomeState {
   HomeLoadedState copyWith({
     final List<Movie>? movieCarouselList,
     final List<Movie>? gridMovieList,
+    List<int>? favourite,
     final int? currentPage,
     final int? totalPages,
     final bool? showNextPage,
+    final bool? selectIcon,
     final int? carousalMovieCurrentpage,
   }) {
     return HomeLoadedState(
         movieCarouselList: movieCarouselList ?? this.movieCarouselList,
         gridMovieList: gridMovieList ?? this.gridMovieList,
+        favourite: favourite ?? this.favourite,
         currentPage: currentPage ?? this.currentPage,
         totalPages: totalPages ?? this.totalPages,
-        carousalMovieCurrentpage: carousalMovieCurrentpage ?? this.carousalMovieCurrentpage,
+        selectIcon: selectIcon ?? this.selectIcon,
+        carousalMovieCurrentpage:
+            carousalMovieCurrentpage ?? this.carousalMovieCurrentpage,
         showNextPage: showNextPage ?? this.showNextPage);
   }
 
   @override
   List<Object?> get props => [
-    movieCarouselList,
-    gridMovieList,
-    currentPage,
-    totalPages,
-    showNextPage,
-    carousalMovieCurrentpage
-  ];
+        movieCarouselList,
+        gridMovieList,
+        favourite,
+        selectIcon,
+        currentPage,
+        totalPages,
+        showNextPage,
+        carousalMovieCurrentpage
+      ];
 }
 
 class HomeErrorState extends HomeState {
