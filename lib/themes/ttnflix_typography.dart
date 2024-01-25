@@ -78,7 +78,7 @@ class TtnFlixTextStyle {
 
   static TextStyle _getCaptionDefault() => GoogleFonts.inter(
         fontSize: 12,
-        fontWeight: FontWeight.w400,
+        fontWeight: FontWeight.w600,
         letterSpacing: 0,
       );
 
