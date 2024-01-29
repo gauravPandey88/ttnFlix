@@ -8,11 +8,13 @@ extension Snackbar on String {
       content: Text(
         this,
         style: TtnFlixTextStyle.defaultTextTheme.titleMedium
-            ?.copyWith(color: Colors.black),
+            ?.copyWith(color: TtnflixColors.textBlackColor.platformBrightnessColor(context)),
       ),
       backgroundColor:
           TtnflixColors.frozenListYellow.platformBrightnessColor(context),
     );
+    ScaffoldMessenger.of(context).removeCurrentSnackBar();
     ScaffoldMessenger.of(context).showSnackBar(snackBar).close;
+
   }
 }

@@ -29,7 +29,7 @@ class TtnflixColors {
   static const Color _lightGreenColor = Color(0xFFE5F3EC);
   static const Color _camDividerColor = Color(0xFF173B3E);
 
-  static const Color _cellGrey = Color(0xFF6D6D6D);
+  static const Color _cellGrey = Color(0xFF616161);
   static const Color _headerCellColor = Color(0XFF00282B);
   static const Color _green20 = Color(0XFFCCE7D9);
   static const Color strokeColor = Color(0XFFF4F4F4);

@@ -5,14 +5,19 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:ttn_flix/accounts/cubit/accounts_cubit.dart';
 import 'package:ttn_flix/accounts/cubit/accounts_state.dart';
 import 'package:ttn_flix/accounts/widgets/profile_list.dart';
-import 'dart:convert';
 import 'package:ttn_flix/di/service_locator.dart';
+import 'package:ttn_flix/generated/flutter_gen/assets.gen.dart';
+import 'package:ttn_flix/generated/l10n.dart';
 import 'package:ttn_flix/navigation/ttnflix_auto_route.dart';
-import 'package:ttn_flix/register/model/user_model.dart';
-import 'package:ttn_flix/register/screen/signup_screen.dart';
 import 'package:ttn_flix/themes/ttnflix_colors.dart';
+import 'package:ttn_flix/themes/ttnflix_spacing.dart';
 import 'package:ttn_flix/themes/ttnflix_typography.dart';
 import 'package:ttn_flix/utils/app_alert.dart';
+
+class _AccountsScreenConstant {
+  static const String maleGender = "0";
+  static const String femaleGender = "1";
+}
 
 @RoutePage()
 class AccountsScreen extends StatelessWidget {
@@ -50,7 +55,7 @@ class AccountBody extends StatelessWidget {
           return Scaffold(
             appBar: AppBar(
               title: Center(
-                child: Text('Profile',
+                child: Text(S.current.profile,
                     style: TtnFlixTextStyle.defaultTextTheme.headlineSmall
                         ?.copyWith(
                             color: TtnflixColors.frozenListYellow
@@ -76,32 +81,34 @@ class AccountBody extends StatelessWidget {
                 icon: Icon(Icons.logout,
                     color: TtnflixColors.frozenListYellow
                         .platformBrightnessColor(context)),
-                tooltip: 'Logout',
+                tooltip: S.current.logout,
                 onPressed: () {
                   _logout(context, currentState);
                 },
               ),
-              backgroundColor: Colors.black,
+              backgroundColor: TtnflixColors.textBlackColor.platformBrightnessColor(context),
             ),
-            backgroundColor: Colors.black,
+            backgroundColor: TtnflixColors.textBlackColor.platformBrightnessColor(context),
             body: SingleChildScrollView(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Center(
                     child: Padding(
-                      padding: const EdgeInsets.all(10.0),
+                      padding: const EdgeInsets.all(TtnflixSpacing.spacing10),
                       child: Container(
-                        height: 150,
-                        width: 150,
+                        height: TtnflixSpacing.spacing150,
+                        width: TtnflixSpacing.spacing150,
                         decoration: BoxDecoration(
-                          borderRadius:
-                              const BorderRadius.all(Radius.circular(75)),
+                          borderRadius: const BorderRadius.all(
+                              Radius.circular(TtnflixSpacing.spacing75)),
                           image: DecorationImage(
-                              image: AssetImage(currentState.image != null
-                                  ? currentState.gender == "0"
-                                      ? "images/avtar_man.png"
-                                      : "images/avtar_female.png"
+                              image: AssetImage(currentState.image == ''
+                                  ? currentState.gender == _AccountsScreenConstant.maleGender
+                                      ? Assets.images.avtarMan.path
+                                      : currentState.gender == _AccountsScreenConstant.femaleGender
+                                          ? Assets.images.avtarFemale.path
+                                          : Assets.images.avtarTransgender.path
                                   : currentState.image ?? ''),
                               fit: BoxFit.cover),
                         ),
@@ -110,39 +117,46 @@ class AccountBody extends StatelessWidget {
                   ),
                   Center(
                     child: Padding(
-                      padding: const EdgeInsets.only(top: 10.0),
+                      padding:
+                          const EdgeInsets.only(top: TtnflixSpacing.spacing10),
                       child: Text(currentState.name ?? '-',
                           style: TtnFlixTextStyle.defaultTextTheme.titleLarge
-                              ?.copyWith(color: Colors.grey)),
+                              ?.copyWith(color: TtnflixColors.whiteGlow)),
                     ),
                   ),
                   ProfileList(
                       context: context,
-                      tittle: "Email",
+                      tittle: S.current.email,
                       icon: Icons.email,
                       data: currentState.emailAddress),
                   Divider(
-                    height: 20,
+                    height: TtnflixSpacing.spacing20,
                     color: TtnflixColors.frozenListYellow
                         .platformBrightnessColor(context),
                   ),
                   ProfileList(
                       context: context,
                       icon: Icons.calendar_month,
-                      tittle: "Date of Birth",
+                      tittle: S.current.dateOfBirth,
                       data: currentState.dateOfBirth),
                   Divider(
-                    height: 20,
+                    height: TtnflixSpacing.spacing20,
                     color: TtnflixColors.frozenListYellow
                         .platformBrightnessColor(context),
                   ),
                   ProfileList(
                       context: context,
-                      icon: currentState.gender == "0"
+                      icon: currentState.gender == _AccountsScreenConstant.maleGender
                           ? Icons.male
-                          : Icons.female,
-                      tittle: "Gender",
-                      data: currentState.gender == "0" ? "Male" : "Female"),
+                          : currentState.gender == _AccountsScreenConstant.femaleGender
+                              ? Icons.female
+                              : Icons.transgender,
+                      tittle: S.current.gender,
+                      data: currentState.gender == _AccountsScreenConstant.maleGender
+                          ? S.current.male
+                          : currentState.gender == _AccountsScreenConstant.femaleGender
+                              ? S.current.female
+                              : S.current.other),
                 ],
               ),
             ),
@@ -156,9 +170,9 @@ class AccountBody extends StatelessWidget {
 
   void _logout(BuildContext context, AccountLoadedState currentState) {
     AppAlert(
-        title: 'Logout',
-        message: 'Are you sure to logout?',
-        confirmBtnText: 'Log Out',
+        title: S.current.logout,
+        message: S.current.logoutTitle,
+        confirmBtnText: S.current.logout,
         confirmTap: () {
           BlocProvider.of<AccountsCubit>(context).loadSharedPrefs(
               image: currentState.image,

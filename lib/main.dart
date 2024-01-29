@@ -6,9 +6,8 @@ import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:ttn_flix/di/app_launch_module.dart';
 import 'package:ttn_flix/di/service_locator_impl.dart';
+import 'package:ttn_flix/generated/l10n.dart';
 import 'package:ttn_flix/navigation/ttnflix_auto_route.dart';
-import 'package:ttn_flix/register/model/user_model.dart';
-import 'package:ttn_flix/register/screen/login_screen.dart';
 import 'package:ttn_flix/themes/ttnflix_theme.dart';
 
 Future<void> main() async {
@@ -29,6 +28,10 @@ class MyApp extends StatelessWidget {
     return MaterialApp.router(
       theme: TtnflixTheme.lightTheme,
       debugShowCheckedModeBanner: false,
+        localizationsDelegates: const [
+          S.delegate,
+        ],
+        supportedLocales: S.delegate.supportedLocales,
       darkTheme: TtnflixTheme.darkTheme,
       routerConfig: _appRouter.config(),
 

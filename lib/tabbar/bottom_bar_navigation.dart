@@ -5,12 +5,21 @@ import 'package:get_it/get_it.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:ttn_flix/accounts/screen/accounts_screen.dart';
 import 'package:ttn_flix/favourites/screen/favourites_screen.dart';
+import 'package:ttn_flix/generated/l10n.dart';
 import 'package:ttn_flix/home/screen/home_screen.dart';
 import 'package:ttn_flix/themes/ttnflix_colors.dart';
 import 'package:ttn_flix/di/app_launch_module.dart';
 import 'package:ttn_flix/navigation/ttnflix_auto_route.dart';
 import 'package:ttn_flix/themes/ttnflix_theme.dart';
+import 'package:ttn_flix/themes/ttnflix_typography.dart';
 
+
+class _BottomBarConstant {
+  static const int selectedIndex = 0;
+  static double fontSize = 30;
+
+
+}
 
 @RoutePage()
 class BottomBarNavigation extends StatelessWidget {
@@ -35,10 +44,10 @@ class BottomNavigationBarExample extends StatefulWidget {
 
 class _BottomNavigationBarExampleState
     extends State<BottomNavigationBarExample> {
-  int _selectedIndex = 0;
-  static const TextStyle optionStyle =
-  TextStyle(fontSize: 30, fontWeight: FontWeight.bold);
-  static List<Widget> _widgetOptions = <Widget>[
+  int _selectedIndex = _BottomBarConstant.selectedIndex;
+  static TextStyle optionStyle =
+  TextStyle(fontSize: _BottomBarConstant.fontSize, fontWeight: FontWeight.bold);
+  static final List<Widget> _widgetOptions = <Widget>[
     HomeScreen(),
     FavouritesScreen(),
     AccountsScreen()
@@ -58,25 +67,25 @@ class _BottomNavigationBarExampleState
       ),
 
       bottomNavigationBar: BottomNavigationBar(
-        backgroundColor: Colors.black,
-        items: const <BottomNavigationBarItem>[
+        backgroundColor: TtnflixColors.textBlackColor.platformBrightnessColor(context),
+        items: <BottomNavigationBarItem>[
           BottomNavigationBarItem(
-            icon: Icon(CupertinoIcons.home),
-            label: 'Home',
+            icon: const Icon(CupertinoIcons.home),
+            label: S.current.home,
           ),
           BottomNavigationBarItem(
-            icon: Icon(CupertinoIcons.heart_fill),
-            label: 'Favourites',
+            icon: const Icon(CupertinoIcons.heart_fill),
+            label: S.current.favourites,
           ),
           BottomNavigationBarItem(
-            icon: Icon(CupertinoIcons.profile_circled),
-            label: 'Accounts',
+            icon: const Icon(CupertinoIcons.profile_circled),
+            label: S.current.accounts,
           ),
         ],
         currentIndex: _selectedIndex,
         selectedItemColor: TtnflixColors.frozenListYellow
             .platformBrightnessColor(context),
-        unselectedItemColor: Colors.white,
+        unselectedItemColor: TtnflixColors.whiteGlow,
         onTap: _onItemTapped,
       ),
     );

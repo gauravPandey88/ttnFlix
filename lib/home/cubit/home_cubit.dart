@@ -1,5 +1,4 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:ttn_flix/di/service_locator.dart';
 import 'package:ttn_flix/di/service_locator_impl.dart';
 import 'package:ttn_flix/home/cubit/home_state.dart';
 import 'package:ttn_flix/home/repository/ttnflix_home_repositiory.dart';
@@ -71,11 +70,7 @@ class HomeCubit extends Cubit<HomeState> {
   void updatePageIndicator(int index){
     if (state is HomeLoadedState) {
       var currentState = state as HomeLoadedState;
-      if ( index >= _HomeCubitConstant.itemIndex){
-        emit(currentState.copyWith(carousalMovieCurrentpage: index % _HomeCubitConstant.itemIndex));
-      } else {
-        emit(currentState.copyWith(carousalMovieCurrentpage: index));
-      }
+      emit(currentState.copyWith(carousalMovieCurrentpage: index));
     }
   }
 

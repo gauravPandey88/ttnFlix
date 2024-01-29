@@ -7,6 +7,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:ttn_flix/EditProfile/screen/edit_profile_screen.dart';
 import 'package:ttn_flix/accounts/screen/accounts_screen.dart';
 import 'package:ttn_flix/detail/screen/movie_detail_screen.dart';
+import 'package:ttn_flix/detail/widget/icon_widget.dart';
 import 'package:ttn_flix/favourites/screen/favourites_screen.dart';
 import 'package:ttn_flix/home/model/ttnflix_movies.dart';
 import 'package:ttn_flix/home/screen/home_screen.dart';

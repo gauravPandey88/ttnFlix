@@ -2,6 +2,7 @@ import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:ttn_flix/detail/screen/movie_detail_screen.dart';
+import 'package:ttn_flix/favourites/cubit/favourite_cubit.dart';
 import 'package:ttn_flix/home/favouriteList/cubit/favourite_list_cubit.dart';
 import 'package:ttn_flix/home/favouriteList/cubit/favourite_list_state.dart';
 import 'package:ttn_flix/home/model/ttnflix_movies.dart';
@@ -16,7 +17,7 @@ class _GridMovielistConstant {
   static const double gridHeight = 200.0;
   static const double blurRadius = 10.0;
   static const double borderRadius = 8;
-  static const String content = 'U/A';
+  static const double offset = 1.0;
 }
 
 class GridMovielist extends StatelessWidget {
@@ -29,6 +30,8 @@ class GridMovielist extends StatelessWidget {
       this.standardSelected,
       this.onChanged,
       this.movieName,
+        this.isComingFromHome = true,
+        this.favClickAction,
       required this.isFavourite,
       required this.movie});
   final BuildContext context;
@@ -39,6 +42,8 @@ class GridMovielist extends StatelessWidget {
   final Movie movie;
   final bool? standardSelected;
   final ValueChanged? onChanged;
+  final Function(bool)? favClickAction;
+  final bool isComingFromHome;
   bool isFavourite;
   @override
   Widget build(BuildContext context) {
@@ -85,7 +90,7 @@ class GridMovielist extends StatelessWidget {
                             BoxShadow(
                                 color: Colors.black54,
                                 blurRadius: _GridMovielistConstant.blurRadius,
-                                offset: Offset(1.0, 1.0))
+                                offset: Offset(_GridMovielistConstant.offset, _GridMovielistConstant.offset))
                           ],
                         ),
                         padding: const EdgeInsets.only(
@@ -142,29 +147,30 @@ class GridMovielist extends StatelessWidget {
                     child: GestureDetector(
                       onTap: () {
                         final cubit = context.read<FavouriteListCubit>();
-                        cubit.addRemoveWishlist(context, movie,
+                        cubit.addRemoveWishlist(movie,
                             isNeedToAdd: !isFavourite);
                       },
                       child: Align(
                         alignment: Alignment.topRight,
                         child: Padding(
-                          padding: const EdgeInsets.all(5.0),
+                          padding: const EdgeInsets.all(TtnflixSpacing.spacing5),
                           child: Container(
-                            decoration: const BoxDecoration(
-                              color: Colors.black,
+                            decoration: BoxDecoration(
+                              color: TtnflixColors.textBlackColor.platformBrightnessColor(context),
                               borderRadius:
-                                  BorderRadius.all(Radius.circular(30)),
+                                  const BorderRadius.all(Radius.circular(TtnflixSpacing.spacing30)),
                             ),
                             child: BlocBuilder<FavouriteListCubit,
                                 FavouriteListState>(
                               builder: (context, state) {
                                 if (state is FavouriteListSuccess) {
-                                  isFavourite = state.isFavourite;
+                                  isComingFromHome ? isFavourite = state.isFavourite : isFavourite = !state.isFavourite;
+                                  favClickAction?.call(!isFavourite);
                                 }
                                 return Icon(
                                   Icons.star_outlined,
                                   color: isFavourite
-                                      ? TtnflixColors.whiteGlow
+                                      ? TtnflixColors.skyRacing1Color.platformBrightnessColor(context)
                                       : TtnflixColors.frozenListYellow
                                       .platformBrightnessColor(context),
                                 );

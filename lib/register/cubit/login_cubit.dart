@@ -5,9 +5,14 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:ttn_flix/di/service_locator.dart';
+import 'package:ttn_flix/network/ttnflix_api_url.dart';
 import 'package:ttn_flix/register/cubit/login_state.dart';
 import 'package:ttn_flix/register/model/user_model.dart';
+import 'package:ttn_flix/utils/encrypy.dart';
 import 'package:ttn_flix/utils/validation_helper.dart';
+import 'package:ttn_flix/generated/l10n.dart';
+
+
 
 class LoginCubit extends Cubit<LoginState> {
   LoginCubit({Key? key, SharedPreferences? sharedPreferences})
@@ -22,13 +27,16 @@ class LoginCubit extends Cubit<LoginState> {
 
   Future<UserModel> getSavedInfo() async {
     Map<String, dynamic> userMap = jsonDecode(
-        _sharedPreferences.getString('userData') ?? Map().toString());
+        _sharedPreferences.getString(S.current.userData) ?? Map().toString());
     UserModel user = UserModel.fromJson(userMap);
+
+    // final password = user.password;
+    // final decrypt = Encrypt.decrypt(TtnflixApiUrl.encryptKey, password ?? "");
 
     var currentState = state as LoginLoadedState;
     emit(currentState.copyWith(
         emailId: user.emailAddress,
-        password: user.password,
+        password: getPasswordDecrypt(encryptPassword: user.password),
         image: user.image,
         gender: user.gender,
         name: user.userName,
@@ -39,7 +47,7 @@ class LoginCubit extends Cubit<LoginState> {
   String _getEmailIdErrorText() {
     final emailId = emailTextController.text.trim();
     return (emailId.isNotEmpty && !ValidationHelper.isValidEmail(emailId))
-        ? 'Email Address is invalid.'
+        ? S.current.invalidEmail
         : '';
   }
 
@@ -84,6 +92,17 @@ class LoginCubit extends Cubit<LoginState> {
     }
   }
 
+  String getPasswordDecrypt({required String? encryptPassword}) {
+    final password = encryptPassword;
+    final decrypt = Encrypt.decrypt(TtnflixApiUrl.encryptKey, password ?? "");
+    return decrypt.toString();
+  }
+
+  String getPasswordEncrypt({required String? encryptPassword}) {
+    final encrypted = Encrypt.encrypt(TtnflixApiUrl.encryptKey, encryptPassword ?? "").base64;
+    return encrypted.toString();
+  }
+
   loadSharedPrefs(
       {String? image,
       String? name,
@@ -104,6 +123,6 @@ class LoginCubit extends Cubit<LoginState> {
     String user = jsonEncode(user1);
     print(user);
     //save the data into sharedPreferences using key-value pairs
-    _sharedPreferences.setString('userData', user);
+    _sharedPreferences.setString(S.current.userData, user);
   }
 }

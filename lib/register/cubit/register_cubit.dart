@@ -5,10 +5,11 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:ttn_flix/di/service_locator.dart';
+import 'package:ttn_flix/generated/l10n.dart';
+import 'package:ttn_flix/network/ttnflix_api_url.dart';
 import 'package:ttn_flix/register/cubit/register_state.dart';
 import 'package:ttn_flix/register/model/user_model.dart';
-import 'package:ttn_flix/utils/date_util.dart';
-import 'package:ttn_flix/utils/app_alert.dart';
+import 'package:ttn_flix/utils/encrypy.dart';
 import 'package:ttn_flix/utils/validation_helper.dart';
 
 class RegisterCubit extends Cubit<RegisterState> {
@@ -24,7 +25,7 @@ class RegisterCubit extends Cubit<RegisterState> {
         super(const RegisterLoadedState());
 
   String? imagePath;
-  String? gender = "1";
+  String? gender = "0";
   bool _passwordVisible = false;
   bool _confirmPasswordVisible = false;
   final SharedPreferences _sharedPreferences;
@@ -42,15 +43,6 @@ class RegisterCubit extends Cubit<RegisterState> {
     }
   }
 
-  Future<void> selectDate(BuildContext context) async {
-    final DateTime? picked = await showDatePicker(
-        context: context,
-        initialDate: DateTime.now(),
-        firstDate: DateTime(2015, 8),
-        lastDate: DateTime(2101));
-    dateofBirthController.text = getFormattedDate(picked.toString());
-  }
-
   void setSelectedGenderType({required int selectedIndex}) {
     if (state is RegisterLoadedState) {
       var currentState = state as RegisterLoadedState;
@@ -65,7 +57,7 @@ class RegisterCubit extends Cubit<RegisterState> {
   String _getEmailIdErrorText() {
     final emailId = emailTextController.text.trim();
     return (emailId.isNotEmpty && !ValidationHelper.isValidEmail(emailId))
-        ? 'Email Address is invalid.'
+        ? S.current.invalidEmail
         : '';
   }
 
@@ -83,7 +75,7 @@ class RegisterCubit extends Cubit<RegisterState> {
   String _getPasswordErrorText() {
     final password = passwordTextController.text.trim();
     return (password.isNotEmpty && !ValidationHelper.isPasswordValid(password))
-        ? 'At least 8 characters long'
+        ? S.current.passwordValidation
         : '';
   }
 
@@ -91,7 +83,7 @@ class RegisterCubit extends Cubit<RegisterState> {
     final confirmPassword = confirmPasswordTextController.text.trim();
     return (confirmPassword.isNotEmpty &&
             !ValidationHelper.isPasswordValid(confirmPassword))
-        ? 'At least 8 characters long'
+        ? S.current.passwordValidation
         : '';
   }
 
@@ -146,13 +138,19 @@ class RegisterCubit extends Cubit<RegisterState> {
 
   Future<UserModel> getSavedInfo() async {
     Map<String, dynamic> userMap =
-        jsonDecode(_sharedPreferences.getString('userData') ?? Map().toString());
+        jsonDecode(_sharedPreferences.getString(S.current.userData) ?? Map().toString());
     UserModel user = UserModel.fromJson(userMap);
 
     var currentState = state as RegisterLoadedState;
     emit(currentState.copyWith(
         emailId: user.emailAddress, password: user.password));
     return user;
+  }
+
+  String _getPasswordEncrypt() {
+    final password = passwordTextController.text;
+    final encrypted = Encrypt.encrypt(TtnflixApiUrl.encryptKey, password).base64;
+    return encrypted.toString();
   }
 
   loadSharedPrefs() async {
@@ -163,13 +161,13 @@ class RegisterCubit extends Cubit<RegisterState> {
         dateOfBirth: dateofBirthController.text,
         image: imagePath,
         gender: gender,
-        password: passwordTextController.text,
+        password: _getPasswordEncrypt().toString(),
         isLogin: true);
     // encode / convert object into json string
     String user = jsonEncode(user1);
     print(user);
     //save the data into sharedPreferences using key-value pairs
-    _sharedPreferences.setString('userData', user);
+    _sharedPreferences.setString(S.current.userData, user);
   }
 
   void clearAll() {

@@ -38,7 +38,7 @@ class AppAlert {
               actions: [
                 AppTextButton(
                     title: 'Cancel',
-                    textColor: Colors.black,
+                    textColor: TtnflixColors.textBlackColor.platformBrightnessColor(context),
                     onPressed: () {
                       Navigator.of(context).pop();
                       if (cancelTap != null) {
@@ -48,7 +48,7 @@ class AppAlert {
                 if (isNeedConfirmBtn ?? false)
                   AppTextButton(
                       title: confirmBtnText ?? '',
-                      textColor: Colors.black,
+                      textColor: TtnflixColors.textBlackColor.platformBrightnessColor(context),
                       onPressed: () {
                         Navigator.of(context).pop();
                         if (confirmTap != null) {

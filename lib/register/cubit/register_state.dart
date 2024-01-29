@@ -5,6 +5,7 @@ class GenderStateConstants {
   static const List<String> genderTypeRadioList = [
     'Male',
     'Female',
+    'other'
   ];
 }
 

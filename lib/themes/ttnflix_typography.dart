@@ -57,6 +57,11 @@ class TtnFlixTextStyle {
         fontWeight: FontWeight.w600,
         letterSpacing: 0.14,
       );
+  static TextStyle getBody2SemiBold() => GoogleFonts.inter(
+        fontSize: 14,
+        fontWeight: FontWeight.w600,
+        letterSpacing: 0.14,
+      );
 
   static TextStyle _getBody1Default() => GoogleFonts.inter(
         fontSize: 16,
@@ -89,8 +94,8 @@ class TtnFlixTextStyle {
       );
 
   static TextStyle getBody1SemiBold() => GoogleFonts.inter(
-    fontSize: 16,
-    fontWeight: FontWeight.w600,
-    letterSpacing: 0.16,
-  );
+        fontSize: 16,
+        fontWeight: FontWeight.w600,
+        letterSpacing: 0.16,
+      );
 }

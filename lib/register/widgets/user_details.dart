@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:ttn_flix/themes/ttnflix_colors.dart';
+import 'package:ttn_flix/themes/ttnflix_spacing.dart';
 import 'package:ttn_flix/themes/ttnflix_typography.dart';
 
 class UserDetails extends StatelessWidget {
@@ -18,29 +19,29 @@ class UserDetails extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Padding(
-          padding: const EdgeInsets.only(top: 20.0, left: 10.0),
+          padding: const EdgeInsets.only(top: TtnflixSpacing.spacing20, left: TtnflixSpacing.spacing10),
           child: Text(title ?? "",
               style: TtnFlixTextStyle.defaultTextTheme.titleSmall
-                  ?.copyWith(color: Colors.grey)),
+                  ?.copyWith(color: TtnflixColors.whiteGlow)),
         ),
         Padding(
           padding: const EdgeInsets.only(
-              top: 10.0, left: 10.0, right: 10.0),
+              top: TtnflixSpacing.spacing10, left: TtnflixSpacing.spacing10, right: TtnflixSpacing.spacing10),
           child: TextField(
             controller: controller,//BlocProvider.of<RegisterCubit>(context).nameTextController,
-            cursorColor: Colors.white,
-            style: const TextStyle(color: Colors.white),
+            cursorColor: TtnflixColors.whiteGlow,
+            style: const TextStyle(color: TtnflixColors.whiteGlow),
             onChanged: onChanged,
             decoration: InputDecoration(
                 filled: true,
                 fillColor: TtnflixColors.greyColor,
                 focusedBorder: const OutlineInputBorder(
-                  borderSide: BorderSide(color: Colors.white),
+                  borderSide: BorderSide(color: TtnflixColors.whiteGlow),
                 ),
                 hintText: title,
                 hintStyle: TtnFlixTextStyle
                     .defaultTextTheme.titleMedium
-                    ?.copyWith(color: Colors.grey),
+                    ?.copyWith(color: TtnflixColors.cellTextColor.platformBrightnessColor(context)),
               errorText: errorText,
               errorStyle: TextStyle(
                   color: Theme.of(context).colorScheme.onError)),

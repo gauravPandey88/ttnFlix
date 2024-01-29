@@ -104,7 +104,7 @@ class _RadioView extends StatelessWidget {
             padding: const EdgeInsets.only(left: TtnflixSpacing.spacing16),
             child: Text(title,
                 style: TtnFlixTextStyle.defaultTextTheme.bodyLarge?.copyWith(
-                    color: Colors.grey),
+                    color: TtnflixColors.whiteGlow),
           ),
           ),
         ],

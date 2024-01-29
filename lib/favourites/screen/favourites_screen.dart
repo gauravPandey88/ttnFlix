@@ -1,8 +1,11 @@
+import 'dart:async';
+
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:ttn_flix/favourites/cubit/favourite_cubit.dart';
 import 'package:ttn_flix/favourites/cubit/favourite_state.dart';
+import 'package:ttn_flix/generated/l10n.dart';
 import 'package:ttn_flix/home/favouriteList/cubit/favourite_list_cubit.dart';
 
 import '../../home/widgets/grid_movie_list.dart';
@@ -26,17 +29,20 @@ class FavouritesScreen extends StatelessWidget {
       create: (context) => FavouriteCubit()..getWishlist(),
       child: Scaffold(
           appBar: AppBar(
-            title: Text('Favourites',
+            title: Text(S.current.favourites,
                 style: TtnFlixTextStyle.defaultTextTheme.headlineSmall
                     ?.copyWith(
                         color: TtnflixColors.frozenListYellow
                             .platformBrightnessColor(context))),
-            backgroundColor: Colors.black,
+            backgroundColor:
+                TtnflixColors.textBlackColor.platformBrightnessColor(context),
           ),
-          backgroundColor: Colors.black,
+          backgroundColor:
+              TtnflixColors.textBlackColor.platformBrightnessColor(context),
           body: BlocBuilder<FavouriteCubit, FavouriteState>(
             builder: (context, state) {
-              if (state is AllWishListState && state.wishListItems.isNotEmpty) {
+              if (state is FavouriteListState &&
+                  state.favouriteListItems.isNotEmpty) {
                 return SingleChildScrollView(
                   child: Column(children: [
                     GridView.builder(
@@ -53,22 +59,25 @@ class FavouritesScreen extends StatelessWidget {
                         mainAxisExtent: _FavouriteScreenConstant
                             .mainAxisHeight, // here set custom Height You Want
                       ),
-                      itemCount: state.wishListItems.length,
+                      itemCount: state.favouriteListItems.length,
                       itemBuilder: (context, index) {
                         return BlocProvider(
                           create: (context) => FavouriteListCubit(),
                           child: GridMovielist(
                             context: context,
                             height: _FavouriteScreenConstant.gridHeight,
-                            movieName: state.wishListItems[index].title,
+                            movieName: state.favouriteListItems[index].title,
                             carousalImage:
-                                state.wishListItems?[index].backdropPath ?? '',
+                                state.favouriteListItems[index].backdropPath ??
+                                    '',
                             language: state
-                                .wishListItems?[index].originalLanguage
+                                .favouriteListItems[index].originalLanguage
                                 ?.toUpperCase(),
-                            movie: state.wishListItems[index],
-                            isFavourite: state.favourite.map((item) => item).
-                            contains(state.wishListItems![index].id),
+                            movie: state.favouriteListItems[index],
+                            isFavourite: true,
+                            isComingFromHome: false,
+                            favClickAction: (isFav) =>
+                               context.read<FavouriteCubit>().getWishlist(),
                           ),
                         );
                       },
@@ -76,7 +85,15 @@ class FavouritesScreen extends StatelessWidget {
                   ]),
                 );
               } else {
-                return Container();
+                return Center(
+                  child: Text(
+                    S.current.noFavouritesYet,
+                    style: TtnFlixTextStyle.defaultTextTheme.headlineSmall
+                        ?.copyWith(
+                            color: TtnflixColors.frozenListYellow
+                                .platformBrightnessColor(context)),
+                  ),
+                );
               }
             },
           )),

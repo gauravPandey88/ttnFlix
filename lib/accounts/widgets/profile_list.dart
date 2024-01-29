@@ -1,5 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:ttn_flix/themes/ttnflix_colors.dart';
+import 'package:ttn_flix/themes/ttnflix_spacing.dart';
 import 'package:ttn_flix/themes/ttnflix_typography.dart';
 
 class ProfileList extends StatelessWidget {
@@ -11,31 +13,31 @@ class ProfileList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.only(top: 20.0),
+      padding: const EdgeInsets.only(top: TtnflixSpacing.spacing20),
       child: Container(
-        color: Colors.black,
+        color: TtnflixColors.textBlackColor.platformBrightnessColor(context),
         child: Row(
           mainAxisSize: MainAxisSize.max,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Icon(icon, size: 20, color: Colors.grey),
+            Icon(icon, size: TtnflixSpacing.spacing20, color: TtnflixColors.cellTextColor.platformBrightnessColor(context)),
             const SizedBox(
-              width: 10.0,
+              width: TtnflixSpacing.spacing10,
             ),
             SizedBox(
-              height: 50,
+              height: TtnflixSpacing.spacing50,
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(tittle ?? "",
                       style: TtnFlixTextStyle.defaultTextTheme.titleSmall
-                          ?.copyWith(color: Colors.grey)),
+                          ?.copyWith(color: TtnflixColors.cellTextColor.platformBrightnessColor(context))),
                   const SizedBox(
-                    height: 10,
+                    height: TtnflixSpacing.spacing10,
                   ),
                   Text(data ?? "",
                       style: TtnFlixTextStyle.defaultTextTheme.titleSmall
-                          ?.copyWith(color: Colors.grey)),
+                          ?.copyWith(color: TtnflixColors.cellTextColor.platformBrightnessColor(context))),
                 ],
               ),
             )

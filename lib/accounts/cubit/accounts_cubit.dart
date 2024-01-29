@@ -5,6 +5,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:ttn_flix/accounts/cubit/accounts_state.dart';
 import 'package:ttn_flix/di/service_locator.dart';
+import 'package:ttn_flix/generated/l10n.dart';
 import 'package:ttn_flix/register/model/user_model.dart';
 
 class AccountsCubit extends Cubit<AccountsState> {
@@ -19,7 +20,7 @@ class AccountsCubit extends Cubit<AccountsState> {
   Future<UserModel> getSavedInfo() async {
     SharedPreferences preferences = await SharedPreferences.getInstance();
     Map<String, dynamic> userMap =
-        jsonDecode(preferences.getString('userData') ?? Map().toString());
+        jsonDecode(preferences.getString(S.current.userData) ?? Map().toString());
     UserModel user = UserModel.fromJson(userMap);
 
     var currentState = state as AccountLoadedState;
@@ -55,6 +56,6 @@ class AccountsCubit extends Cubit<AccountsState> {
     String user = jsonEncode(user1);
     print(user);
     //save the data into sharedPreferences using key-value pairs
-    _sharedPreferences.setString('userData', user);
+    _sharedPreferences.setString(S.current.userData, user);
   }
 }

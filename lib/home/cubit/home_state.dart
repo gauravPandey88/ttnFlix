@@ -69,3 +69,4 @@ class HomeErrorState extends HomeState {
 
   const HomeErrorState(this.errorMessage);
 }
+

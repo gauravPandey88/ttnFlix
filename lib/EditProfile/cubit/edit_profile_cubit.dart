@@ -6,9 +6,14 @@ import 'package:image_picker/image_picker.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:ttn_flix/EditProfile/cubit/edit_profile_state.dart';
 import 'package:ttn_flix/di/service_locator.dart';
+import 'package:ttn_flix/generated/l10n.dart';
+import 'package:ttn_flix/network/ttnflix_api_url.dart';
 import 'package:ttn_flix/register/model/user_model.dart';
+import 'package:ttn_flix/utils/date_picker.dart';
 import 'package:ttn_flix/utils/date_util.dart';
+import 'package:ttn_flix/utils/encrypy.dart';
 import 'package:ttn_flix/utils/validation_helper.dart';
+import 'package:intl/date_symbol_data_local.dart';
 
 class EditProfileCubit extends Cubit<EditProfileState> {
   final TextEditingController dateofBirthController = TextEditingController();
@@ -26,7 +31,6 @@ class EditProfileCubit extends Cubit<EditProfileState> {
   String? imagePath;
   String? selectGender;
   bool _passwordVisible = false;
-  bool _confirmPasswordVisible = false;
 
   Future<void> addImage() async {
     final ImagePicker picker = ImagePicker();
@@ -34,42 +38,15 @@ class EditProfileCubit extends Cubit<EditProfileState> {
     if (state is EditProfileLoadedState) {
       var currentState = state as EditProfileLoadedState;
       imagePath = image?.path;
-      emit(currentState.copyWith(imagePath: image?.path));
+      emit(currentState.copyWith(imagePath: image?.path, genderType: selectGender));
     }
-  }
-
-  Future<void> selectDate(BuildContext context) async {
-    final DateTime? picked = await showDatePicker(
-        context: context,
-        initialDate: DateTime.now(),
-        firstDate: DateTime(2015, 8),
-        lastDate: DateTime(2101));
-    dateofBirthController.text = getFormattedDate(picked.toString());
   }
 
   String _getPasswordErrorText() {
     final password = passwordTextController.text.trim();
     return (password.isNotEmpty && !ValidationHelper.isPasswordValid(password))
-        ? 'At least 8 characters long'
+        ? S.current.passwordValidation
         : '';
-  }
-
-  String _getConfirmPasswordErrorText() {
-    final confirmPassword = confirmPasswordTextController.text.trim();
-    return (confirmPassword.isNotEmpty &&
-        !ValidationHelper.isPasswordValid(confirmPassword))
-        ? 'At least 8 characters long'
-        : '';
-  }
-
-  void onConfirmPasswordChange({required String password}) {
-    if (state is EditProfileLoadedState) {
-      final currentState = (state as EditProfileLoadedState);
-      emit(currentState.copyWith(
-          confirmpPassword: password,
-          confirmPasswordErrorMessage: _getConfirmPasswordErrorText(),
-          imagePath: imagePath));
-    }
   }
 
   void onPasswordChange({required String password}) {
@@ -87,7 +64,7 @@ class EditProfileCubit extends Cubit<EditProfileState> {
       var currentState = state as EditProfileLoadedState;
       selectGender = selectedIndex.toString();
       emit(currentState.copyWith(
-          genderType: currentState.genderTypeRadioList.elementAt(selectedIndex),
+          genderType: selectGender,
           imagePath: imagePath));
     }
   }
@@ -102,21 +79,28 @@ class EditProfileCubit extends Cubit<EditProfileState> {
     }
   }
 
-  void showAndHideConfirmPassword() {
-    if (state is EditProfileLoadedState) {
-      var currentState = state as EditProfileLoadedState;
-      _confirmPasswordVisible = !_confirmPasswordVisible;
-      emit(currentState.copyWith(
-          isShowConfrimPassword: _confirmPasswordVisible,
-          imagePath: imagePath));
-    }
+  String getPasswordEncrypt({required String? encryptPassword}) {
+    final password = passwordTextController.text.isEmpty ? encryptPassword : passwordTextController.text;
+    final encrypted = Encrypt.encrypt(TtnflixApiUrl.encryptKey, password ?? "").base64;
+    return encrypted.toString();
   }
+
+
+  String getPasswordDecrypt({required String? encryptPassword}) {
+    final password = encryptPassword;
+    final decrypt = Encrypt.decrypt(TtnflixApiUrl.encryptKey, password ?? "");
+    return decrypt.toString();
+  }
+
 
   Future<UserModel> getSavedInfo() async {
     Map<String, dynamic> userMap =
-        jsonDecode(_sharedPreferences.getString('userData') ?? Map().toString());
+        jsonDecode(_sharedPreferences.getString(S.current.userData) ?? Map().toString());
     UserModel user = UserModel.fromJson(userMap);
-
+    nameTextController.text = user.userName ?? "";
+    passwordTextController.text = getPasswordDecrypt(encryptPassword: user.password);
+    dateofBirthController.text = user.dateOfBirth ?? "";
+    selectGender = user.gender;
     var currentState = state as EditProfileLoadedState;
     emit(currentState.copyWith(
         imagePath: user.image,
@@ -124,7 +108,7 @@ class EditProfileCubit extends Cubit<EditProfileState> {
         dateofBirth: user.dateOfBirth,
         genderType: user.gender,
         emailId: user.emailAddress,
-    password: user.password));
+    password: getPasswordDecrypt(encryptPassword: user.password)));
     return user;
   }
 
@@ -145,12 +129,12 @@ class EditProfileCubit extends Cubit<EditProfileState> {
             : dateofBirthController.text,
         image: image,
         gender: selectGender,
-        password: passwordTextController.text.isEmpty ? password : passwordTextController.text,
+        password: getPasswordEncrypt(encryptPassword: password),
         isLogin: true);
     // encode / convert object into json string
     String user = jsonEncode(user1);
     print(user);
     //save the data into sharedPreferences using key-value pairs
-    _sharedPreferences.setString('userData', user);
+    _sharedPreferences.setString(S.current.userData, user);
   }
 }

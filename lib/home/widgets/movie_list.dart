@@ -54,7 +54,7 @@ class MovieListWidgets extends StatelessWidget {
                 alignment: Alignment.topRight,
                 child: Container(
                   decoration:
-                  BoxDecoration(color: Colors.black.withOpacity(0.15)),
+                  BoxDecoration(color: TtnflixColors.textBlackColor.platformBrightnessColor(context)?.withOpacity(0.15)),
                   padding: const EdgeInsets.only(
                       left: TtnflixSpacing.spacing10,
                       right: TtnflixSpacing.spacing10),
@@ -62,7 +62,7 @@ class MovieListWidgets extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Text(
-                        'U/A',
+                        movie.getContentRating(),
                         style: TtnFlixTextStyle.defaultTextTheme.labelLarge
                             ?.copyWith(
                           color: TtnflixColors.frozenListYellow

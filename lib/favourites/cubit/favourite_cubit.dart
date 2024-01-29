@@ -11,7 +11,6 @@ class FavouriteCubit extends Cubit<FavouriteState> {
   void getWishlist() async {
     var db = ServiceLocatorImpl.serviceLocator<DBManager>();
     var result = await db.queryAllMovies();
-    List<int> ids = await ServiceLocatorImpl.serviceLocator<DBManager>().getAllIds();
-    emit(AllWishListState(result,ids));
+    emit(FavouriteListState(result));
   }
 }

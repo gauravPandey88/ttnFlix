@@ -1,31 +1,35 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:ttn_flix/di/service_locator.dart';
 import 'package:ttn_flix/di/service_locator_impl.dart';
+import 'package:ttn_flix/generated/l10n.dart';
 import 'package:ttn_flix/home/favouriteList/cubit/favourite_list_state.dart';
 import 'package:ttn_flix/home/model/ttnflix_movies.dart';
 import 'package:ttn_flix/utils/database_Manager.dart';
 
 class FavouriteListCubit extends Cubit<FavouriteListState> {
-  FavouriteListCubit() : super(FavouriteListInitState()) { }
+  FavouriteListCubit({DBManager? dbManager})
+      : _dbManager =
+            dbManager ?? ServiceLocatorImpl.serviceLocator<DBManager>(),
+        super(FavouriteListInitState());
 
-  void addRemoveWishlist(BuildContext context, Movie movie, {bool isNeedToAdd = true}) async {
-    var db = ServiceLocatorImpl.serviceLocator<DBManager>();
+  final DBManager _dbManager;
+
+  void addRemoveWishlist(Movie movie, {bool isNeedToAdd = true}) async {
+
     if (isNeedToAdd) {
-      var result = await db.insert(movie);
+      var result = await _dbManager.insert(movie);
       if (result > 0) {
-        if (context.mounted) emit(FavouriteListSuccess('Successfully add', true));
+        emit(FavouriteListSuccess(S.current.addSuccessfully, true));
       } else {
-        if (context.mounted) emit(FavouriteListError('Not add'));
+        emit(FavouriteListError(S.current.notAdd));
       }
     } else {
-      var result = await db.delete(movie.id ?? 0);
+      var result = await _dbManager.delete(movie.id ?? 0);
       if (result > 0) {
-        if (context.mounted) {
-          emit(FavouriteListSuccess('Successfully removed', false));
-        }
-
+        emit(FavouriteListSuccess(S.current.removeSuccessfully, false));
       } else {
-        if (context.mounted)  emit(FavouriteListError('error'));
+        emit(FavouriteListError(S.current.error));
       }
     }
   }

@@ -3,16 +3,20 @@ import 'dart:ffi';
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:ttn_flix/detail/widget/icon_widget.dart';
+import 'package:ttn_flix/generated/l10n.dart';
 import 'package:ttn_flix/home/favouriteList/cubit/favourite_list_cubit.dart';
-import 'package:ttn_flix/home/favouriteList/cubit/favourite_list_state.dart';
 import 'package:ttn_flix/home/model/ttnflix_movies.dart';
 import 'package:ttn_flix/network/ttnflix_api_url.dart';
 import 'package:ttn_flix/themes/ttnflix_colors.dart';
+import 'package:ttn_flix/themes/ttnflix_spacing.dart';
 import 'package:ttn_flix/themes/ttnflix_typography.dart';
-import 'package:ttn_flix/utils/show_snackbar.dart';
+import 'package:ttn_flix/widgets/icon/ttnflix_icon.dart';
+import 'package:ttn_flix/widgets/text/ttnflix_text.dart';
 
 class _MovieDetailScreenConstant {
   static const String detail = 'Movie Detail';
+  static const double height  = 2.5;
 }
 
 @RoutePage()
@@ -25,17 +29,16 @@ class MovieDetailScreen extends StatelessWidget {
 
   final Movie movie;
   bool isFavourite;
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.black,
+      backgroundColor: TtnflixColors.textBlackColor.platformBrightnessColor(context),
       appBar: AppBar(
-        title: Text(_MovieDetailScreenConstant.detail,
+        title: TtnflixTextWidget(title: _MovieDetailScreenConstant.detail,
             style: TtnFlixTextStyle.defaultTextTheme.headlineSmall?.copyWith(
                 color: TtnflixColors.frozenListYellow
                     .platformBrightnessColor(context))),
-        backgroundColor: Colors.black,
+        backgroundColor: TtnflixColors.textBlackColor.platformBrightnessColor(context),
         actions: <Widget>[
           BlocProvider(
             create: (context) => FavouriteListCubit(),
@@ -49,10 +52,9 @@ class MovieDetailScreen extends StatelessWidget {
           onPressed: () {
             context.router.pop();
           },
-          icon: Icon(
-            Icons.arrow_back_outlined,
-            color:
-                TtnflixColors.frozenListYellow.platformBrightnessColor(context),
+          icon: TtnflixIconWidget(
+            icon: Icons.arrow_back_outlined,
+            color: TtnflixColors.frozenListYellow.platformBrightnessColor(context),
           ),
         ),
       ),
@@ -61,7 +63,7 @@ class MovieDetailScreen extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             SizedBox(
-              height: MediaQuery.of(context).size.height / 2.5,
+              height: MediaQuery.of(context).size.height / _MovieDetailScreenConstant.height,
               width: MediaQuery.of(context).size.width,
               child: Container(
                 decoration: BoxDecoration(
@@ -73,12 +75,11 @@ class MovieDetailScreen extends StatelessWidget {
               ),
             ),
             const SizedBox(
-              height: 10.0,
+              height: TtnflixSpacing.spacing10,
             ),
             Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Text(
-                movie.title ?? '',
+              padding: const EdgeInsets.all(TtnflixSpacing.spacing8),
+              child: TtnflixTextWidget(title: movie.title ?? '',
                 style: TtnFlixTextStyle.defaultTextTheme.headlineLarge
                     ?.copyWith(
                         color: TtnflixColors.frozenListYellow
@@ -86,21 +87,21 @@ class MovieDetailScreen extends StatelessWidget {
               ),
             ),
             Padding(
-              padding: const EdgeInsets.all(8.0),
+              padding: const EdgeInsets.all(TtnflixSpacing.spacing8),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Row(
                     children: [
-                      Icon(
-                        Icons.aspect_ratio,
+                      TtnflixIconWidget(
+                        icon: Icons.aspect_ratio,
                         color: TtnflixColors.frozenListYellow
                             .platformBrightnessColor(context),
                       ),
                       Padding(
-                        padding: const EdgeInsets.only(left: 5.0),
-                        child: Text(
-                          movie.getContentRating() ?? '',
+                        padding: const EdgeInsets.only(left: TtnflixSpacing.spacing5),
+                        child: TtnflixTextWidget(
+                          title: movie.getContentRating() ?? '',
                           style: TtnFlixTextStyle.defaultTextTheme.titleSmall
                               ?.copyWith(
                                   color: TtnflixColors.frozenListYellow
@@ -111,15 +112,15 @@ class MovieDetailScreen extends StatelessWidget {
                   ),
                   Row(
                     children: [
-                      Icon(
-                        Icons.movie,
+                      TtnflixIconWidget(
+                        icon: Icons.movie,
                         color: TtnflixColors.frozenListYellow
                             .platformBrightnessColor(context),
                       ),
                       Padding(
-                        padding: const EdgeInsets.only(left: 5.0),
-                        child: Text(
-                          movie.mediaType ?? '',
+                        padding: const EdgeInsets.only(left: TtnflixSpacing.spacing5),
+                        child: TtnflixTextWidget(
+                          title: movie.mediaType ?? '',
                           style: TtnFlixTextStyle.defaultTextTheme.titleSmall
                               ?.copyWith(
                                   color: TtnflixColors.frozenListYellow
@@ -130,15 +131,15 @@ class MovieDetailScreen extends StatelessWidget {
                   ),
                   Row(
                     children: [
-                      Icon(
-                        Icons.language,
+                      TtnflixIconWidget(
+                        icon: Icons.language,
                         color: TtnflixColors.frozenListYellow
                             .platformBrightnessColor(context),
                       ),
                       Padding(
-                        padding: const EdgeInsets.only(left: 5.0),
-                        child: Text(
-                          movie.originalLanguage?.toUpperCase() ?? '',
+                        padding: const EdgeInsets.only(left: TtnflixSpacing.spacing5),
+                        child: TtnflixTextWidget(
+                          title: movie.originalLanguage?.toUpperCase() ?? '',
                           style: TtnFlixTextStyle.defaultTextTheme.titleSmall
                               ?.copyWith(
                                   color: TtnflixColors.frozenListYellow
@@ -151,9 +152,9 @@ class MovieDetailScreen extends StatelessWidget {
               ),
             ),
             Padding(
-              padding: const EdgeInsets.only(left: 8.0),
-              child: Text(
-                'Overview',
+              padding: const EdgeInsets.only(left: TtnflixSpacing.spacing8),
+              child: TtnflixTextWidget(
+                title: S.of(context).overview,
                 textDirection: TextDirection.ltr,
                 style: TtnFlixTextStyle.defaultTextTheme.labelLarge?.copyWith(
                     color: TtnflixColors.frozenListYellow
@@ -161,9 +162,9 @@ class MovieDetailScreen extends StatelessWidget {
               ),
             ),
             Padding(
-              padding: const EdgeInsets.only(left: 8.0),
-              child: Text(
-                movie.overview ?? '',
+              padding: const EdgeInsets.only(left: TtnflixSpacing.spacing8),
+              child: TtnflixTextWidget(
+                title: movie.overview ?? '',
                 textDirection: TextDirection.ltr,
                 style: TtnFlixTextStyle.defaultTextTheme.titleSmall?.copyWith(
                     color: TtnflixColors.frozenListYellow
@@ -171,21 +172,21 @@ class MovieDetailScreen extends StatelessWidget {
               ),
             ),
             Padding(
-              padding: const EdgeInsets.all(8.0),
+              padding: const EdgeInsets.all(TtnflixSpacing.spacing8),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Row(
                     children: [
-                      Icon(
-                        Icons.calendar_month,
+                      TtnflixIconWidget(
+                        icon: Icons.calendar_month,
                         color: TtnflixColors.frozenListYellow
                             .platformBrightnessColor(context),
                       ),
                       Padding(
-                        padding: const EdgeInsets.only(left: 8.0),
-                        child: Text(
-                          movie.releaseDate ?? '',
+                        padding: const EdgeInsets.only(left: TtnflixSpacing.spacing8),
+                        child: TtnflixTextWidget(
+                          title: movie.releaseDate ?? '',
                           style: TtnFlixTextStyle.defaultTextTheme.titleSmall
                               ?.copyWith(
                                   color: TtnflixColors.frozenListYellow
@@ -196,15 +197,15 @@ class MovieDetailScreen extends StatelessWidget {
                   ),
                   Row(
                     children: [
-                      Icon(
-                        Icons.thumb_up,
+                      TtnflixIconWidget(
+                        icon: Icons.thumb_up,
                         color: TtnflixColors.frozenListYellow
                             .platformBrightnessColor(context),
                       ),
                       Padding(
-                        padding: const EdgeInsets.only(left: 8.0),
-                        child: Text(
-                          movie.voteAverage.toString(),
+                        padding: const EdgeInsets.only(left: TtnflixSpacing.spacing8),
+                        child: TtnflixTextWidget(
+                          title:  movie.voteAverage.toString(),
                           style: TtnFlixTextStyle.defaultTextTheme.titleSmall
                               ?.copyWith(
                                   color: TtnflixColors.frozenListYellow
@@ -219,51 +220,6 @@ class MovieDetailScreen extends StatelessWidget {
           ],
         ),
       ),
-    );
-  }
-}
-
-@RoutePage()
-class IconWidget extends StatelessWidget {
-  IconWidget({super.key, required this.movie, required this.isFavourite});
-  final Movie movie;
-  bool isFavourite;
-  @override
-  Widget build(BuildContext context) {
-    return BlocConsumer<FavouriteListCubit, FavouriteListState>(
-      listener: (context, state) {
-        if (state is FavouriteListSuccess) {
-          state.message.toString().showSnackbar(context);
-        } else {
-          toString().showSnackbar(context);
-        }
-      },
-      builder: (context, state) {
-        return IconButton(onPressed: () {
-          final cubit = context.read<FavouriteListCubit>();
-          cubit.addRemoveWishlist(context, movie, isNeedToAdd: !isFavourite);
-        }, icon: Container(
-          decoration: const BoxDecoration(
-            color: Colors.black,
-            borderRadius:
-            BorderRadius.all(Radius.circular(30)),
-          ),
-          child: BlocBuilder<FavouriteListCubit, FavouriteListState>(
-            builder: (context, state) {
-              if (state is FavouriteListSuccess) {
-                isFavourite = state.isFavourite;
-              }
-              return Icon(
-                Icons.star_outlined,
-                color: isFavourite
-                    ? TtnflixColors.whiteGlow
-                    : TtnflixColors.frozenListYellow
-                        .platformBrightnessColor(context),
-              );
-            },
-          ),
-        ));
-      },
     );
   }
 }

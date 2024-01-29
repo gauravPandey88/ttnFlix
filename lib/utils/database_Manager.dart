@@ -3,7 +3,7 @@ import 'package:sqflite/sqflite.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:ttn_flix/home/model/ttnflix_movies.dart';
 
-enum WishlistTableColumns {
+enum FavouriteListTableColumns {
   imageUrl,
   adult,
   id,
@@ -40,17 +40,17 @@ class DBManager {
   Future _onCreate(Database db, int version) async {
     await db.execute('''
           CREATE TABLE if not exists $_table (
-            ${WishlistTableColumns.id.name} INTEGER PRIMARY KEY,
-            ${WishlistTableColumns.imageUrl.name} TEXT NULL,
-            ${WishlistTableColumns.posterPath.name} TEXT NULL,
-            ${WishlistTableColumns.title.name} TEXT NULL,
-            ${WishlistTableColumns.overview.name} TEXT NULL,
-            ${WishlistTableColumns.mediaType.name} TEXT NULL,
-            ${WishlistTableColumns.releaseDate.name} TEXT NULL,
-            ${WishlistTableColumns.language.name} TEXT NULL,
-            ${WishlistTableColumns.adult.name} INTEGER NULL,
-            ${WishlistTableColumns.voteAverage.name} REAL NULL,
-            ${WishlistTableColumns.voteCount.name} INTEGER NULL
+            ${FavouriteListTableColumns.id.name} INTEGER PRIMARY KEY,
+            ${FavouriteListTableColumns.imageUrl.name} TEXT NULL,
+            ${FavouriteListTableColumns.posterPath.name} TEXT NULL,
+            ${FavouriteListTableColumns.title.name} TEXT NULL,
+            ${FavouriteListTableColumns.overview.name} TEXT NULL,
+            ${FavouriteListTableColumns.mediaType.name} TEXT NULL,
+            ${FavouriteListTableColumns.releaseDate.name} TEXT NULL,
+            ${FavouriteListTableColumns.language.name} TEXT NULL,
+            ${FavouriteListTableColumns.adult.name} INTEGER NULL,
+            ${FavouriteListTableColumns.voteAverage.name} REAL NULL,
+            ${FavouriteListTableColumns.voteCount.name} INTEGER NULL
           )
           ''');
   }
@@ -63,11 +63,9 @@ class DBManager {
   }
 
   Future<List<Movie>> queryAllMovies() async {
-    List<Map> maps = await _db.query(_table);
-    if (maps.isNotEmpty) {
-      return maps.map((e) => Movie.fromMap(e as Map<String, Object?>)).toList();
-    }
-    return [];
+    var db = await _db;
+    List<Map> maps = await db.query(_table);
+    return (maps.isNotEmpty) ? maps.map((e) => Movie.fromMap(e as Map<String, Object?>)).toList() : [];
   }
 
   Future<int> queryRowCount() async {
@@ -76,28 +74,24 @@ class DBManager {
   }
 
   Future<List<int>> getAllIds() async {
-    List<Map> maps = await _db.query(_table,
-        columns: [WishlistTableColumns.id.name]);
-    if (maps.isNotEmpty) {
-      return maps.map((e) => e['id'] as int).toList();
-    }
-    return [];
+    var db = await _db;
+    List<Map> movieList = await db.query(_table,
+        columns: [FavouriteListTableColumns.id.name]);
+    return (movieList.isNotEmpty) ? movieList.map((e) => e['id'] as int).toList() : [];
   }
 
   Future<Movie?> getMovie(int id) async {
-    List<Map> maps = await _db.query(_table,
-        where: '${WishlistTableColumns.id.name} = ?',
+    var db = await _db;
+    List<Map> maps = await db.query(_table,
+        where: '${FavouriteListTableColumns.id.name} = ?',
         whereArgs: [id]);
-    if (maps.isNotEmpty) {
-      return Movie.fromMap(maps.first as Map<String, Object?>);
-    }
-    return null;
+    return (maps.isNotEmpty) ? Movie.fromMap(maps.first as Map<String, Object?>) : null;
   }
 
   Future<int> delete(int id) async {
     return await _db.delete(
         _table,
-        where: '${WishlistTableColumns.id.name} = ?',
+        where: '${FavouriteListTableColumns.id.name} = ?',
         whereArgs: [id]
     );
   }

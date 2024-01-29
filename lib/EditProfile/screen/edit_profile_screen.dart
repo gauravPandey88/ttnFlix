@@ -1,13 +1,29 @@
+import 'dart:ffi';
+
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:intl/date_symbol_data_local.dart';
 import 'package:ttn_flix/EditProfile/cubit/edit_profile_cubit.dart';
 import 'package:ttn_flix/EditProfile/cubit/edit_profile_state.dart';
+import 'package:ttn_flix/generated/flutter_gen/assets.gen.dart';
 import 'package:ttn_flix/register/widgets/multi_radio_singel_select.dart';
 import 'package:ttn_flix/themes/ttnflix_colors.dart';
 import 'package:ttn_flix/themes/ttnflix_spacing.dart';
 import 'package:ttn_flix/themes/ttnflix_typography.dart';
+import 'package:ttn_flix/generated/l10n.dart';
+import 'package:ttn_flix/utils/date_picker.dart';
+import 'package:ttn_flix/utils/date_util.dart';
+import 'package:ttn_flix/widgets/textfield/ttnflix_textfield.dart';
+
+class _EditProfileConstant {
+  static const String maleGender = "0";
+  static const int maleSelectedIndex = 0;
+  static const String femaleGender = "1";
+  static const int femaleSelectedIndex = 1;
+  static const int otherSelectedIndex = 2;
+}
 
 @RoutePage()
 class EditProfile extends StatelessWidget {
@@ -19,7 +35,7 @@ class EditProfile extends StatelessWidget {
       create: (context) => EditProfileCubit()..getSavedInfo(),
       child: Scaffold(
         appBar: AppBar(
-          title: Text('EditProfile',
+          title: Text(S.current.editProfile,
               style: TtnFlixTextStyle.defaultTextTheme.headlineLarge?.copyWith(
                   color: TtnflixColors.frozenListYellow
                       .platformBrightnessColor(context))),
@@ -33,9 +49,9 @@ class EditProfile extends StatelessWidget {
                   .platformBrightnessColor(context),
             ),
           ),
-          backgroundColor: Colors.black,
+          backgroundColor: TtnflixColors.textBlackColor.platformBrightnessColor(context),
         ),
-        backgroundColor: Colors.black,
+        backgroundColor: TtnflixColors.textBlackColor.platformBrightnessColor(context),
         body: BlocBuilder<EditProfileCubit, EditProfileState>(
           builder: (context, state) {
             if (state is EditProfileLoadedState) {
@@ -45,17 +61,22 @@ class EditProfile extends StatelessWidget {
                       children: <Widget>[
                     Center(
                       child: Padding(
-                        padding: const EdgeInsets.all(10.0),
+                        padding: const EdgeInsets.all(TtnflixSpacing.spacing10),
                         child: Container(
-                          height: 150,
-                          width: 150,
+                          height: TtnflixSpacing.spacing150,
+                          width: TtnflixSpacing.spacing150,
                           decoration: BoxDecoration(
-                            borderRadius:
-                                const BorderRadius.all(Radius.circular(75)),
+                            borderRadius: const BorderRadius.all(
+                                Radius.circular(TtnflixSpacing.spacing75)),
                             image: DecorationImage(
                                 image: AssetImage(
-                                  state.imagePath?.isEmpty ?? true
-                                      ?  state.genderType == "0" ? "images/avtar_man.png" : "images/avtar_female.png"
+                                  state.imagePath == ''
+                                      ? state.genderType == _EditProfileConstant.maleGender
+                                          ? Assets.images.avtarMan.path
+                                          : state.genderType == _EditProfileConstant.femaleGender
+                                              ? Assets.images.avtarFemale.path
+                                              : Assets
+                                                  .images.avtarTransgender.path
                                       : state.imagePath ?? "",
                                 ),
                                 fit: BoxFit.cover),
@@ -66,17 +87,17 @@ class EditProfile extends StatelessWidget {
                               decoration: BoxDecoration(
                                 color: TtnflixColors.frozenListYellow
                                     .platformBrightnessColor(context),
-                                borderRadius:
-                                    const BorderRadius.all(Radius.circular(30)),
+                                borderRadius: const BorderRadius.all(
+                                    Radius.circular(TtnflixSpacing.spacing30)),
                               ),
                               child: IconButton(
                                   onPressed: () {
                                     BlocProvider.of<EditProfileCubit>(context)
                                         .addImage();
                                   },
-                                  icon: const Icon(
+                                  icon: Icon(
                                     Icons.camera_alt_rounded,
-                                    color: Colors.black,
+                                    color: TtnflixColors.textBlackColor.platformBrightnessColor(context),
                                   )),
                             ),
                           ),
@@ -84,143 +105,174 @@ class EditProfile extends StatelessWidget {
                       ),
                     ),
                     Padding(
-                      padding: const EdgeInsets.only(top: 20.0, left: 10.0),
-                      child: Text("Name",
+                      padding: const EdgeInsets.only(
+                          top: TtnflixSpacing.spacing20,
+                          left: TtnflixSpacing.spacing10),
+                      child: Text(S.current.name,
                           style: TtnFlixTextStyle.defaultTextTheme.titleSmall
-                              ?.copyWith(color: Colors.grey)),
+                              ?.copyWith(color: TtnflixColors.cellTextColor.platformBrightnessColor(context))),
                     ),
                     Padding(
                       padding: const EdgeInsets.only(
-                          top: 10.0, left: 10.0, right: 10.0),
-                      child: TextField(
-                        cursorColor: Colors.white,
-                        style: const TextStyle(color: Colors.white),
+                          top: TtnflixSpacing.spacing10,
+                          left: TtnflixSpacing.spacing10,
+                          right: TtnflixSpacing.spacing10),
+                      child: TtnflixTextField(
+                        cursorColor: TtnflixColors.whiteGlow,
+                        style: const TextStyle(color: TtnflixColors.whiteGlow),
                         controller: BlocProvider.of<EditProfileCubit>(context)
                             .nameTextController,
                         decoration: InputDecoration(
                             filled: true,
                             labelStyle: TtnFlixTextStyle
                                 .defaultTextTheme.titleMedium
-                                ?.copyWith(color: Colors.white),
+                                ?.copyWith(color: TtnflixColors.whiteGlow),
                             focusedBorder: const OutlineInputBorder(
-                              borderSide: BorderSide(color: Colors.white),
+                              borderSide: BorderSide(color: TtnflixColors.whiteGlow),
                             ),
                             fillColor: TtnflixColors.greyColor,
                             labelText:
                                 state.name?.isEmpty ?? false ? '' : state.name,
-                            hintText: "Name",
+                            hintText: S.current.name,
                             hintStyle: TtnFlixTextStyle
                                 .defaultTextTheme.titleMedium
-                                ?.copyWith(color: Colors.grey),
+                                ?.copyWith(color: TtnflixColors.greyColor),
                             errorStyle: TextStyle(
                                 color: Theme.of(context).colorScheme.onError)),
                       ),
                     ),
                     Padding(
-                      padding: const EdgeInsets.only(top: 20.0, left: 10.0),
-                      child: Text("Date of Birth",
+                      padding: const EdgeInsets.only(
+                          top: TtnflixSpacing.spacing20,
+                          left: TtnflixSpacing.spacing10),
+                      child: Text(S.current.dateOfBirth,
                           style: TtnFlixTextStyle.defaultTextTheme.titleSmall
-                              ?.copyWith(color: Colors.grey)),
+                              ?.copyWith(color: TtnflixColors.cellTextColor.platformBrightnessColor(context))),
                     ),
                     Padding(
                       padding: const EdgeInsets.only(
-                          top: 10.0, left: 10.0, right: 10.0),
-                      child: TextField(
-                        cursorColor: Colors.white,
-                        style: const TextStyle(color: Colors.white),
+                          top: TtnflixSpacing.spacing10,
+                          left: TtnflixSpacing.spacing10,
+                          right: TtnflixSpacing.spacing10),
+                      child: TtnflixTextField(
+                        cursorColor: TtnflixColors.whiteGlow,
+                        style: const TextStyle(color: TtnflixColors.whiteGlow),
                         controller: BlocProvider.of<EditProfileCubit>(context)
                             .dateofBirthController,
                         onTap: () {
-                          BlocProvider.of<EditProfileCubit>(context)
-                              .selectDate(context);
+                          initializeDateFormatting();
+                          DatePicker(context,date: (date){
+                            BlocProvider.of<EditProfileCubit>(context)
+                                .dateofBirthController.text = getFormattedDate(date.toString());
+                          }).show();
                         },
                         decoration: InputDecoration(
                             filled: true,
                             labelStyle: TtnFlixTextStyle
                                 .defaultTextTheme.titleMedium
-                                ?.copyWith(color: Colors.white),
+                                ?.copyWith(color: TtnflixColors.whiteGlow),
                             focusedBorder: const OutlineInputBorder(
-                              borderSide: BorderSide(color: Colors.white),
+                              borderSide: BorderSide(color: TtnflixColors.whiteGlow),
                             ),
                             fillColor: TtnflixColors.greyColor,
                             labelText: state.dateofBirth?.isEmpty ?? false
                                 ? ''
                                 : state.dateofBirth,
-                            hintText: "Date of Birth",
+                            hintText: S.current.dateOfBirth,
                             hintStyle: TtnFlixTextStyle
                                 .defaultTextTheme.titleMedium
-                                ?.copyWith(color: Colors.grey),
+                                ?.copyWith(color: TtnflixColors.greyColor),
                             errorStyle: TextStyle(
                                 color: Theme.of(context).colorScheme.onError)),
                       ),
                     ),
-                        Padding(
-                          padding: const EdgeInsets.only(top: 20.0, left: 10.0),
-                          child: Text("Password",
-                              style: TtnFlixTextStyle.defaultTextTheme.titleSmall
-                                  ?.copyWith(color: Colors.grey)),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.only(
-                              top: 10.0, left: 10.0, right: 10.0),
-                          child: TextField(
-                            obscureText: state.isShowPassword ?? false ? false : true,
-                            cursorColor: Colors.white,
-                            style: const TextStyle(color: Colors.white),
-                            controller: BlocProvider.of<EditProfileCubit>(context)
-                                .passwordTextController,
-                            onChanged: (value) {
-                              BlocProvider.of<EditProfileCubit>(context).onPasswordChange(password: value.trim());
-                            },
-                            decoration: InputDecoration(
-                                filled: true,
-                                labelStyle: TtnFlixTextStyle
-                                    .defaultTextTheme.titleMedium
-                                    ?.copyWith(color: Colors.white),
-                                focusedBorder: const OutlineInputBorder(
-                                  borderSide: BorderSide(color: Colors.white),
-                                ),
-                                fillColor: TtnflixColors.greyColor,
-                                hintText: "Password",
-                                suffixIcon: Padding(
-                                  padding: const EdgeInsets.fromLTRB(0, 0, 4, 0),
-                                  child: GestureDetector(
-                                      onTap: () {
-                                        BlocProvider.of<EditProfileCubit>(context)
-                                            .showAndHidePassword();
-                                      },
-                                      child: Icon(
-                                        state.isShowPassword ?? false
-                                            ? Icons.visibility_rounded
-                                            : Icons.visibility_off_rounded,
-                                        size: 24,
-                                        color: Colors.white,
-                                      )),
-                                ),
-                                labelText: state.password.isEmpty
-                                    ? ''
-                                    : state.password,
-                                hintStyle: TtnFlixTextStyle
-                                    .defaultTextTheme.titleMedium
-                                    ?.copyWith(color: Colors.grey),
-                                errorText: state.passwordErrorMessage.isNotEmpty ? state.passwordErrorMessage : null,
-                                errorStyle: TextStyle(
-                                    color: Theme.of(context).colorScheme.onError)),
-                          ),
-                        ),
                     Padding(
-                      padding: const EdgeInsets.only(top: 20.0, left: 10.0),
-                      child: Text("Gender",
+                      padding: const EdgeInsets.only(
+                          top: TtnflixSpacing.spacing20,
+                          left: TtnflixSpacing.spacing10),
+                      child: Text(S.current.password,
                           style: TtnFlixTextStyle.defaultTextTheme.titleSmall
-                              ?.copyWith(color: Colors.grey)),
+                              ?.copyWith(color: TtnflixColors.cellTextColor.platformBrightnessColor(context))),
                     ),
                     Padding(
                       padding: const EdgeInsets.only(
-                          top: 10.0, left: 10.0, right: 10.0),
+                          top: TtnflixSpacing.spacing10,
+                          left: TtnflixSpacing.spacing10,
+                          right: TtnflixSpacing.spacing10),
+                      child: TtnflixTextField(
+                        obscureText: state.isShowPassword ?? false ? false : true,
+                        cursorColor: TtnflixColors.whiteGlow,
+                        style: const TextStyle(color: TtnflixColors.whiteGlow),
+                        controller: BlocProvider.of<EditProfileCubit>(context)
+                            .passwordTextController,
+                        onChanged: (value) {
+                          BlocProvider.of<EditProfileCubit>(context)
+                              .onPasswordChange(password: value.trim());
+                        },
+                        decoration: InputDecoration(
+                            filled: true,
+                            labelStyle: TtnFlixTextStyle
+                                .defaultTextTheme.titleMedium
+                                ?.copyWith(color: TtnflixColors.whiteGlow),
+                            focusedBorder: const OutlineInputBorder(
+                              borderSide: BorderSide(color: TtnflixColors.whiteGlow),
+                            ),
+                            suffixIcon: Padding(
+                              padding: const EdgeInsets.fromLTRB(
+                                  TtnflixSpacing.spacing0,
+                                  TtnflixSpacing.spacing0,
+                                  TtnflixSpacing.spacing4,
+                                  TtnflixSpacing.spacing0),
+                              child: GestureDetector(
+                                  onTap: () {
+                                    BlocProvider.of<EditProfileCubit>(context)
+                                        .showAndHidePassword();
+                                  },
+                                  child: Icon(
+                                    state.isShowPassword ?? false
+                                        ? Icons.visibility_rounded
+                                        : Icons.visibility_off_rounded,
+                                    size: TtnflixSpacing.spacing24,
+                                    color: TtnflixColors.whiteGlow,
+                                  )),
+                            ),
+                            fillColor: TtnflixColors.greyColor,
+                            hintText: S.current.password,
+                            // labelText:
+                            //     state.password.isEmpty ? '' : state.password,
+                            hintStyle: TtnFlixTextStyle
+                                .defaultTextTheme.titleMedium
+                                ?.copyWith(color: TtnflixColors.greyColor),
+                            errorText: state.passwordErrorMessage.isNotEmpty
+                                ? state.passwordErrorMessage
+                                : null,
+                            errorStyle: TextStyle(
+                                color: Theme.of(context).colorScheme.onError)),
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(
+                          top: TtnflixSpacing.spacing20,
+                          left: TtnflixSpacing.spacing10),
+                      child: Text(S.current.gender,
+                          style: TtnFlixTextStyle.defaultTextTheme.titleSmall
+                              ?.copyWith(color: TtnflixColors.cellTextColor.platformBrightnessColor(context))),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(
+                          top: TtnflixSpacing.spacing10,
+                          left: TtnflixSpacing.spacing10,
+                          right: TtnflixSpacing.spacing10),
                       child: MultiRadioSingleSelectWidget(
-                        initialSelectedItem: state.genderType == "0" ? 0 : 1,
+                        initialSelectedItem:
+                            state.genderType == _EditProfileConstant.maleGender
+                                ? _EditProfileConstant.maleSelectedIndex
+                                : state.genderType ==
+                                        _EditProfileConstant.femaleGender
+                                    ? _EditProfileConstant.femaleSelectedIndex
+                                    : _EditProfileConstant.otherSelectedIndex,
                         contentPadding: const EdgeInsets.only(
-                            right: TtnflixSpacing.spacing40),
+                            right: TtnflixSpacing.spacing10),
                         radioTitleList: state.genderTypeRadioList,
                         onSelectedIndex: (radioItemIndex) {
                           BlocProvider.of<EditProfileCubit>(context)
@@ -230,16 +282,17 @@ class EditProfile extends StatelessWidget {
                       ),
                     ),
                     const SizedBox(
-                      height: 50,
+                      height: TtnflixSpacing.spacing50,
                     ),
                     Center(
                       child: Container(
-                        height: 48,
-                        width: 250,
+                        height: TtnflixSpacing.spacing48,
+                        width: TtnflixSpacing.spacing250,
                         decoration: BoxDecoration(
                             color: TtnflixColors.frozenListYellow
                                 .platformBrightnessColor(context),
-                            borderRadius: BorderRadius.circular(20)),
+                            borderRadius: BorderRadius.circular(
+                                TtnflixSpacing.spacing20)),
                         child: TextButton(
                           onPressed: () {
                             BlocProvider.of<EditProfileCubit>(context)
@@ -248,14 +301,15 @@ class EditProfile extends StatelessWidget {
                                     name: state.name,
                                     gender: state.genderType,
                                     dateofBirth: state.dateofBirth,
-                            password: state.password,
-                            email: state.emailId);
+                                    password: state.password,
+                                    email: state.emailId);
                             context.router.pop();
                           },
-                          child: const Text(
-                            'Update',
+                          child: Text(
+                            S.current.update,
                             style: TextStyle(
-                                color: Colors.black, fontSize: 25),
+                                color: TtnflixColors.textBlackColor.platformBrightnessColor(context),
+                                fontSize: TtnflixSpacing.spacing25),
                           ),
                         ),
                       ),
