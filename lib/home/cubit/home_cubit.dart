@@ -8,8 +8,6 @@ import 'package:ttn_flix/utils/database_Manager.dart';
 class _HomeCubitConstant {
   static const int firstPage = 1;
   static const int secondPage = 2;
-  static const int itemIndex = 10;
-
 }
 
 class HomeCubit extends Cubit<HomeState> {
@@ -78,7 +76,6 @@ class HomeCubit extends Cubit<HomeState> {
     if (state is HomeLoadedState) {
       var currentState = state as HomeLoadedState;
       selectIcon = !selectIcon;
-      print(selectIcon);
       emit(currentState.copyWith(selectIcon: selectIcon));
     }
   }

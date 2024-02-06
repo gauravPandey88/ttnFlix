@@ -19,7 +19,7 @@ class LoginLoadedState extends LoginState {
   const LoginLoadedState(
       {this.isShowPassword,
       this.image,
-        this.dateofBirth,
+      this.dateofBirth,
       this.name,
       this.gender,
       this.password = '',
@@ -41,7 +41,7 @@ class LoginLoadedState extends LoginState {
     final bool? isDisable,
   }) {
     return LoginLoadedState(
-      dateofBirth: dateofBirth ?? this.dateofBirth,
+        dateofBirth: dateofBirth ?? this.dateofBirth,
         name: name ?? this.name,
         image: image ?? this.image,
         gender: gender ?? this.gender,
@@ -55,7 +55,7 @@ class LoginLoadedState extends LoginState {
 
   @override
   List<Object?> get props => [
-    dateofBirth,
+        dateofBirth,
         name,
         isShowPassword,
         image,

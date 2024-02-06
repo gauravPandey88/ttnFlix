@@ -70,3 +70,8 @@ class HomeErrorState extends HomeState {
   const HomeErrorState(this.errorMessage);
 }
 
+class AllWishListState extends HomeState {
+  AllWishListState(this.wishListItems);
+  final List<int> wishListItems;
+
+}

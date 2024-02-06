@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:ttn_flix/utils/default_equatable.dart';
 
 abstract class AccountsState extends DefaultEquatable {
@@ -14,6 +16,7 @@ class AccountLoadedState extends AccountsState {
   final String? dateOfBirth;
   final String? gender;
   final String? image;
+  final File? pickedImage;
   final String? dateofBirth;
   final String? password;
   final bool? isLogin;
@@ -24,6 +27,7 @@ class AccountLoadedState extends AccountsState {
     this.dateOfBirth,
     this.gender,
     this.image,
+    this.pickedImage,
     this.dateofBirth,
     this.isLogin,
     this.password
@@ -35,6 +39,7 @@ class AccountLoadedState extends AccountsState {
     final String? dateOfBirth,
     final String? gender,
     final String? image,
+    final File? pickedImage,
     final String? dateofBirth,
     final String? password,
     final bool? islogin
@@ -45,6 +50,7 @@ class AccountLoadedState extends AccountsState {
       dateOfBirth: dateOfBirth ?? this.dateOfBirth,
       gender: gender ?? this.gender,
       image: image ?? this.image,
+      pickedImage: pickedImage ?? this.pickedImage,
       dateofBirth: dateofBirth ?? this.dateofBirth,
       isLogin: isLogin ?? this.isLogin,
       password: password ?? this.password
@@ -57,6 +63,7 @@ class AccountLoadedState extends AccountsState {
     emailAddress,
     dateOfBirth,
     image,
+    pickedImage,
     gender,
     dateofBirth,
     password,

@@ -1,5 +1,3 @@
-import 'dart:async';
-
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -41,7 +39,9 @@ class FavouritesScreen extends StatelessWidget {
               TtnflixColors.textBlackColor.platformBrightnessColor(context),
           body: BlocBuilder<FavouriteCubit, FavouriteState>(
             builder: (context, state) {
-              if (state is FavouriteListState &&
+              if (state is FavouriteInitState) {
+                return const Center(child: CircularProgressIndicator());
+              } else if (state is FavouriteListState &&
                   state.favouriteListItems.isNotEmpty) {
                 return SingleChildScrollView(
                   child: Column(children: [
@@ -76,8 +76,8 @@ class FavouritesScreen extends StatelessWidget {
                             movie: state.favouriteListItems[index],
                             isFavourite: true,
                             isComingFromHome: false,
-                            favClickAction: (isFav) =>
-                               context.read<FavouriteCubit>().getWishlist(),
+                            favouritesAction: (isFav) =>
+                                context.read<FavouriteCubit>().getWishlist(),
                           ),
                         );
                       },

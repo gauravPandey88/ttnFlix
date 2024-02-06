@@ -95,7 +95,7 @@ class _RadioView extends StatelessWidget {
         children: [
           Radio(
           //  activeColor: TtnflixColors.whiteGlow,
-            fillColor: MaterialStateColor.resolveWith((states) => TtnflixColors.whiteGlow),
+            fillColor: MaterialStateColor.resolveWith((states) => TtnflixColors.titleColor.platformBrightnessColor(context)!),
             value: value,
             groupValue: _groupValue,
             onChanged: onChanged,
@@ -104,7 +104,7 @@ class _RadioView extends StatelessWidget {
             padding: const EdgeInsets.only(left: TtnflixSpacing.spacing16),
             child: Text(title,
                 style: TtnFlixTextStyle.defaultTextTheme.bodyLarge?.copyWith(
-                    color: TtnflixColors.whiteGlow),
+                    color: TtnflixColors.titleColor.platformBrightnessColor(context)),
           ),
           ),
         ],

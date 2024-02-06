@@ -84,25 +84,15 @@ abstract class _$TtnflixAppRouter extends RootStackRouter {
       );
     },
     SignupScreenRoute.name: (routeData) {
-      final args = routeData.argsAs<SignupScreenRouteArgs>(
-          orElse: () => const SignupScreenRouteArgs());
       return AutoRoutePage<dynamic>(
         routeData: routeData,
-        child: SignupScreen(
-          key: args.key,
-          sharedPreferences: args.sharedPreferences,
-        ),
+        child: const SignupScreen(),
       );
     },
     SplashScreenRoute.name: (routeData) {
-      final args = routeData.argsAs<SplashScreenRouteArgs>(
-          orElse: () => const SplashScreenRouteArgs());
       return AutoRoutePage<dynamic>(
         routeData: routeData,
-        child: SplashScreen(
-          key: args.key,
-          isLogin: args.isLogin,
-        ),
+        child: const SplashScreen(),
       );
     },
   };
@@ -328,76 +318,28 @@ class MovieDetailScreenRouteArgs {
 
 /// generated route for
 /// [SignupScreen]
-class SignupScreenRoute extends PageRouteInfo<SignupScreenRouteArgs> {
-  SignupScreenRoute({
-    Key? key,
-    SharedPreferences? sharedPreferences,
-    List<PageRouteInfo>? children,
-  }) : super(
+class SignupScreenRoute extends PageRouteInfo<void> {
+  const SignupScreenRoute({List<PageRouteInfo>? children})
+      : super(
           SignupScreenRoute.name,
-          args: SignupScreenRouteArgs(
-            key: key,
-            sharedPreferences: sharedPreferences,
-          ),
           initialChildren: children,
         );
 
   static const String name = 'SignupScreenRoute';
 
-  static const PageInfo<SignupScreenRouteArgs> page =
-      PageInfo<SignupScreenRouteArgs>(name);
-}
-
-class SignupScreenRouteArgs {
-  const SignupScreenRouteArgs({
-    this.key,
-    this.sharedPreferences,
-  });
-
-  final Key? key;
-
-  final SharedPreferences? sharedPreferences;
-
-  @override
-  String toString() {
-    return 'SignupScreenRouteArgs{key: $key, sharedPreferences: $sharedPreferences}';
-  }
+  static const PageInfo<void> page = PageInfo<void>(name);
 }
 
 /// generated route for
 /// [SplashScreen]
-class SplashScreenRoute extends PageRouteInfo<SplashScreenRouteArgs> {
-  SplashScreenRoute({
-    Key? key,
-    bool? isLogin,
-    List<PageRouteInfo>? children,
-  }) : super(
+class SplashScreenRoute extends PageRouteInfo<void> {
+  const SplashScreenRoute({List<PageRouteInfo>? children})
+      : super(
           SplashScreenRoute.name,
-          args: SplashScreenRouteArgs(
-            key: key,
-            isLogin: isLogin,
-          ),
           initialChildren: children,
         );
 
   static const String name = 'SplashScreenRoute';
 
-  static const PageInfo<SplashScreenRouteArgs> page =
-      PageInfo<SplashScreenRouteArgs>(name);
-}
-
-class SplashScreenRouteArgs {
-  const SplashScreenRouteArgs({
-    this.key,
-    this.isLogin,
-  });
-
-  final Key? key;
-
-  final bool? isLogin;
-
-  @override
-  String toString() {
-    return 'SplashScreenRouteArgs{key: $key, isLogin: $isLogin}';
-  }
+  static const PageInfo<void> page = PageInfo<void>(name);
 }

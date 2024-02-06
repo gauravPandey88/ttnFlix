@@ -86,9 +86,11 @@ class AccountBody extends StatelessWidget {
                   _logout(context, currentState);
                 },
               ),
-              backgroundColor: TtnflixColors.textBlackColor.platformBrightnessColor(context),
+              backgroundColor:
+                  TtnflixColors.textBlackColor.platformBrightnessColor(context),
             ),
-            backgroundColor: TtnflixColors.textBlackColor.platformBrightnessColor(context),
+            backgroundColor:
+                TtnflixColors.textBlackColor.platformBrightnessColor(context),
             body: SingleChildScrollView(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -121,7 +123,7 @@ class AccountBody extends StatelessWidget {
                           const EdgeInsets.only(top: TtnflixSpacing.spacing10),
                       child: Text(currentState.name ?? '-',
                           style: TtnFlixTextStyle.defaultTextTheme.titleLarge
-                              ?.copyWith(color: TtnflixColors.whiteGlow)),
+                              ?.copyWith(color: TtnflixColors.titleColor.platformBrightnessColor(context))),
                     ),
                   ),
                   ProfileList(
@@ -146,15 +148,19 @@ class AccountBody extends StatelessWidget {
                   ),
                   ProfileList(
                       context: context,
-                      icon: currentState.gender == _AccountsScreenConstant.maleGender
+                      icon: currentState.gender ==
+                              _AccountsScreenConstant.maleGender
                           ? Icons.male
-                          : currentState.gender == _AccountsScreenConstant.femaleGender
+                          : currentState.gender ==
+                                  _AccountsScreenConstant.femaleGender
                               ? Icons.female
                               : Icons.transgender,
                       tittle: S.current.gender,
-                      data: currentState.gender == _AccountsScreenConstant.maleGender
+                      data: currentState.gender ==
+                              _AccountsScreenConstant.maleGender
                           ? S.current.male
-                          : currentState.gender == _AccountsScreenConstant.femaleGender
+                          : currentState.gender ==
+                                  _AccountsScreenConstant.femaleGender
                               ? S.current.female
                               : S.current.other),
                 ],

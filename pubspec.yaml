@@ -49,6 +49,7 @@ dependencies:
   shared_preferences: ^2.2.0
   encrypt: ^5.0.3
   sqflite: ^2.3.1
+  mockito: ^5.4.4
   flutter_localizations:
     sdk: flutter
 
@@ -89,7 +90,9 @@ flutter:
   uses-material-design: true
   generate: true
   assets:
-    - images/
+    - images/avtar_female.png
+    - images/avtar_man.png
+    - images/avtar_transgender.png
 
 
 

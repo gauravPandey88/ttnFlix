@@ -1,5 +1,3 @@
-import 'dart:ffi';
-
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -101,7 +99,7 @@ class MovieDetailScreen extends StatelessWidget {
                       Padding(
                         padding: const EdgeInsets.only(left: TtnflixSpacing.spacing5),
                         child: TtnflixTextWidget(
-                          title: movie.getContentRating() ?? '',
+                          title: movie.getContentRating(),
                           style: TtnFlixTextStyle.defaultTextTheme.titleSmall
                               ?.copyWith(
                                   color: TtnflixColors.frozenListYellow

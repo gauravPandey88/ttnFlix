@@ -1,6 +1,4 @@
 import 'dart:convert';
-import 'dart:ffi';
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -29,9 +27,6 @@ class LoginCubit extends Cubit<LoginState> {
     Map<String, dynamic> userMap = jsonDecode(
         _sharedPreferences.getString(S.current.userData) ?? Map().toString());
     UserModel user = UserModel.fromJson(userMap);
-
-    // final password = user.password;
-    // final decrypt = Encrypt.decrypt(TtnflixApiUrl.encryptKey, password ?? "");
 
     var currentState = state as LoginLoadedState;
     emit(currentState.copyWith(
@@ -62,7 +57,7 @@ class LoginCubit extends Cubit<LoginState> {
   String _getPasswordErrorText() {
     final password = passwordTextController.text.trim();
     return (password.isNotEmpty && !ValidationHelper.isPasswordValid(password))
-        ? 'At least 8 characters long'
+        ? S.current.passwordValidation
         : '';
   }
 
@@ -79,16 +74,6 @@ class LoginCubit extends Cubit<LoginState> {
       var currentState = state as LoginLoadedState;
       _passwordVisible = !_passwordVisible;
       emit(currentState.copyWith(isShowPassword: _passwordVisible));
-    }
-  }
-
-  bool isDisplayButtonEnable() {
-    if (state is LoginLoadedState) {
-      (emailTextController.text.isNotEmpty ||
-          passwordTextController.text.isNotEmpty);
-      return true;
-    } else {
-      return false;
     }
   }
 

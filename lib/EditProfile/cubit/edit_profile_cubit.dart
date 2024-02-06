@@ -9,11 +9,8 @@ import 'package:ttn_flix/di/service_locator.dart';
 import 'package:ttn_flix/generated/l10n.dart';
 import 'package:ttn_flix/network/ttnflix_api_url.dart';
 import 'package:ttn_flix/register/model/user_model.dart';
-import 'package:ttn_flix/utils/date_picker.dart';
-import 'package:ttn_flix/utils/date_util.dart';
 import 'package:ttn_flix/utils/encrypy.dart';
 import 'package:ttn_flix/utils/validation_helper.dart';
-import 'package:intl/date_symbol_data_local.dart';
 
 class EditProfileCubit extends Cubit<EditProfileState> {
   final TextEditingController dateofBirthController = TextEditingController();

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:ttn_flix/themes/ttnflix_colors.dart';
 
 class DatePicker {
   final BuildContext context;
@@ -16,6 +17,24 @@ class DatePicker {
           .now()
           .year - 100),
       lastDate: DateTime.now(),
+      builder: (context, child) {
+        return Theme(
+            data: Theme.of(context).copyWith(
+                colorScheme: ColorScheme.light(
+                  primary: TtnflixColors.frozenListYellow
+                      .platformBrightnessColor(context) ?? Colors.amber, // <-- SEE HERE
+                  onPrimary: TtnflixColors.textBlackColor.platformBrightnessColor(context) ?? Colors.black, // <-- SEE HERE
+                  onSurface: TtnflixColors.textBlackColor.platformBrightnessColor(context) ?? Colors.black, // <-- SEE HERE
+                ),
+             textButtonTheme: TextButtonThemeData(
+            style: TextButton.styleFrom(
+            primary: TtnflixColors.textBlackColor.platformBrightnessColor(context), // button text color
+            ),
+        ),
+            ),
+        child: child!,);
+        
+      }
     );
     if (pickedDate != null) {
       String formattedDate =

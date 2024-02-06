@@ -94,11 +94,21 @@ class TtnflixColors {
   static const Color _borderOutlineColor = Color(0xFFE9E9E9);
   static const Color greyColor = Color(0xFF1A1A1A);
 
+  static final Map<Brightness, Color> cellTextColor = _buildColor(
+      lightColor: TtnflixColors._cellGrey, darkColor: TtnflixColors._pureBlack);
+
+  static final Map<Brightness, Color> titleColor =
+  _buildColor(lightColor: _pureWhite, darkColor: _pureBlack);
+
+  static final Map<Brightness, Color> inputBoxColor =
+  _buildColor(lightColor: greyColor, darkColor: _lightGrey);
+
   static final Map<Brightness, Color> transparent = _buildColor(
       lightColor: TtnflixColors._transparent, darkColor: TtnflixColors._transparent);
 
   static final Map<Brightness, Color> informGrey = _buildColor(
       lightColor: TtnflixColors._informGrey, darkColor: TtnflixColors._informGrey);
+
   static const Color _arrowColor = Color(0XFF444444);
 
   static final Map<Brightness, Color> mellowGreyColor = _buildColor(
@@ -234,7 +244,7 @@ class TtnflixColors {
       darkColor: TtnflixColors._cautiousRedDark);
 
   static final Map<Brightness, Color> onErrorColor = _buildColor(
-      lightColor: TtnflixColors._actionRed, darkColor: TtnflixColors._actionRed);
+      lightColor: TtnflixColors._frozenListYellow, darkColor: TtnflixColors._frozenListYellow);
 
   static final Map<Brightness, Color> onDisabledBoundaryColor = _buildColor(
       lightColor: TtnflixColors._boundaryGrey, darkColor: TtnflixColors._informGrey);
@@ -295,9 +305,6 @@ class TtnflixColors {
       lightColor: _pureWhite.withOpacity(0.70),
       darkColor: _pureWhite.withOpacity(0.70));
 
-  static final Map<Brightness, Color> cellTextColor = _buildColor(
-      lightColor: TtnflixColors._cellGrey, darkColor: TtnflixColors._cellGrey);
-
   static final Map<Brightness, Color> headerStaticTextColor = _buildColor(
       lightColor: TtnflixColors._headerCellColor,
       darkColor: TtnflixColors._headerCellColor);
@@ -332,7 +339,7 @@ class TtnflixColors {
   _buildColor(lightColor: _arrowColor, darkColor: _arrowColor);
 
   static final Map<Brightness, Color> frozenListYellow =
-  _buildColor(lightColor: _frozenListYellow, darkColor: _frozenListYellow);
+  _buildColor(lightColor: _frozenListYellow, darkColor: _skyRacing2);
 
   static final Map<Brightness, Color> radiusColor =
   _buildColor(lightColor: _radiusColor, darkColor: _radiusColor);

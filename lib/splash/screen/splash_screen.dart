@@ -8,19 +8,14 @@ import 'package:ttn_flix/navigation/ttnflix_auto_route.dart';
 import 'package:ttn_flix/register/model/user_model.dart';
 import 'package:ttn_flix/themes/ttnflix_colors.dart';
 
-
 @RoutePage()
 class SplashScreen extends StatelessWidget {
-  const SplashScreen({super.key, this.isLogin});
-  final bool? isLogin;
+  const SplashScreen({super.key});
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       title: S.of(context).splashScreen,
-      theme: ThemeData(
-        primarySwatch: Colors.green,
-      ),
-      home: MyHomePage(isLogin: isLogin),
+      home: const MyHomePage(),
       debugShowCheckedModeBanner: false,
     );
   }
@@ -28,10 +23,7 @@ class SplashScreen extends StatelessWidget {
 
 class MyHomePage extends StatefulWidget {
   const MyHomePage({
-    super.key,
-    this.isLogin,
-  });
-  final bool? isLogin;
+    super.key});
   @override
   MyHomePageState createState() => MyHomePageState();
 }
@@ -54,7 +46,7 @@ class MyHomePageState extends State<MyHomePage> {
   @override
   Widget build(BuildContext context) {
     return Container(
-        color: TtnflixColors.whiteGlow,
+        color: TtnflixColors.pureWhite.platformBrightnessColor(context),
         child: FlutterLogo(size: MediaQuery.of(context).size.height));
   }
 }

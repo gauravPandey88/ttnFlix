@@ -102,6 +102,9 @@ class HomeBody extends StatelessWidget {
                               language: state.movieCarouselList?[itemIndex]
                                   .originalLanguage
                                   ?.toUpperCase(),
+                              favouritesAction: (value) {
+                                context.read<HomeCubit>().getCarouselListMoviesData();
+                              },
                             ),
                           );
                         },
@@ -111,7 +114,7 @@ class HomeBody extends StatelessWidget {
                               _HomeScreenConstant.viewPortFraction,
                           enableInfiniteScroll: true,
                           reverse: false,
-                          autoPlay: true,
+                          autoPlay: false,
                           autoPlayInterval: const Duration(
                               seconds:
                                   _HomeScreenConstant.carouselPlayInterval),
@@ -134,7 +137,7 @@ class HomeBody extends StatelessWidget {
                             dotsCount: _HomeScreenConstant.dotsTotalCount,
                             position: state.carousalMovieCurrentpage ?? 0,
                             decorator: DotsDecorator(
-                              color: TtnflixColors.whiteGlow,
+                              color: TtnflixColors.titleColor.platformBrightnessColor(context)!,
                               activeColor: TtnflixColors.frozenListYellow
                                   .platformBrightnessColor(context),
                               size: const Size.square(

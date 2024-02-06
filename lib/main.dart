@@ -1,9 +1,4 @@
-
-import 'dart:convert';
-
-import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:ttn_flix/di/app_launch_module.dart';
 import 'package:ttn_flix/di/service_locator_impl.dart';
 import 'package:ttn_flix/generated/l10n.dart';

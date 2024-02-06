@@ -1,8 +1,6 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:ttn_flix/detail/screen/movie_detail_screen.dart';
-import 'package:ttn_flix/favourites/cubit/favourite_cubit.dart';
 import 'package:ttn_flix/home/favouriteList/cubit/favourite_list_cubit.dart';
 import 'package:ttn_flix/home/favouriteList/cubit/favourite_list_state.dart';
 import 'package:ttn_flix/home/model/ttnflix_movies.dart';
@@ -30,8 +28,8 @@ class GridMovielist extends StatelessWidget {
       this.standardSelected,
       this.onChanged,
       this.movieName,
-        this.isComingFromHome = true,
-        this.favClickAction,
+      this.isComingFromHome = true,
+      this.favouritesAction,
       required this.isFavourite,
       required this.movie});
   final BuildContext context;
@@ -42,7 +40,7 @@ class GridMovielist extends StatelessWidget {
   final Movie movie;
   final bool? standardSelected;
   final ValueChanged? onChanged;
-  final Function(bool)? favClickAction;
+  final Function(bool)? favouritesAction;
   final bool isComingFromHome;
   bool isFavourite;
   @override
@@ -90,7 +88,8 @@ class GridMovielist extends StatelessWidget {
                             BoxShadow(
                                 color: Colors.black54,
                                 blurRadius: _GridMovielistConstant.blurRadius,
-                                offset: Offset(_GridMovielistConstant.offset, _GridMovielistConstant.offset))
+                                offset: Offset(_GridMovielistConstant.offset,
+                                    _GridMovielistConstant.offset))
                           ],
                         ),
                         padding: const EdgeInsets.only(
@@ -153,26 +152,31 @@ class GridMovielist extends StatelessWidget {
                       child: Align(
                         alignment: Alignment.topRight,
                         child: Padding(
-                          padding: const EdgeInsets.all(TtnflixSpacing.spacing5),
+                          padding:
+                              const EdgeInsets.all(TtnflixSpacing.spacing5),
                           child: Container(
                             decoration: BoxDecoration(
-                              color: TtnflixColors.textBlackColor.platformBrightnessColor(context),
-                              borderRadius:
-                                  const BorderRadius.all(Radius.circular(TtnflixSpacing.spacing30)),
+                              color: TtnflixColors.textBlackColor
+                                  .platformBrightnessColor(context),
+                              borderRadius: const BorderRadius.all(
+                                  Radius.circular(TtnflixSpacing.spacing30)),
                             ),
                             child: BlocBuilder<FavouriteListCubit,
                                 FavouriteListState>(
                               builder: (context, state) {
                                 if (state is FavouriteListSuccess) {
-                                  isComingFromHome ? isFavourite = state.isFavourite : isFavourite = !state.isFavourite;
-                                  favClickAction?.call(!isFavourite);
+                                  isComingFromHome
+                                      ? isFavourite = state.isFavourite
+                                      : isFavourite = !state.isFavourite;
+                                  favouritesAction?.call(isFavourite);
                                 }
                                 return Icon(
                                   Icons.star_outlined,
                                   color: isFavourite
-                                      ? TtnflixColors.skyRacing1Color.platformBrightnessColor(context)
+                                      ? TtnflixColors.skyRacing1Color
+                                          .platformBrightnessColor(context)
                                       : TtnflixColors.frozenListYellow
-                                      .platformBrightnessColor(context),
+                                          .platformBrightnessColor(context),
                                 );
                               },
                             ),

@@ -27,7 +27,7 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Successfully add"),
         "confirmPassword":
             MessageLookupByLibrary.simpleMessage("Confirm Password"),
-        "dateOfBirth": MessageLookupByLibrary.simpleMessage("Date of birth"),
+        "dateOfBirth": MessageLookupByLibrary.simpleMessage("Date of Birth"),
         "editProfile": MessageLookupByLibrary.simpleMessage("EditProfile"),
         "email": MessageLookupByLibrary.simpleMessage("Email"),
         "emailAddress": MessageLookupByLibrary.simpleMessage("Email Address"),

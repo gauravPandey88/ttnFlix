@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -25,6 +26,7 @@ class RegisterCubit extends Cubit<RegisterState> {
         super(const RegisterLoadedState());
 
   String? imagePath;
+   File? pickedImage;
   String? gender = "0";
   bool _passwordVisible = false;
   bool _confirmPasswordVisible = false;
@@ -38,8 +40,7 @@ class RegisterCubit extends Cubit<RegisterState> {
       var currentState = state as RegisterLoadedState;
       imagePath = image?.path;
       emit(currentState.copyWith(
-          imagePath: image?.path,
-          isConfirmPasswordFieldEnable: _isConfirmPasswordFieldEnable()));
+          imagePath: image?.path));
     }
   }
 
@@ -50,7 +51,7 @@ class RegisterCubit extends Cubit<RegisterState> {
       emit(currentState.copyWith(
           genderType: currentState.genderTypeRadioList.elementAt(selectedIndex),
           imagePath: imagePath,
-          isConfirmPasswordFieldEnable: _isConfirmPasswordFieldEnable()));
+          pickedImage: pickedImage));
     }
   }
 
@@ -68,7 +69,7 @@ class RegisterCubit extends Cubit<RegisterState> {
           emailId: emailId,
           emailIdErrorMessage: _getEmailIdErrorText(),
           imagePath: imagePath,
-          isConfirmPasswordFieldEnable: _isConfirmPasswordFieldEnable()));
+          pickedImage: pickedImage));
     }
   }
 
@@ -94,7 +95,7 @@ class RegisterCubit extends Cubit<RegisterState> {
           confirmpPassword: password,
           confirmPasswordErrorMessage: _getConfirmPasswordErrorText(),
           imagePath: imagePath,
-          isConfirmPasswordFieldEnable: _isConfirmPasswordFieldEnable()));
+          pickedImage: pickedImage));
     }
   }
 
@@ -105,7 +106,7 @@ class RegisterCubit extends Cubit<RegisterState> {
           password: password,
           passwordErrorMessage: _getPasswordErrorText(),
           imagePath: imagePath,
-          isConfirmPasswordFieldEnable: _isConfirmPasswordFieldEnable()));
+          pickedImage: pickedImage));
     }
   }
 
@@ -120,7 +121,7 @@ class RegisterCubit extends Cubit<RegisterState> {
       emit(currentState.copyWith(
           isShowPassword: _passwordVisible,
           imagePath: imagePath,
-          isConfirmPasswordFieldEnable: _isConfirmPasswordFieldEnable()));
+          pickedImage: pickedImage));
     }
   }
 
@@ -131,7 +132,7 @@ class RegisterCubit extends Cubit<RegisterState> {
       emit(currentState.copyWith(
           isShowConfrimPassword: _confirmPasswordVisible,
           imagePath: imagePath,
-          isConfirmPasswordFieldEnable: _isConfirmPasswordFieldEnable()));
+          pickedImage: pickedImage));
     }
   }
 

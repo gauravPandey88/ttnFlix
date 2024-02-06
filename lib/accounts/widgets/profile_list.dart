@@ -13,14 +13,14 @@ class ProfileList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.only(top: TtnflixSpacing.spacing20),
+      padding: const EdgeInsets.only(top: TtnflixSpacing.spacing20, left: TtnflixSpacing.spacing10),
       child: Container(
         color: TtnflixColors.textBlackColor.platformBrightnessColor(context),
         child: Row(
           mainAxisSize: MainAxisSize.max,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Icon(icon, size: TtnflixSpacing.spacing20, color: TtnflixColors.cellTextColor.platformBrightnessColor(context)),
+            Icon(icon, size: TtnflixSpacing.spacing20, color: TtnflixColors.titleColor.platformBrightnessColor(context)),
             const SizedBox(
               width: TtnflixSpacing.spacing10,
             ),
@@ -31,13 +31,13 @@ class ProfileList extends StatelessWidget {
                 children: [
                   Text(tittle ?? "",
                       style: TtnFlixTextStyle.defaultTextTheme.titleSmall
-                          ?.copyWith(color: TtnflixColors.cellTextColor.platformBrightnessColor(context))),
+                          ?.copyWith(color: TtnflixColors.titleColor.platformBrightnessColor(context))),
                   const SizedBox(
                     height: TtnflixSpacing.spacing10,
                   ),
                   Text(data ?? "",
                       style: TtnFlixTextStyle.defaultTextTheme.titleSmall
-                          ?.copyWith(color: TtnflixColors.cellTextColor.platformBrightnessColor(context))),
+                          ?.copyWith(color: TtnflixColors.titleColor.platformBrightnessColor(context))),
                 ],
               ),
             )

@@ -1,6 +1,4 @@
-import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:ttn_flix/di/service_locator.dart';
 import 'package:ttn_flix/di/service_locator_impl.dart';
 import 'package:ttn_flix/generated/l10n.dart';
 import 'package:ttn_flix/home/favouriteList/cubit/favourite_list_state.dart';

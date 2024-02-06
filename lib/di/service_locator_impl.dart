@@ -20,7 +20,12 @@ class ServiceLocatorImpl implements ServiceLocator {
 
      _initSharedPref();
 
-    serviceLocator.registerSingleton<DBManager>(DBManager());
+    if (!isRegistered<DBManager>()) {
+      serviceLocator.registerSingleton<DBManager>(
+          DBManager());
+    }
+
+   // serviceLocator.registerSingleton<DBManager>(DBManager());
 
   }
   Future<void> _initSharedPref() async {

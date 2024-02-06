@@ -1,18 +1,11 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:get_it/get_it.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:ttn_flix/accounts/screen/accounts_screen.dart';
 import 'package:ttn_flix/favourites/screen/favourites_screen.dart';
 import 'package:ttn_flix/generated/l10n.dart';
 import 'package:ttn_flix/home/screen/home_screen.dart';
 import 'package:ttn_flix/themes/ttnflix_colors.dart';
-import 'package:ttn_flix/di/app_launch_module.dart';
-import 'package:ttn_flix/navigation/ttnflix_auto_route.dart';
-import 'package:ttn_flix/themes/ttnflix_theme.dart';
-import 'package:ttn_flix/themes/ttnflix_typography.dart';
-
 
 class _BottomBarConstant {
   static const int selectedIndex = 0;
@@ -48,8 +41,8 @@ class _BottomNavigationBarExampleState
   static TextStyle optionStyle =
   TextStyle(fontSize: _BottomBarConstant.fontSize, fontWeight: FontWeight.bold);
   static final List<Widget> _widgetOptions = <Widget>[
-    HomeScreen(),
-    FavouritesScreen(),
+    const HomeScreen(),
+    const FavouritesScreen(),
     AccountsScreen()
   ];
 
@@ -85,7 +78,7 @@ class _BottomNavigationBarExampleState
         currentIndex: _selectedIndex,
         selectedItemColor: TtnflixColors.frozenListYellow
             .platformBrightnessColor(context),
-        unselectedItemColor: TtnflixColors.whiteGlow,
+        unselectedItemColor: TtnflixColors.titleColor.platformBrightnessColor(context),
         onTap: _onItemTapped,
       ),
     );

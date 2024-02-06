@@ -240,10 +240,10 @@ class S {
     );
   }
 
-  /// `Date of birth`
+  /// `Date of Birth`
   String get dateOfBirth {
     return Intl.message(
-      'Date of birth',
+      'Date of Birth',
       name: 'dateOfBirth',
       desc: '',
       args: [],

@@ -1,5 +1,3 @@
-import 'dart:ffi';
-
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -110,7 +108,7 @@ class EditProfile extends StatelessWidget {
                           left: TtnflixSpacing.spacing10),
                       child: Text(S.current.name,
                           style: TtnFlixTextStyle.defaultTextTheme.titleSmall
-                              ?.copyWith(color: TtnflixColors.cellTextColor.platformBrightnessColor(context))),
+                              ?.copyWith(color: TtnflixColors.titleColor.platformBrightnessColor(context))),
                     ),
                     Padding(
                       padding: const EdgeInsets.only(
@@ -118,25 +116,25 @@ class EditProfile extends StatelessWidget {
                           left: TtnflixSpacing.spacing10,
                           right: TtnflixSpacing.spacing10),
                       child: TtnflixTextField(
-                        cursorColor: TtnflixColors.whiteGlow,
-                        style: const TextStyle(color: TtnflixColors.whiteGlow),
+                        cursorColor: TtnflixColors.titleColor.platformBrightnessColor(context),
+                        style: TextStyle(color: TtnflixColors.titleColor.platformBrightnessColor(context)),
                         controller: BlocProvider.of<EditProfileCubit>(context)
                             .nameTextController,
                         decoration: InputDecoration(
                             filled: true,
                             labelStyle: TtnFlixTextStyle
                                 .defaultTextTheme.titleMedium
-                                ?.copyWith(color: TtnflixColors.whiteGlow),
-                            focusedBorder: const OutlineInputBorder(
-                              borderSide: BorderSide(color: TtnflixColors.whiteGlow),
+                                ?.copyWith(color: TtnflixColors.titleColor.platformBrightnessColor(context)),
+                            focusedBorder: OutlineInputBorder(
+                              borderSide: BorderSide(color: TtnflixColors.titleColor.platformBrightnessColor(context)!),
                             ),
-                            fillColor: TtnflixColors.greyColor,
+                            fillColor: TtnflixColors.inputBoxColor.platformBrightnessColor(context),
                             labelText:
                                 state.name?.isEmpty ?? false ? '' : state.name,
                             hintText: S.current.name,
                             hintStyle: TtnFlixTextStyle
                                 .defaultTextTheme.titleMedium
-                                ?.copyWith(color: TtnflixColors.greyColor),
+                                ?.copyWith(color: TtnflixColors.cellTextColor.platformBrightnessColor(context)),
                             errorStyle: TextStyle(
                                 color: Theme.of(context).colorScheme.onError)),
                       ),
@@ -147,7 +145,7 @@ class EditProfile extends StatelessWidget {
                           left: TtnflixSpacing.spacing10),
                       child: Text(S.current.dateOfBirth,
                           style: TtnFlixTextStyle.defaultTextTheme.titleSmall
-                              ?.copyWith(color: TtnflixColors.cellTextColor.platformBrightnessColor(context))),
+                              ?.copyWith(color: TtnflixColors.titleColor.platformBrightnessColor(context))),
                     ),
                     Padding(
                       padding: const EdgeInsets.only(
@@ -155,8 +153,8 @@ class EditProfile extends StatelessWidget {
                           left: TtnflixSpacing.spacing10,
                           right: TtnflixSpacing.spacing10),
                       child: TtnflixTextField(
-                        cursorColor: TtnflixColors.whiteGlow,
-                        style: const TextStyle(color: TtnflixColors.whiteGlow),
+                        cursorColor: TtnflixColors.titleColor.platformBrightnessColor(context),
+                        style: TextStyle(color: TtnflixColors.titleColor.platformBrightnessColor(context)),
                         controller: BlocProvider.of<EditProfileCubit>(context)
                             .dateofBirthController,
                         onTap: () {
@@ -170,18 +168,18 @@ class EditProfile extends StatelessWidget {
                             filled: true,
                             labelStyle: TtnFlixTextStyle
                                 .defaultTextTheme.titleMedium
-                                ?.copyWith(color: TtnflixColors.whiteGlow),
-                            focusedBorder: const OutlineInputBorder(
-                              borderSide: BorderSide(color: TtnflixColors.whiteGlow),
+                                ?.copyWith(color: TtnflixColors.titleColor.platformBrightnessColor(context)),
+                            focusedBorder: OutlineInputBorder(
+                              borderSide: BorderSide(color: TtnflixColors.titleColor.platformBrightnessColor(context)!),
                             ),
-                            fillColor: TtnflixColors.greyColor,
+                            fillColor: TtnflixColors.inputBoxColor.platformBrightnessColor(context),
                             labelText: state.dateofBirth?.isEmpty ?? false
                                 ? ''
                                 : state.dateofBirth,
                             hintText: S.current.dateOfBirth,
                             hintStyle: TtnFlixTextStyle
                                 .defaultTextTheme.titleMedium
-                                ?.copyWith(color: TtnflixColors.greyColor),
+                                ?.copyWith(color: TtnflixColors.cellTextColor.platformBrightnessColor(context)),
                             errorStyle: TextStyle(
                                 color: Theme.of(context).colorScheme.onError)),
                       ),
@@ -201,8 +199,8 @@ class EditProfile extends StatelessWidget {
                           right: TtnflixSpacing.spacing10),
                       child: TtnflixTextField(
                         obscureText: state.isShowPassword ?? false ? false : true,
-                        cursorColor: TtnflixColors.whiteGlow,
-                        style: const TextStyle(color: TtnflixColors.whiteGlow),
+                        cursorColor: TtnflixColors.titleColor.platformBrightnessColor(context),
+                        style: TextStyle(color: TtnflixColors.titleColor.platformBrightnessColor(context)),
                         controller: BlocProvider.of<EditProfileCubit>(context)
                             .passwordTextController,
                         onChanged: (value) {
@@ -213,9 +211,9 @@ class EditProfile extends StatelessWidget {
                             filled: true,
                             labelStyle: TtnFlixTextStyle
                                 .defaultTextTheme.titleMedium
-                                ?.copyWith(color: TtnflixColors.whiteGlow),
-                            focusedBorder: const OutlineInputBorder(
-                              borderSide: BorderSide(color: TtnflixColors.whiteGlow),
+                                ?.copyWith(color: TtnflixColors.titleColor.platformBrightnessColor(context)),
+                            focusedBorder: OutlineInputBorder(
+                              borderSide: BorderSide(color: TtnflixColors.titleColor.platformBrightnessColor(context)!),
                             ),
                             suffixIcon: Padding(
                               padding: const EdgeInsets.fromLTRB(
@@ -233,16 +231,14 @@ class EditProfile extends StatelessWidget {
                                         ? Icons.visibility_rounded
                                         : Icons.visibility_off_rounded,
                                     size: TtnflixSpacing.spacing24,
-                                    color: TtnflixColors.whiteGlow,
+                                    color: TtnflixColors.titleColor.platformBrightnessColor(context),
                                   )),
                             ),
-                            fillColor: TtnflixColors.greyColor,
+                            fillColor: TtnflixColors.inputBoxColor.platformBrightnessColor(context),
                             hintText: S.current.password,
-                            // labelText:
-                            //     state.password.isEmpty ? '' : state.password,
                             hintStyle: TtnFlixTextStyle
                                 .defaultTextTheme.titleMedium
-                                ?.copyWith(color: TtnflixColors.greyColor),
+                                ?.copyWith(color: TtnflixColors.cellTextColor.platformBrightnessColor(context)),
                             errorText: state.passwordErrorMessage.isNotEmpty
                                 ? state.passwordErrorMessage
                                 : null,

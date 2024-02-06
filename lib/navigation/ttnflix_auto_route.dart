@@ -1,6 +1,3 @@
-import 'dart:convert';
-import 'dart:ffi';
-
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -11,10 +8,8 @@ import 'package:ttn_flix/detail/widget/icon_widget.dart';
 import 'package:ttn_flix/favourites/screen/favourites_screen.dart';
 import 'package:ttn_flix/home/model/ttnflix_movies.dart';
 import 'package:ttn_flix/home/screen/home_screen.dart';
-import 'package:ttn_flix/register/model/user_model.dart';
 import 'package:ttn_flix/register/screen/login_screen.dart';
 import 'package:ttn_flix/register/screen/signup_screen.dart';
-import 'package:ttn_flix/register/widgets/user_details.dart';
 import 'package:ttn_flix/tabbar/bottom_bar_navigation.dart';
 
 import '../splash/screen/splash_screen.dart';

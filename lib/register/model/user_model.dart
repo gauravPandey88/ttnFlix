@@ -1,5 +1,3 @@
-import 'package:flutter/material.dart';
-
 class UserModel {
   late final String? userName;
   final String? emailAddress;
@@ -40,5 +38,4 @@ class UserModel {
       "isLogin": isLogin
     };
   }
-
 }
