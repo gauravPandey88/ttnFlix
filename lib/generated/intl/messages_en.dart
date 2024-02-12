@@ -71,6 +71,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "noFavouritesYet":
             MessageLookupByLibrary.simpleMessage("No Favourites Yet"),
         "notAdd": MessageLookupByLibrary.simpleMessage("Not add"),
+        "onboarding": MessageLookupByLibrary.simpleMessage("OnBoarding"),
         "other": MessageLookupByLibrary.simpleMessage("Other"),
         "overview": MessageLookupByLibrary.simpleMessage("Overview"),
         "page": MessageLookupByLibrary.simpleMessage("page"),

@@ -12,7 +12,6 @@ class HomeLoadingState extends HomeState {
 class HomeLoadedState extends HomeState {
   final List<Movie>? movieCarouselList;
   final List<Movie>? gridMovieList;
-  final List<int> favourite;
   final int currentPage;
   final int totalPages;
   final bool showNextPage;
@@ -22,7 +21,6 @@ class HomeLoadedState extends HomeState {
   const HomeLoadedState(
       {this.movieCarouselList,
       this.gridMovieList,
-      required this.favourite,
       this.selectIcon,
       required this.currentPage,
       required this.totalPages,
@@ -42,7 +40,6 @@ class HomeLoadedState extends HomeState {
     return HomeLoadedState(
         movieCarouselList: movieCarouselList ?? this.movieCarouselList,
         gridMovieList: gridMovieList ?? this.gridMovieList,
-        favourite: favourite ?? this.favourite,
         currentPage: currentPage ?? this.currentPage,
         totalPages: totalPages ?? this.totalPages,
         selectIcon: selectIcon ?? this.selectIcon,
@@ -55,7 +52,6 @@ class HomeLoadedState extends HomeState {
   List<Object?> get props => [
         movieCarouselList,
         gridMovieList,
-        favourite,
         selectIcon,
         currentPage,
         totalPages,

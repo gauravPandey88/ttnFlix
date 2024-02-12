@@ -26,7 +26,7 @@ class RegisterCubit extends Cubit<RegisterState> {
         super(const RegisterLoadedState());
 
   String? imagePath;
-   File? pickedImage;
+  File? pickedImage;
   String? gender = "0";
   bool _passwordVisible = false;
   bool _confirmPasswordVisible = false;
@@ -39,8 +39,7 @@ class RegisterCubit extends Cubit<RegisterState> {
     if (state is RegisterLoadedState) {
       var currentState = state as RegisterLoadedState;
       imagePath = image?.path;
-      emit(currentState.copyWith(
-          imagePath: image?.path));
+      emit(currentState.copyWith(imagePath: image?.path));
     }
   }
 
@@ -136,10 +135,9 @@ class RegisterCubit extends Cubit<RegisterState> {
     }
   }
 
-
   Future<UserModel> getSavedInfo() async {
-    Map<String, dynamic> userMap =
-        jsonDecode(_sharedPreferences.getString(S.current.userData) ?? Map().toString());
+    Map<String, dynamic> userMap = jsonDecode(
+        _sharedPreferences.getString(S.current.userData) ?? Map().toString());
     UserModel user = UserModel.fromJson(userMap);
 
     var currentState = state as RegisterLoadedState;
@@ -150,7 +148,8 @@ class RegisterCubit extends Cubit<RegisterState> {
 
   String _getPasswordEncrypt() {
     final password = passwordTextController.text;
-    final encrypted = Encrypt.encrypt(TtnflixApiUrl.encryptKey, password).base64;
+    final encrypted =
+        Encrypt.encrypt(TtnflixApiUrl.encryptKey, password).base64;
     return encrypted.toString();
   }
 
@@ -163,7 +162,9 @@ class RegisterCubit extends Cubit<RegisterState> {
         image: imagePath,
         gender: gender,
         password: _getPasswordEncrypt().toString(),
-        isLogin: true);
+        isLogin: true,
+        isOnboardingShow: true,
+        timestamp: DateTime.now().millisecondsSinceEpoch);
     // encode / convert object into json string
     String user = jsonEncode(user1);
     print(user);

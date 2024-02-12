@@ -23,8 +23,6 @@ class DatePicker {
                 colorScheme: ColorScheme.light(
                   primary: TtnflixColors.frozenListYellow
                       .platformBrightnessColor(context) ?? Colors.amber, // <-- SEE HERE
-                  onPrimary: TtnflixColors.textBlackColor.platformBrightnessColor(context) ?? Colors.black, // <-- SEE HERE
-                  onSurface: TtnflixColors.textBlackColor.platformBrightnessColor(context) ?? Colors.black, // <-- SEE HERE
                 ),
              textButtonTheme: TextButtonThemeData(
             style: TextButton.styleFrom(

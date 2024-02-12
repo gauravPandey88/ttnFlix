@@ -20,6 +20,8 @@ class TtnflixMoviesModel {
 
 @JsonSerializable(createToJson: false)
 class Movie {
+  @JsonKey(includeFromJson: false)
+  bool isFavourite = false;
   String? title;
   int? id;
   String? overview;
@@ -59,6 +61,7 @@ class Movie {
   }
 
   Movie.fromMap(Map<String, Object?> map) {
+    isFavourite = true;
     backdropPath = map['imageUrl'] as String;
     posterPath = map['posterPath'] as String?;
     mediaType = map['mediaType'] as String;

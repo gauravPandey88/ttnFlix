@@ -1,6 +1,7 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:ttn_flix/home/cubit/home_cubit.dart';
 import 'package:ttn_flix/home/favouriteList/cubit/favourite_list_cubit.dart';
 import 'package:ttn_flix/home/favouriteList/cubit/favourite_list_state.dart';
 import 'package:ttn_flix/home/model/ttnflix_movies.dart';
@@ -18,7 +19,7 @@ class _GridMovielistConstant {
   static const double offset = 1.0;
 }
 
-class GridMovielist extends StatelessWidget {
+class GridMovielist extends StatelessWidget with ChangeNotifier {
   GridMovielist(
       {super.key,
       required this.context,
@@ -30,8 +31,10 @@ class GridMovielist extends StatelessWidget {
       this.movieName,
       this.isComingFromHome = true,
       this.favouritesAction,
-      required this.isFavourite,
-      required this.movie});
+      required this.movie
+      }){
+    _wishlist = ValueNotifier<bool>(movie.isFavourite);
+  }
   final BuildContext context;
   final double? height;
   final String? movieName;
@@ -42,7 +45,7 @@ class GridMovielist extends StatelessWidget {
   final ValueChanged? onChanged;
   final Function(bool)? favouritesAction;
   final bool isComingFromHome;
-  bool isFavourite;
+  late ValueNotifier<bool>? _wishlist;
   @override
   Widget build(BuildContext context) {
     return BlocConsumer<FavouriteListCubit, FavouriteListState>(
@@ -60,7 +63,10 @@ class GridMovielist extends StatelessWidget {
             GestureDetector(
               onTap: () {
                 context.router.push(MovieDetailScreenRoute(
-                    movie: movie, isFavourite: isFavourite));
+                    movie: movie, favouritesAction: favouritesAction)).then((value){
+                  _wishlist?.value = movie.isFavourite;
+                  _wishlist?.notifyListeners();
+                });
               },
               child: Stack(
                 alignment: Alignment.bottomCenter,
@@ -146,8 +152,7 @@ class GridMovielist extends StatelessWidget {
                     child: GestureDetector(
                       onTap: () {
                         final cubit = context.read<FavouriteListCubit>();
-                        cubit.addRemoveWishlist(movie,
-                            isNeedToAdd: !isFavourite);
+                        cubit.addRemoveWishlist(movie);
                       },
                       child: Align(
                         alignment: Alignment.topRight,
@@ -165,18 +170,26 @@ class GridMovielist extends StatelessWidget {
                                 FavouriteListState>(
                               builder: (context, state) {
                                 if (state is FavouriteListSuccess) {
-                                  isComingFromHome
-                                      ? isFavourite = state.isFavourite
-                                      : isFavourite = !state.isFavourite;
-                                  favouritesAction?.call(isFavourite);
+                                 if (!isComingFromHome) {
+                                   movie.isFavourite = movie.isFavourite;
+                                   favouritesAction?.call(movie.isFavourite);
+                                 } else {
+                                   movie.isFavourite = !movie.isFavourite;
+                                 }
+
                                 }
-                                return Icon(
-                                  Icons.star_outlined,
-                                  color: isFavourite
-                                      ? TtnflixColors.skyRacing1Color
-                                          .platformBrightnessColor(context)
-                                      : TtnflixColors.frozenListYellow
-                                          .platformBrightnessColor(context),
+                                return ValueListenableBuilder(
+                                    valueListenable: _wishlist!,
+                                    builder: (context, value, _) {
+                                      return Icon(
+                                        Icons.star_outlined,
+                                        color: movie.isFavourite
+                                            ? TtnflixColors.skyRacing1Color
+                                            .platformBrightnessColor(context)
+                                            : TtnflixColors.frozenListYellow
+                                            .platformBrightnessColor(context),
+                                      );
+                                    }
                                 );
                               },
                             ),

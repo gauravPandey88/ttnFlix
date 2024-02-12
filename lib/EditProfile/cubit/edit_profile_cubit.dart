@@ -17,7 +17,7 @@ class EditProfileCubit extends Cubit<EditProfileState> {
   final TextEditingController nameTextController = TextEditingController();
   final TextEditingController passwordTextController = TextEditingController();
   final TextEditingController confirmPasswordTextController =
-  TextEditingController();
+      TextEditingController();
 
   EditProfileCubit({Key? key, SharedPreferences? sharedPreferences})
       : _sharedPreferences = sharedPreferences ?? SL.get<SharedPreferences>(),
@@ -27,6 +27,7 @@ class EditProfileCubit extends Cubit<EditProfileState> {
   UserModel userLoad = UserModel();
   String? imagePath;
   String? selectGender;
+  int? timeStamp;
   bool _passwordVisible = false;
 
   Future<void> addImage() async {
@@ -35,7 +36,8 @@ class EditProfileCubit extends Cubit<EditProfileState> {
     if (state is EditProfileLoadedState) {
       var currentState = state as EditProfileLoadedState;
       imagePath = image?.path;
-      emit(currentState.copyWith(imagePath: image?.path, genderType: selectGender));
+      emit(currentState.copyWith(
+          imagePath: image?.path, genderType: selectGender));
     }
   }
 
@@ -61,8 +63,7 @@ class EditProfileCubit extends Cubit<EditProfileState> {
       var currentState = state as EditProfileLoadedState;
       selectGender = selectedIndex.toString();
       emit(currentState.copyWith(
-          genderType: selectGender,
-          imagePath: imagePath));
+          genderType: selectGender, imagePath: imagePath, timeStamp: timeStamp));
     }
   }
 
@@ -71,17 +72,18 @@ class EditProfileCubit extends Cubit<EditProfileState> {
       var currentState = state as EditProfileLoadedState;
       _passwordVisible = !_passwordVisible;
       emit(currentState.copyWith(
-          isShowPassword: _passwordVisible,
-          imagePath: imagePath));
+          isShowPassword: _passwordVisible, imagePath: imagePath));
     }
   }
 
   String getPasswordEncrypt({required String? encryptPassword}) {
-    final password = passwordTextController.text.isEmpty ? encryptPassword : passwordTextController.text;
-    final encrypted = Encrypt.encrypt(TtnflixApiUrl.encryptKey, password ?? "").base64;
+    final password = passwordTextController.text.isEmpty
+        ? encryptPassword
+        : passwordTextController.text;
+    final encrypted =
+        Encrypt.encrypt(TtnflixApiUrl.encryptKey, password ?? "").base64;
     return encrypted.toString();
   }
-
 
   String getPasswordDecrypt({required String? encryptPassword}) {
     final password = encryptPassword;
@@ -89,45 +91,50 @@ class EditProfileCubit extends Cubit<EditProfileState> {
     return decrypt.toString();
   }
 
-
   Future<UserModel> getSavedInfo() async {
-    Map<String, dynamic> userMap =
-        jsonDecode(_sharedPreferences.getString(S.current.userData) ?? Map().toString());
+    Map<String, dynamic> userMap = jsonDecode(
+        _sharedPreferences.getString(S.current.userData) ?? Map().toString());
     UserModel user = UserModel.fromJson(userMap);
     nameTextController.text = user.userName ?? "";
-    passwordTextController.text = getPasswordDecrypt(encryptPassword: user.password);
+    passwordTextController.text =
+        getPasswordDecrypt(encryptPassword: user.password);
     dateofBirthController.text = user.dateOfBirth ?? "";
     selectGender = user.gender;
+    timeStamp = user.timestamp;
     var currentState = state as EditProfileLoadedState;
+    print(user.timestamp);
     emit(currentState.copyWith(
         imagePath: user.image,
         name: user.userName,
         dateofBirth: user.dateOfBirth,
         genderType: user.gender,
         emailId: user.emailAddress,
-    password: getPasswordDecrypt(encryptPassword: user.password)));
+        password: getPasswordDecrypt(encryptPassword: user.password),
+        timeStamp: user.timestamp));
     return user;
   }
 
   loadSharedPrefs(
       {String? image,
       String? name,
-      String? dateofBirth,
+      String? dateOfBirth,
       String? email,
       String? gender,
-        String? password}) async {
+      String? password}) async {
     //  store the user entered data in user object
     UserModel user1 = UserModel(
         userName:
             nameTextController.text.isEmpty ? name : nameTextController.text,
         emailAddress: email,
         dateOfBirth: dateofBirthController.text.isEmpty
-            ? dateofBirth
+            ? dateOfBirth
             : dateofBirthController.text,
         image: image,
         gender: selectGender,
         password: getPasswordEncrypt(encryptPassword: password),
-        isLogin: true);
+        isLogin: true,
+        isOnboardingShow: true,
+        timestamp: timeStamp);
     // encode / convert object into json string
     String user = jsonEncode(user1);
     print(user);

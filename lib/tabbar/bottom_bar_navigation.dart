@@ -1,9 +1,12 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:ttn_flix/accounts/screen/accounts_screen.dart';
 import 'package:ttn_flix/favourites/screen/favourites_screen.dart';
 import 'package:ttn_flix/generated/l10n.dart';
+import 'package:ttn_flix/home/cubit/home_cubit.dart';
+import 'package:ttn_flix/home/repository/ttnflix_home_repositiory.dart';
 import 'package:ttn_flix/home/screen/home_screen.dart';
 import 'package:ttn_flix/themes/ttnflix_colors.dart';
 

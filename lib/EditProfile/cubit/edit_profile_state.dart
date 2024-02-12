@@ -27,6 +27,7 @@ class EditProfileLoadedState extends EditProfileState {
   final bool? isShowConfrimPassword;
   final String? genderType;
   final String? dateofBirth;
+  final int? timestamp;
   final List<String> genderTypeRadioList;
   final int initialSelectedGenderTypeIndex;
 
@@ -41,6 +42,7 @@ class EditProfileLoadedState extends EditProfileState {
     this.isShowConfrimPassword,
     this.dateofBirth,
     this.genderType,
+    this.timestamp,
     this.passwordErrorMessage = '',
     this.confirmPasswordErrorMessage = '',
     this.genderTypeRadioList = GenderStateConstants.genderTypeRadioList,
@@ -52,6 +54,7 @@ class EditProfileLoadedState extends EditProfileState {
     final File? pickedImage,
     final String? name,
     String? password,
+    int? timeStamp,
     String? confirmpPassword,
     final bool? isShowPassword,
     final bool? isShowConfrimPassword,
@@ -70,7 +73,8 @@ class EditProfileLoadedState extends EditProfileState {
       passwordErrorMessage: passwordErrorMessage ?? this.passwordErrorMessage,
       confirmPasswordErrorMessage:
       confirmPasswordErrorMessage ?? this.confirmPasswordErrorMessage,
-      confirmPassword: confirmPassword ?? this.confirmPassword,
+      confirmPassword: confirmPassword ?? confirmPassword,
+      timestamp: timestamp ?? timestamp,
       isShowConfrimPassword:
       isShowConfrimPassword ?? this.isShowConfrimPassword,
       isShowPassword: isShowPassword ?? this.isShowPassword,
@@ -100,5 +104,6 @@ class EditProfileLoadedState extends EditProfileState {
     genderType,
     genderTypeRadioList,
     initialSelectedGenderTypeIndex,
+    timestamp
     ];
 }

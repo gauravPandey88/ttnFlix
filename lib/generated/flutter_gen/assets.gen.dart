@@ -23,8 +23,12 @@ class $ImagesGen {
   AssetGenImage get avtarTransgender =>
       const AssetGenImage('images/avtar_transgender.png');
 
+  /// File path: images/onboarding.png
+  AssetGenImage get onboarding => const AssetGenImage('images/onboarding.png');
+
   /// List of all assets
-  List<AssetGenImage> get values => [avtarFemale, avtarMan, avtarTransgender];
+  List<AssetGenImage> get values =>
+      [avtarFemale, avtarMan, avtarTransgender, onboarding];
 }
 
 class Assets {

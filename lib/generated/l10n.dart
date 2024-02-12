@@ -499,6 +499,16 @@ class S {
       args: [],
     );
   }
+
+  /// `OnBoarding`
+  String get onboarding {
+    return Intl.message(
+      'OnBoarding',
+      name: 'onboarding',
+      desc: '',
+      args: [],
+    );
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<S> {

@@ -22,6 +22,7 @@ class LoginScreen extends StatelessWidget {
         super(key: key);
 
   final SharedPreferences _sharedPreferences;
+  final _formKey = GlobalKey<FormState>();
 
   @override
   Widget build(BuildContext context) {
@@ -121,7 +122,6 @@ class LoginScreen extends StatelessWidget {
                           BlocProvider.of<LoginCubit>(context)
                               .onPasswordChange(password: value.trim());
                         },
-
                         decoration:  buildInputDecoration(
                             context: context,
                             state: state,
@@ -144,6 +144,7 @@ class LoginScreen extends StatelessWidget {
                                 TtnflixSpacing.spacing20)),
                         child: TextButton(
                           onPressed: () {
+                         //   BlocProvider.of<LoginCubit>(context).validateLogin();
                             _onLogin(state, context);
                           },
                           child: Text(
@@ -161,7 +162,7 @@ class LoginScreen extends StatelessWidget {
                     ),
                     Center(
                       child: InkWell(
-                        onTap: () => context.router.push(SignupScreenRoute()),
+                        onTap: () => context.router.push(const SignupScreenRoute()),
                         child: Text(S.of(context).newUser,
                             style: TtnFlixTextStyle.defaultTextTheme.titleMedium
                                 ?.copyWith(
@@ -199,34 +200,42 @@ class LoginScreen extends StatelessWidget {
         hintStyle: TtnFlixTextStyle.defaultTextTheme.titleMedium?.copyWith(
             color:
                 TtnflixColors.cellTextColor.platformBrightnessColor(context)),
-        suffixIcon: isSuffixIcon ? Padding(
-          padding: const EdgeInsets.fromLTRB(
-              TtnflixSpacing.spacing0,
-              TtnflixSpacing.spacing0,
-              TtnflixSpacing.spacing4,
-              TtnflixSpacing.spacing0),
-          child: GestureDetector(
-              onTap: () {
-                BlocProvider.of<LoginCubit>(context)
-                    .showAndHidePassword();
-              },
-              child: Icon(
-                state.isShowPassword ?? false
-                    ? Icons.visibility_rounded
-                    : Icons.visibility_off_rounded,
-                size: TtnflixSpacing.spacing24,
-                color: TtnflixColors.titleColor
-                    .platformBrightnessColor(context),
-              )),
-        ) : null,
-
-        errorText: errorText.isNotEmpty
-            ? errorText
+        suffixIcon: isSuffixIcon
+            ? Padding(
+                padding: const EdgeInsets.fromLTRB(
+                    TtnflixSpacing.spacing0,
+                    TtnflixSpacing.spacing0,
+                    TtnflixSpacing.spacing4,
+                    TtnflixSpacing.spacing0),
+                child: GestureDetector(
+                    onTap: () {
+                      BlocProvider.of<LoginCubit>(context)
+                          .showAndHidePassword();
+                    },
+                    child: Icon(
+                      state.isShowPassword ?? false
+                          ? Icons.visibility_rounded
+                          : Icons.visibility_off_rounded,
+                      size: TtnflixSpacing.spacing24,
+                      color: TtnflixColors.titleColor
+                          .platformBrightnessColor(context),
+                    )),
+              )
             : null,
+        errorText: errorText.isNotEmpty ? errorText : null,
         errorStyle: TextStyle(
             color: TtnflixColors.frozenListYellow
                 .platformBrightnessColor(context)));
   }
+
+  // void _validateForm(BuildContext context) async {
+  //   if (_formKey.currentState?.validate() == true) {
+  //     SystemChannels.textInput.invokeMethod("TextInput.hide");
+  //     BlocProvider.of<LoginCubit>(context).loadSharedPrefs();
+  //   } else {
+  //     S.of(context).enterEmailAndPassword.showSnackbar(context);
+  //   }
+  // }
 
   void _onLogin(LoginLoadedState state, BuildContext context) {
     Map<String, dynamic> userMap = jsonDecode(
@@ -255,7 +264,7 @@ class LoginScreen extends StatelessWidget {
             name: state.name,
             email: state.emailId,
             password: cubit.getPasswordEncrypt(encryptPassword: state.password),
-            dateofBirth: state.dateofBirth,
+            dateofBirth: state.dateOfBirth,
             gender: state.gender,
             image: state.image);
         context.router.push(const BottomBarNavigationRoute());

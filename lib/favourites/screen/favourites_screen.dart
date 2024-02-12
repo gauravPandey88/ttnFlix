@@ -74,7 +74,6 @@ class FavouritesScreen extends StatelessWidget {
                                 .favouriteListItems[index].originalLanguage
                                 ?.toUpperCase(),
                             movie: state.favouriteListItems[index],
-                            isFavourite: true,
                             isComingFromHome: false,
                             favouritesAction: (isFav) =>
                                 context.read<FavouriteCubit>().getWishlist(),

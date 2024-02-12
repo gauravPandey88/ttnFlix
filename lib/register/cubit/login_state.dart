@@ -4,33 +4,40 @@ abstract class LoginState extends DefaultEquatable {
   const LoginState();
 }
 
+class LoginLoadingState extends LoginState {
+  const LoginLoadingState();
+}
+
 class LoginLoadedState extends LoginState {
   final String emailId;
   final String password;
   final String? image;
-  final String? dateofBirth;
+  final String? dateOfBirth;
   final String? gender;
   final String? name;
   final String emailIdErrorMessage;
   final String passwordErrorMessage;
   final bool? isShowPassword;
   final bool? isDisable;
+  final String? timeStamp;
 
   const LoginLoadedState(
       {this.isShowPassword,
       this.image,
-      this.dateofBirth,
+      this.dateOfBirth,
       this.name,
       this.gender,
       this.password = '',
       this.emailId = '',
       this.emailIdErrorMessage = '',
       this.passwordErrorMessage = '',
+      this.timeStamp,
       this.isDisable});
 
   LoginLoadedState copyWith({
     final bool? isShowPassword,
-    final String? dateofBirth,
+    final String? dateOfBirth,
+    final String? timeStamp,
     String? password,
     String? image,
     final String? name,
@@ -41,7 +48,8 @@ class LoginLoadedState extends LoginState {
     final bool? isDisable,
   }) {
     return LoginLoadedState(
-        dateofBirth: dateofBirth ?? this.dateofBirth,
+        dateOfBirth: dateOfBirth ?? this.dateOfBirth,
+        timeStamp: timeStamp ?? this.timeStamp,
         name: name ?? this.name,
         image: image ?? this.image,
         gender: gender ?? this.gender,
@@ -55,7 +63,7 @@ class LoginLoadedState extends LoginState {
 
   @override
   List<Object?> get props => [
-        dateofBirth,
+        dateOfBirth,
         name,
         isShowPassword,
         image,
@@ -63,6 +71,18 @@ class LoginLoadedState extends LoginState {
         password,
         emailId,
         emailIdErrorMessage,
-        isDisable
+        isDisable,
+        timeStamp
       ];
+}
+
+class LoginSuccessState extends LoginState {}
+
+class LoginErrorState extends LoginState {
+  const LoginErrorState(this.message);
+
+  final String? message;
+
+  @override
+  List<Object> get props => [];
 }

@@ -57,7 +57,7 @@ abstract class _$TtnflixAppRouter extends RootStackRouter {
         child: IconWidget(
           key: args.key,
           movie: args.movie,
-          isFavourite: args.isFavourite,
+          favouritesAction: args.favouritesAction,
         ),
       );
     },
@@ -79,7 +79,18 @@ abstract class _$TtnflixAppRouter extends RootStackRouter {
         child: MovieDetailScreen(
           key: args.key,
           movie: args.movie,
-          isFavourite: args.isFavourite,
+          favouritesAction: args.favouritesAction,
+        ),
+      );
+    },
+    OnBoardingScreenRoute.name: (routeData) {
+      final args = routeData.argsAs<OnBoardingScreenRouteArgs>(
+          orElse: () => const OnBoardingScreenRouteArgs());
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: OnBoardingScreen(
+          key: args.key,
+          sharedPreferences: args.sharedPreferences,
         ),
       );
     },
@@ -198,14 +209,14 @@ class IconWidgetRoute extends PageRouteInfo<IconWidgetRouteArgs> {
   IconWidgetRoute({
     Key? key,
     required Movie movie,
-    required bool isFavourite,
+    dynamic Function(bool)? favouritesAction,
     List<PageRouteInfo>? children,
   }) : super(
           IconWidgetRoute.name,
           args: IconWidgetRouteArgs(
             key: key,
             movie: movie,
-            isFavourite: isFavourite,
+            favouritesAction: favouritesAction,
           ),
           initialChildren: children,
         );
@@ -220,18 +231,18 @@ class IconWidgetRouteArgs {
   const IconWidgetRouteArgs({
     this.key,
     required this.movie,
-    required this.isFavourite,
+    this.favouritesAction,
   });
 
   final Key? key;
 
   final Movie movie;
 
-  final bool isFavourite;
+  final dynamic Function(bool)? favouritesAction;
 
   @override
   String toString() {
-    return 'IconWidgetRouteArgs{key: $key, movie: $movie, isFavourite: $isFavourite}';
+    return 'IconWidgetRouteArgs{key: $key, movie: $movie, favouritesAction: $favouritesAction}';
   }
 }
 
@@ -279,14 +290,14 @@ class MovieDetailScreenRoute extends PageRouteInfo<MovieDetailScreenRouteArgs> {
   MovieDetailScreenRoute({
     Key? key,
     required Movie movie,
-    required bool isFavourite,
+    dynamic Function(bool)? favouritesAction,
     List<PageRouteInfo>? children,
   }) : super(
           MovieDetailScreenRoute.name,
           args: MovieDetailScreenRouteArgs(
             key: key,
             movie: movie,
-            isFavourite: isFavourite,
+            favouritesAction: favouritesAction,
           ),
           initialChildren: children,
         );
@@ -301,18 +312,56 @@ class MovieDetailScreenRouteArgs {
   const MovieDetailScreenRouteArgs({
     this.key,
     required this.movie,
-    required this.isFavourite,
+    this.favouritesAction,
   });
 
   final Key? key;
 
   final Movie movie;
 
-  final bool isFavourite;
+  final dynamic Function(bool)? favouritesAction;
 
   @override
   String toString() {
-    return 'MovieDetailScreenRouteArgs{key: $key, movie: $movie, isFavourite: $isFavourite}';
+    return 'MovieDetailScreenRouteArgs{key: $key, movie: $movie, favouritesAction: $favouritesAction}';
+  }
+}
+
+/// generated route for
+/// [OnBoardingScreen]
+class OnBoardingScreenRoute extends PageRouteInfo<OnBoardingScreenRouteArgs> {
+  OnBoardingScreenRoute({
+    Key? key,
+    SharedPreferences? sharedPreferences,
+    List<PageRouteInfo>? children,
+  }) : super(
+          OnBoardingScreenRoute.name,
+          args: OnBoardingScreenRouteArgs(
+            key: key,
+            sharedPreferences: sharedPreferences,
+          ),
+          initialChildren: children,
+        );
+
+  static const String name = 'OnBoardingScreenRoute';
+
+  static const PageInfo<OnBoardingScreenRouteArgs> page =
+      PageInfo<OnBoardingScreenRouteArgs>(name);
+}
+
+class OnBoardingScreenRouteArgs {
+  const OnBoardingScreenRouteArgs({
+    this.key,
+    this.sharedPreferences,
+  });
+
+  final Key? key;
+
+  final SharedPreferences? sharedPreferences;
+
+  @override
+  String toString() {
+    return 'OnBoardingScreenRouteArgs{key: $key, sharedPreferences: $sharedPreferences}';
   }
 }
 

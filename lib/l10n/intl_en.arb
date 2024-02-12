@@ -43,5 +43,6 @@
     "update": "Update",
     "editProfile": "EditProfile",
     "accounts": "Accounts",
-    "other": "Other"
+    "other": "Other",
+    "onboarding" : "OnBoarding"
 }

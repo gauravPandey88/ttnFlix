@@ -187,6 +187,7 @@ class AccountBody extends StatelessWidget {
               dateofBirth: currentState.dateOfBirth,
               password: currentState.password,
               isLogin: false,
+              timeStamp: currentState.timeStamp,
               email: currentState.emailAddress);
           context.router.push(
             LoginScreenRoute(),

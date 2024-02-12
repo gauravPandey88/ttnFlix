@@ -22,11 +22,11 @@ class MovieDetailScreen extends StatelessWidget {
   MovieDetailScreen({
     super.key,
     required this.movie,
-    required this.isFavourite,
+    this.favouritesAction
   });
 
   final Movie movie;
-  bool isFavourite;
+  final Function(bool)? favouritesAction;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -42,7 +42,7 @@ class MovieDetailScreen extends StatelessWidget {
             create: (context) => FavouriteListCubit(),
             child: IconWidget(
               movie: movie,
-              isFavourite: isFavourite,
+              favouritesAction: favouritesAction,
             ),
           )
         ],

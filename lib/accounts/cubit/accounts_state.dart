@@ -19,6 +19,7 @@ class AccountLoadedState extends AccountsState {
   final File? pickedImage;
   final String? dateofBirth;
   final String? password;
+  final int? timeStamp;
   final bool? isLogin;
 
   const AccountLoadedState({
@@ -30,7 +31,8 @@ class AccountLoadedState extends AccountsState {
     this.pickedImage,
     this.dateofBirth,
     this.isLogin,
-    this.password
+    this.password,
+    this.timeStamp
   });
 
   AccountLoadedState copyWith({
@@ -42,7 +44,8 @@ class AccountLoadedState extends AccountsState {
     final File? pickedImage,
     final String? dateofBirth,
     final String? password,
-    final bool? islogin
+    final bool? islogin,
+    final int? timeStamp,
   }) {
     return AccountLoadedState(
       name: name ?? this.name,
@@ -53,7 +56,8 @@ class AccountLoadedState extends AccountsState {
       pickedImage: pickedImage ?? this.pickedImage,
       dateofBirth: dateofBirth ?? this.dateofBirth,
       isLogin: isLogin ?? this.isLogin,
-      password: password ?? this.password
+      password: password ?? this.password,
+      timeStamp: timeStamp ?? this.timeStamp
     );
   }
 
@@ -67,6 +71,7 @@ class AccountLoadedState extends AccountsState {
     gender,
     dateofBirth,
     password,
-    isLogin
+    isLogin,
+    timeStamp
   ];
 }

@@ -4,33 +4,24 @@ import 'package:dots_indicator/dots_indicator.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:ttn_flix/home/cubit/indicator_cubit.dart';
+import 'package:ttn_flix/home/widgets/carousal_widget.dart';
 import 'package:ttn_flix/favourites/cubit/favourite_cubit.dart';
 import 'package:ttn_flix/generated/l10n.dart';
 import 'package:ttn_flix/home/cubit/home_cubit.dart';
 import 'package:ttn_flix/home/cubit/home_state.dart';
 import 'package:ttn_flix/home/favouriteList/cubit/favourite_list_cubit.dart';
 import 'package:ttn_flix/home/widgets/grid_movie_list.dart';
-import 'package:ttn_flix/home/widgets/movie_list.dart';
 import 'package:ttn_flix/home/repository/ttnflix_home_repositiory.dart';
 import 'package:ttn_flix/themes/ttnflix_colors.dart';
 import 'package:ttn_flix/themes/ttnflix_spacing.dart';
 import 'package:ttn_flix/themes/ttnflix_typography.dart';
 
 class _HomeScreenConstant {
-  static const double movieListHeight = 215.0;
   static const double carouselHeight = 280.0;
-  static const double carouselOptionsHeight = 280.0;
   static const double mainAxisHeight = 200.0;
   static const double gridHeight = 200.0;
-  static const int carouselRotationDuration = 800;
-  static const int carouselPlayInterval = 3;
-  static const double borderRadius = 8.0;
-  static const double dotsInitialSize = 8.0;
-  static const double dotsActiveSize = 16.0;
-  static const int dotsTotalCount = 10;
   static const int crossAxisCount = 2;
-  static const double viewPortFraction = 1;
-  static const int itemCount = 10;
 }
 
 @RoutePage()
@@ -51,7 +42,6 @@ class HomeBody extends StatelessWidget {
   HomeBody({super.key});
 
   final ScrollController _scrollController = ScrollController();
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -77,83 +67,10 @@ class HomeBody extends StatelessWidget {
                   SizedBox(
                     width: MediaQuery.of(context).size.width,
                     height: _HomeScreenConstant.carouselHeight,
-                    child: Stack(children: [
-                      CarouselSlider.builder(
-                        itemCount: _HomeScreenConstant.itemCount,
-                        itemBuilder: (BuildContext context, int itemIndex,
-                            int pageViewIndex) {
-                          return BlocProvider<FavouriteListCubit>(
-                            create: (BuildContext context) =>
-                                FavouriteListCubit(),
-                            child: MovieListWidgets(
-                              context: context,
-                              height: _HomeScreenConstant.movieListHeight,
-                              carousalImage: state
-                                      .movieCarouselList?[itemIndex]
-                                      .backdropPath ??
-                                  '',
-                              movie: state.movieCarouselList![itemIndex],
-                              movieName:
-                                  state.movieCarouselList?[itemIndex].title,
-                              isFavourite: state.favourite
-                                  .map((item) => item)
-                                  .contains(
-                                      state.movieCarouselList![itemIndex].id),
-                              language: state.movieCarouselList?[itemIndex]
-                                  .originalLanguage
-                                  ?.toUpperCase(),
-                              favouritesAction: (value) {
-                                context.read<HomeCubit>().getCarouselListMoviesData();
-                              },
-                            ),
-                          );
-                        },
-                        options: CarouselOptions(
-                          height: _HomeScreenConstant.carouselOptionsHeight,
-                          viewportFraction:
-                              _HomeScreenConstant.viewPortFraction,
-                          enableInfiniteScroll: true,
-                          reverse: false,
-                          autoPlay: false,
-                          autoPlayInterval: const Duration(
-                              seconds:
-                                  _HomeScreenConstant.carouselPlayInterval),
-                          autoPlayAnimationDuration: const Duration(
-                              milliseconds: _HomeScreenConstant
-                                  .carouselRotationDuration),
-                          autoPlayCurve: Curves.fastOutSlowIn,
-                          enlargeCenterPage: true,
-                          onPageChanged: (index, reason) {
-                            BlocProvider.of<HomeCubit>(context)
-                                .updatePageIndicator(index);
-                          },
-                          scrollDirection: Axis.horizontal,
-                        ),
-                      ),
-                      Positioned(
-                        child: Align(
-                          alignment: Alignment.bottomCenter,
-                          child: DotsIndicator(
-                            dotsCount: _HomeScreenConstant.dotsTotalCount,
-                            position: state.carousalMovieCurrentpage ?? 0,
-                            decorator: DotsDecorator(
-                              color: TtnflixColors.titleColor.platformBrightnessColor(context)!,
-                              activeColor: TtnflixColors.frozenListYellow
-                                  .platformBrightnessColor(context),
-                              size: const Size.square(
-                                  _HomeScreenConstant.dotsInitialSize),
-                              activeSize: const Size(
-                                  _HomeScreenConstant.dotsActiveSize,
-                                  _HomeScreenConstant.dotsInitialSize),
-                              activeShape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(
-                                    _HomeScreenConstant.borderRadius),
-                              ),
-                            ),
-                          ),
-                        ),
-                      )
-                    ]),
+                    child: BlocProvider(
+                      create: (context) => IndicatorCubit(),
+                      child: CarousalWidget(state: state),
+                    ),
                   ),
                   GridView.builder(
                     shrinkWrap: true,
@@ -172,21 +89,17 @@ class HomeBody extends StatelessWidget {
                     itemCount: state.gridMovieList?.length,
                     itemBuilder: (context, index) {
                       return BlocProvider<FavouriteListCubit>(
-                        create: (BuildContext context) =>
-                            FavouriteListCubit(),
+                        create: (BuildContext context) => FavouriteListCubit(),
                         child: GridMovielist(
                           context: context,
                           height: _HomeScreenConstant.gridHeight,
                           movieName: state.gridMovieList?[index].title,
                           carousalImage:
                               state.gridMovieList?[index].backdropPath ?? '',
-                          language: state
-                              .gridMovieList?[index].originalLanguage
+                          language: state.gridMovieList?[index].originalLanguage
                               ?.toUpperCase(),
                           movie: state.gridMovieList![index],
-                          isFavourite: state.favourite
-                              .map((item) => item)
-                              .contains(state.gridMovieList![index].id),
+                          isComingFromHome: true,
                         ),
                       );
                     },
@@ -211,7 +124,6 @@ class HomeBody extends StatelessWidget {
         BlocProvider.of<HomeCubit>(context).loadPaginationData();
       }
     });
-
     return _scrollController;
   }
 }

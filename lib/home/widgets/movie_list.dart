@@ -11,7 +11,7 @@ import 'package:ttn_flix/themes/ttnflix_spacing.dart';
 import 'package:ttn_flix/themes/ttnflix_typography.dart';
 import 'package:ttn_flix/utils/show_snackbar.dart';
 
-class MovieListWidgets extends StatelessWidget {
+class MovieListWidgets extends StatelessWidget with ChangeNotifier  {
   MovieListWidgets(
       {super.key,
       required this.context,
@@ -19,9 +19,10 @@ class MovieListWidgets extends StatelessWidget {
       this.carousalImage,
       this.movieName,
       this.language,
-      required this.isFavourite,
       required this.movie,
-      this.favouritesAction});
+      this.favouritesAction}){
+    _wishlist = ValueNotifier<bool>(movie.isFavourite);
+  }
 
   final BuildContext context;
   final double? height;
@@ -29,8 +30,8 @@ class MovieListWidgets extends StatelessWidget {
   final String? movieName;
   final String? language;
   final Movie movie;
-  bool isFavourite;
   final Function(bool)? favouritesAction;
+  late ValueNotifier<bool>? _wishlist;
 
   @override
   Widget build(BuildContext context) {
@@ -49,7 +50,10 @@ class MovieListWidgets extends StatelessWidget {
             GestureDetector(
               onTap: () {
                 context.router.push(MovieDetailScreenRoute(
-                    movie: movie, isFavourite: isFavourite));
+                    movie: movie, favouritesAction: favouritesAction)).then((value){
+                  _wishlist?.value = movie.isFavourite;
+                  _wishlist?.notifyListeners();
+                });
               },
               child: Stack(
                 alignment: Alignment.bottomCenter,
@@ -97,8 +101,7 @@ class MovieListWidgets extends StatelessWidget {
                     child: GestureDetector(
                       onTap: () {
                         final cubit = context.read<FavouriteListCubit>();
-                        cubit.addRemoveWishlist(movie,
-                            isNeedToAdd: !isFavourite);
+                        cubit.addRemoveWishlist(movie);
                       },
                       child: Align(
                         alignment: Alignment.topRight,
@@ -116,16 +119,20 @@ class MovieListWidgets extends StatelessWidget {
                                 FavouriteListState>(
                               builder: (context, state) {
                                 if (state is FavouriteListSuccess) {
-                                  isFavourite = state.isFavourite;
-                                  favouritesAction?.call(isFavourite);
+                                  movie.isFavourite = !movie.isFavourite;
                                 }
-                                return Icon(
-                                  Icons.star_outlined,
-                                  color: isFavourite
-                                      ? TtnflixColors.skyRacing1Color
-                                          .platformBrightnessColor(context)
-                                      : TtnflixColors.frozenListYellow
-                                          .platformBrightnessColor(context),
+                                return ValueListenableBuilder(
+                                  valueListenable: _wishlist!,
+                                builder: (context, value, _) {
+                                  return Icon(
+                                    Icons.star_outlined,
+                                    color: movie.isFavourite
+                                        ? TtnflixColors.skyRacing1Color
+                                        .platformBrightnessColor(context)
+                                        : TtnflixColors.frozenListYellow
+                                        .platformBrightnessColor(context),
+                                  );
+                                },
                                 );
                               },
                             ),

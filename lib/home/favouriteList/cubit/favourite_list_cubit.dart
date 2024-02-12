@@ -13,9 +13,9 @@ class FavouriteListCubit extends Cubit<FavouriteListState> {
 
   final DBManager _dbManager;
 
-  void addRemoveWishlist(Movie movie, {bool isNeedToAdd = true}) async {
+  void addRemoveWishlist(Movie movie) async {
 
-    if (isNeedToAdd) {
+    if (!movie.isFavourite) {
       var result = await _dbManager.insert(movie);
       if (result > 0) {
         emit(FavouriteListSuccess(S.current.addSuccessfully, true));

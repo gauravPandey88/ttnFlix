@@ -9,7 +9,6 @@ import 'package:ttn_flix/generated/l10n.dart';
 import 'package:ttn_flix/register/model/user_model.dart';
 
 class AccountsCubit extends Cubit<AccountsState> {
-
   AccountsCubit({Key? key, SharedPreferences? sharedPreferences})
       : _sharedPreferences = sharedPreferences ?? SL.get<SharedPreferences>(),
         super(const AccountLoadedState());
@@ -19,8 +18,8 @@ class AccountsCubit extends Cubit<AccountsState> {
 
   Future<UserModel> getSavedInfo() async {
     SharedPreferences preferences = await SharedPreferences.getInstance();
-    Map<String, dynamic> userMap =
-        jsonDecode(preferences.getString(S.current.userData) ?? Map().toString());
+    Map<String, dynamic> userMap = jsonDecode(
+        preferences.getString(S.current.userData) ?? Map().toString());
     UserModel user = UserModel.fromJson(userMap);
 
     var currentState = state as AccountLoadedState;
@@ -31,6 +30,7 @@ class AccountsCubit extends Cubit<AccountsState> {
       gender: user.gender,
       password: user.password,
       dateOfBirth: user.dateOfBirth,
+      timeStamp: user.timestamp
     ));
     return user;
   }
@@ -42,6 +42,7 @@ class AccountsCubit extends Cubit<AccountsState> {
       String? email,
       String? gender,
       String? password,
+      int? timeStamp,
       bool? isLogin}) async {
     //  store the user entered data in user object
     UserModel user1 = UserModel(
@@ -51,6 +52,8 @@ class AccountsCubit extends Cubit<AccountsState> {
         image: image,
         gender: gender,
         password: password,
+        timestamp: timeStamp,
+        isOnboardingShow: true,
         isLogin: isLogin);
     // encode / convert object into json string
     String user = jsonEncode(user1);

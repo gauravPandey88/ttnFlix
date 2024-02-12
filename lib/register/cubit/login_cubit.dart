@@ -35,7 +35,7 @@ class LoginCubit extends Cubit<LoginState> {
         image: user.image,
         gender: user.gender,
         name: user.userName,
-        dateofBirth: user.dateOfBirth));
+        dateOfBirth: user.dateOfBirth));
     return user;
   }
 
@@ -88,6 +88,12 @@ class LoginCubit extends Cubit<LoginState> {
     return encrypted.toString();
   }
 
+  void validateLogin()  {
+    if (emailTextController.text.isEmpty) {
+      emit(LoginErrorState('message'));
+    }
+  }
+
   loadSharedPrefs(
       {String? image,
       String? name,
@@ -95,19 +101,27 @@ class LoginCubit extends Cubit<LoginState> {
       String? email,
       String? gender,
       String? password}) async {
-    //  store the user entered data in user object
-    UserModel user1 = UserModel(
-        userName: name,
-        emailAddress: email,
-        dateOfBirth: dateofBirth,
-        image: image,
-        gender: gender,
-        password: password,
-        isLogin: true);
-    // encode / convert object into json string
-    String user = jsonEncode(user1);
-    print(user);
-    //save the data into sharedPreferences using key-value pairs
-    _sharedPreferences.setString(S.current.userData, user);
+    try {
+      //  store the user entered data in user object
+      UserModel user1 = UserModel(
+          userName: name,
+          emailAddress: email,
+          dateOfBirth: dateofBirth,
+          image: image,
+          gender: gender,
+          password: password,
+          isLogin: true,
+      isOnboardingShow: true,
+      timestamp: DateTime.timestamp().millisecondsSinceEpoch);
+      // encode / convert object into json string
+      String user = jsonEncode(user1);
+      print(user);
+      //save the data into sharedPreferences using key-value pairs
+      _sharedPreferences.setString(S.current.userData, user);
+    //  emit(LoginSuccessState());
+    } catch (error){
+      emit(const LoginErrorState('message'));
+    }
+
   }
 }

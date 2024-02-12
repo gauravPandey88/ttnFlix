@@ -8,6 +8,7 @@ import 'package:ttn_flix/detail/widget/icon_widget.dart';
 import 'package:ttn_flix/favourites/screen/favourites_screen.dart';
 import 'package:ttn_flix/home/model/ttnflix_movies.dart';
 import 'package:ttn_flix/home/screen/home_screen.dart';
+import 'package:ttn_flix/onboarding/screen/onboarding_screen.dart';
 import 'package:ttn_flix/register/screen/login_screen.dart';
 import 'package:ttn_flix/register/screen/signup_screen.dart';
 import 'package:ttn_flix/tabbar/bottom_bar_navigation.dart';
@@ -21,6 +22,7 @@ class TtnflixAppRouter extends _$TtnflixAppRouter {
   @override
   List<AutoRoute> get routes => [
         AutoRoute(page: SplashScreenRoute.page, initial: true),
+        AutoRoute(page: OnBoardingScreenRoute.page),
         AutoRoute(page: LoginScreenRoute.page),
         AutoRoute(page: SignupScreenRoute.page),
         AutoRoute(page: BottomBarNavigationRoute.page),

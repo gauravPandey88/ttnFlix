@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
+import 'dart:ffi';
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -7,6 +8,12 @@ import 'package:ttn_flix/generated/l10n.dart';
 import 'package:ttn_flix/navigation/ttnflix_auto_route.dart';
 import 'package:ttn_flix/register/model/user_model.dart';
 import 'package:ttn_flix/themes/ttnflix_colors.dart';
+
+
+class _SplashScreenConstant {
+  static const int timeSession = 15;
+  static const int splashTime = 3;
+}
 
 @RoutePage()
 class SplashScreen extends StatelessWidget {
@@ -22,8 +29,7 @@ class SplashScreen extends StatelessWidget {
 }
 
 class MyHomePage extends StatefulWidget {
-  const MyHomePage({
-    super.key});
+  const MyHomePage({super.key});
   @override
   MyHomePageState createState() => MyHomePageState();
 }
@@ -32,14 +38,21 @@ class MyHomePageState extends State<MyHomePage> {
   @override
   void initState() {
     super.initState();
-    Timer(const Duration(seconds: 3), () async {
+    Timer(const Duration(seconds: _SplashScreenConstant.splashTime), () async {
       final SharedPreferences prefs = await SharedPreferences.getInstance();
       Map<String, dynamic> userMap =
           jsonDecode(prefs.getString(S.current.userData) ?? Map().toString());
       UserModel user = UserModel.fromJson(userMap);
+
       user.isLogin ?? false
-          ? context.router.push(const BottomBarNavigationRoute())
-          : context.router.push(LoginScreenRoute());
+          ? checkTimestamp(user.timestamp ?? 0)
+              ? context.router.push(LoginScreenRoute())
+              : context.router.push(const BottomBarNavigationRoute())
+          : checkTimestamp(user.timestamp ?? 0)
+              ? context.router.push(LoginScreenRoute())
+              : user.isOnboardingShow ?? false
+                  ? context.router.push(LoginScreenRoute())
+                  : context.router.push(OnBoardingScreenRoute());
     });
   }
 
@@ -48,5 +61,19 @@ class MyHomePageState extends State<MyHomePage> {
     return Container(
         color: TtnflixColors.pureWhite.platformBrightnessColor(context),
         child: FlutterLogo(size: MediaQuery.of(context).size.height));
+  }
+}
+
+bool checkTimestamp(int timestamp) {
+  if (timestamp > 0) {
+    var now = DateTime.now();
+    var date = DateTime.fromMillisecondsSinceEpoch(timestamp);
+    var diff = now.difference(date);
+    int time;
+    time = diff.inMinutes;
+
+    return time > _SplashScreenConstant.timeSession ? true : false;
+  } else {
+    return false;
   }
 }
