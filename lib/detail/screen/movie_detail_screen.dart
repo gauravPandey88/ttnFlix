@@ -19,7 +19,7 @@ class _MovieDetailScreenConstant {
 
 @RoutePage()
 class MovieDetailScreen extends StatelessWidget {
-  MovieDetailScreen({
+  const MovieDetailScreen({
     super.key,
     required this.movie,
     this.favouritesAction
@@ -78,7 +78,7 @@ class MovieDetailScreen extends StatelessWidget {
             Padding(
               padding: const EdgeInsets.all(TtnflixSpacing.spacing8),
               child: TtnflixTextWidget(title: movie.title ?? '',
-                style: TtnFlixTextStyle.defaultTextTheme.headlineLarge
+                style: TtnFlixTextStyle.defaultTextTheme.headlineSmall
                     ?.copyWith(
                         color: TtnflixColors.frozenListYellow
                             .platformBrightnessColor(context)),

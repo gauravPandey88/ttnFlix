@@ -68,7 +68,6 @@ class OnBoardingScreen extends StatelessWidget {
       isOnboardingShow: true,
     );
     String user = jsonEncode(user1);
-    print(user);
     _sharedPreferences.setString(S.current.userData, user);
   }
 }

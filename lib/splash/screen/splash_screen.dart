@@ -1,6 +1,7 @@
+// ignore_for_file: use_build_context_synchronously, duplicate_ignore
+
 import 'dart:async';
 import 'dart:convert';
-import 'dart:ffi';
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -41,11 +42,12 @@ class MyHomePageState extends State<MyHomePage> {
     Timer(const Duration(seconds: _SplashScreenConstant.splashTime), () async {
       final SharedPreferences prefs = await SharedPreferences.getInstance();
       Map<String, dynamic> userMap =
-          jsonDecode(prefs.getString(S.current.userData) ?? Map().toString());
+          jsonDecode(prefs.getString(S.current.userData) ?? {}.toString());
       UserModel user = UserModel.fromJson(userMap);
 
       user.isLogin ?? false
           ? checkTimestamp(user.timestamp ?? 0)
+              // ignore: use_build_context_synchronously
               ? context.router.push(LoginScreenRoute())
               : context.router.push(const BottomBarNavigationRoute())
           : checkTimestamp(user.timestamp ?? 0)

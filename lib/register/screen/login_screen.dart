@@ -14,6 +14,8 @@ import 'package:ttn_flix/themes/ttnflix_colors.dart';
 import 'package:ttn_flix/themes/ttnflix_spacing.dart';
 import 'package:ttn_flix/themes/ttnflix_typography.dart';
 import 'package:ttn_flix/utils/show_snackbar.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:ttn_flix/firebase_options.dart';
 
 @RoutePage()
 class LoginScreen extends StatelessWidget {
@@ -22,7 +24,6 @@ class LoginScreen extends StatelessWidget {
         super(key: key);
 
   final SharedPreferences _sharedPreferences;
-  final _formKey = GlobalKey<FormState>();
 
   @override
   Widget build(BuildContext context) {
@@ -228,26 +229,20 @@ class LoginScreen extends StatelessWidget {
                 .platformBrightnessColor(context)));
   }
 
-  // void _validateForm(BuildContext context) async {
-  //   if (_formKey.currentState?.validate() == true) {
-  //     SystemChannels.textInput.invokeMethod("TextInput.hide");
-  //     BlocProvider.of<LoginCubit>(context).loadSharedPrefs();
-  //   } else {
-  //     S.of(context).enterEmailAndPassword.showSnackbar(context);
-  //   }
-  // }
+
 
   void _onLogin(LoginLoadedState state, BuildContext context) {
     Map<String, dynamic> userMap = jsonDecode(
         _sharedPreferences.getString(S.of(context).userData) ??
-            Map().toString());
+            {}.toString());
     UserModel user = UserModel.fromJson(userMap);
 
     final cubit = BlocProvider.of<LoginCubit>(context);
 
     if (cubit.emailTextController.text.isEmpty &&
         cubit.passwordTextController.text.isEmpty) {
-      S.of(context).enterEmailAndPassword.showSnackbar(context);
+      cubit.authStateChanges();
+    //  S.of(context).enterEmailAndPassword.showSnackbar(context);
     } else if (cubit.emailTextController.text.isEmpty) {
       S.of(context).enterEmail.showSnackbar(context);
     } else if (state.emailIdErrorMessage.isNotEmpty) {
@@ -270,6 +265,7 @@ class LoginScreen extends StatelessWidget {
         context.router.push(const BottomBarNavigationRoute());
       } else {
         S.of(context).enterEmailAndPasswordIncorrect.showSnackbar(context);
+
       }
     }
   }

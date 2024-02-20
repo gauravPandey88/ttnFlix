@@ -26,7 +26,7 @@ class DatePicker {
                 ),
              textButtonTheme: TextButtonThemeData(
             style: TextButton.styleFrom(
-            primary: TtnflixColors.textBlackColor.platformBrightnessColor(context), // button text color
+            foregroundColor: TtnflixColors.textBlackColor.platformBrightnessColor(context), // button text color
             ),
         ),
             ),

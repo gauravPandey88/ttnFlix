@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -25,7 +26,7 @@ class LoginCubit extends Cubit<LoginState> {
 
   Future<UserModel> getSavedInfo() async {
     Map<String, dynamic> userMap = jsonDecode(
-        _sharedPreferences.getString(S.current.userData) ?? Map().toString());
+        _sharedPreferences.getString(S.current.userData) ?? {}.toString());
     UserModel user = UserModel.fromJson(userMap);
 
     var currentState = state as LoginLoadedState;
@@ -88,10 +89,18 @@ class LoginCubit extends Cubit<LoginState> {
     return encrypted.toString();
   }
 
-  void validateLogin()  {
-    if (emailTextController.text.isEmpty) {
-      emit(LoginErrorState('message'));
-    }
+  Future<void> authStateChanges() async {
+    FirebaseAuth.instance
+        .authStateChanges()
+        .listen((User? user) {
+      if (user == null) {
+        print('User is currently signed out!');
+      } else {
+        print('User is signed in!');
+      }
+    });
+
+
   }
 
   loadSharedPrefs(
@@ -115,7 +124,6 @@ class LoginCubit extends Cubit<LoginState> {
       timestamp: DateTime.timestamp().millisecondsSinceEpoch);
       // encode / convert object into json string
       String user = jsonEncode(user1);
-      print(user);
       //save the data into sharedPreferences using key-value pairs
       _sharedPreferences.setString(S.current.userData, user);
     //  emit(LoginSuccessState());

@@ -84,7 +84,7 @@ class EditProfileLoadedState extends EditProfileState {
       genderType: genderType ?? this.genderType,
       genderTypeRadioList: genderTypeRadioList ?? this.genderTypeRadioList,
       initialSelectedGenderTypeIndex: initialSelectedAuditTypeIndex ??
-          this.initialSelectedGenderTypeIndex,
+          initialSelectedGenderTypeIndex,
     );
   }
 

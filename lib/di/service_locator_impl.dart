@@ -3,7 +3,7 @@
 import 'package:get_it/get_it.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:ttn_flix/di/service_locator.dart';
-import 'package:ttn_flix/utils/database_Manager.dart';
+import 'package:ttn_flix/utils/database_manager.dart';
 
 class ServiceLocatorImpl implements ServiceLocator {
   static final serviceLocator = GetIt.instance;
@@ -16,7 +16,6 @@ class ServiceLocatorImpl implements ServiceLocator {
           ServiceLocator.ttnflixServiceLocator);
     }
 
-    final SharedPreferences prefs = await SharedPreferences.getInstance();
 
      _initSharedPref();
 

@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:image_picker/image_picker.dart';
@@ -109,10 +110,6 @@ class RegisterCubit extends Cubit<RegisterState> {
     }
   }
 
-  bool _isConfirmPasswordFieldEnable() {
-    return (passwordTextController.text.isEmpty);
-  }
-
   void showAndHidePassword() {
     if (state is RegisterLoadedState) {
       var currentState = state as RegisterLoadedState;
@@ -137,7 +134,7 @@ class RegisterCubit extends Cubit<RegisterState> {
 
   Future<UserModel> getSavedInfo() async {
     Map<String, dynamic> userMap = jsonDecode(
-        _sharedPreferences.getString(S.current.userData) ?? Map().toString());
+        _sharedPreferences.getString(S.current.userData) ?? {}.toString());
     UserModel user = UserModel.fromJson(userMap);
 
     var currentState = state as RegisterLoadedState;
@@ -167,19 +164,31 @@ class RegisterCubit extends Cubit<RegisterState> {
         timestamp: DateTime.now().millisecondsSinceEpoch);
     // encode / convert object into json string
     String user = jsonEncode(user1);
-    print(user);
     //save the data into sharedPreferences using key-value pairs
     _sharedPreferences.setString(S.current.userData, user);
   }
 
-  void clearAll() {
-    if (state is RegisterLoadedState) {
-      dateofBirthController.clear();
-      nameTextController.clear();
-      emailTextController.clear();
-      passwordTextController.clear();
-      confirmPasswordTextController.clear();
-      emit(RegisterLoadedState());
+   Future<User?> registerUsingEmailPassword() async {
+    FirebaseAuth auth = FirebaseAuth.instance;
+    User? user;
+    try {
+      UserCredential userCredential = await auth.createUserWithEmailAndPassword(
+        email: emailTextController.text,
+        password: _getPasswordEncrypt().toString(),
+      );
+      user = userCredential.user;
+      await user!.updateDisplayName(nameTextController.text);
+      await user.reload();
+      user = auth.currentUser;
+    } on FirebaseAuthException catch (e) {
+      if (e.code == 'weak-password') {
+        print('The password provided is too weak.');
+      } else if (e.code == 'email-already-in-use') {
+        print('The account already exists for that email.');
+      }
+    } catch (e) {
+      print(e);
     }
+    return user;
   }
 }

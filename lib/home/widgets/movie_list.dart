@@ -11,6 +11,7 @@ import 'package:ttn_flix/themes/ttnflix_spacing.dart';
 import 'package:ttn_flix/themes/ttnflix_typography.dart';
 import 'package:ttn_flix/utils/show_snackbar.dart';
 
+// ignore: must_be_immutable
 class MovieListWidgets extends StatelessWidget with ChangeNotifier  {
   MovieListWidgets(
       {super.key,

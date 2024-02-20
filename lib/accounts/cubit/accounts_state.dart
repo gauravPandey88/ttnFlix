@@ -55,7 +55,7 @@ class AccountLoadedState extends AccountsState {
       image: image ?? this.image,
       pickedImage: pickedImage ?? this.pickedImage,
       dateofBirth: dateofBirth ?? this.dateofBirth,
-      isLogin: isLogin ?? this.isLogin,
+      isLogin: isLogin ?? isLogin,
       password: password ?? this.password,
       timeStamp: timeStamp ?? this.timeStamp
     );

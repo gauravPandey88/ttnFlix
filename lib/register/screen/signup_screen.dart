@@ -2,8 +2,6 @@ import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/date_symbol_data_local.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-import 'package:ttn_flix/di/service_locator.dart';
 import 'package:ttn_flix/generated/flutter_gen/assets.gen.dart';
 import 'package:ttn_flix/generated/l10n.dart';
 import 'package:ttn_flix/navigation/ttnflix_auto_route.dart';
@@ -269,28 +267,33 @@ class SignupScreen extends StatelessWidget {
   void _onSignup(RegisterLoadedState state, BuildContext context) {
     final cubit = BlocProvider.of<RegisterCubit>(context);
 
-    if (cubit.nameTextController.text.isEmpty) {
-      S.of(context).enterUserName.showSnackbar(context);
-    } else if (cubit.emailTextController.text.isEmpty) {
-      S.of(context).enterEmail.showSnackbar(context);
-    } else if (state.emailIdErrorMessage.isNotEmpty) {
-      S.of(context).enterCorrectEmail.showSnackbar(context);
-    } else if (cubit.dateofBirthController.text.isEmpty) {
-      S.of(context).enterDOB.showSnackbar(context);
-    } else if (cubit.passwordTextController.text.isEmpty) {
-      S.of(context).enterPassword.showSnackbar(context);
-    } else if (state.passwordErrorMessage.isNotEmpty) {
-      S.of(context).enterCorrectPassword.showSnackbar(context);
-    } else if (cubit.confirmPasswordTextController.text.isEmpty) {
-      S.of(context).enterConfirmPassword.showSnackbar(context);
-    } else if (state.confirmPasswordErrorMessage.isNotEmpty) {
-      S.of(context).enterCorrectConfirmPassword.showSnackbar(context);
-    } else if (cubit.passwordTextController.text !=
-        cubit.confirmPasswordTextController.text) {
-      S.of(context).passwordMismatch.showSnackbar(context);
-    } else {
-      cubit.loadSharedPrefs();
-      context.router.push(const BottomBarNavigationRoute());
-    }
+    cubit.registerUsingEmailPassword();
+
+
+
+
+    // if (cubit.nameTextController.text.isEmpty) {
+    //   S.of(context).enterUserName.showSnackbar(context);
+    // } else if (cubit.emailTextController.text.isEmpty) {
+    //   S.of(context).enterEmail.showSnackbar(context);
+    // } else if (state.emailIdErrorMessage.isNotEmpty) {
+    //   S.of(context).enterCorrectEmail.showSnackbar(context);
+    // } else if (cubit.dateofBirthController.text.isEmpty) {
+    //   S.of(context).enterDOB.showSnackbar(context);
+    // } else if (cubit.passwordTextController.text.isEmpty) {
+    //   S.of(context).enterPassword.showSnackbar(context);
+    // } else if (state.passwordErrorMessage.isNotEmpty) {
+    //   S.of(context).enterCorrectPassword.showSnackbar(context);
+    // } else if (cubit.confirmPasswordTextController.text.isEmpty) {
+    //   S.of(context).enterConfirmPassword.showSnackbar(context);
+    // } else if (state.confirmPasswordErrorMessage.isNotEmpty) {
+    //   S.of(context).enterCorrectConfirmPassword.showSnackbar(context);
+    // } else if (cubit.passwordTextController.text !=
+    //     cubit.confirmPasswordTextController.text) {
+    //   S.of(context).passwordMismatch.showSnackbar(context);
+    // } else {
+    //   cubit.loadSharedPrefs();
+    //   context.router.push(const BottomBarNavigationRoute());
+    // }
   }
 }

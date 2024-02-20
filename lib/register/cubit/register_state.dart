@@ -65,9 +65,9 @@ class RegisterLoadedState extends RegisterState {
         genderType: genderType ?? this.genderType,
         emailId: emailId ?? this.emailId,
         password: password ?? this.password,
-        confirmPassword: confirmPassword ?? this.confirmPassword,
+        confirmPassword: confirmPassword ?? confirmPassword,
         initialSelectedGenderTypeIndex: initialSelectedAuditTypeIndex ??
-            this.initialSelectedGenderTypeIndex,
+            initialSelectedGenderTypeIndex,
         isShowPassword: isShowPassword ?? this.isShowPassword,
         isShowConfrimPassword:
             isShowConfrimPassword ?? this.isShowConfrimPassword,

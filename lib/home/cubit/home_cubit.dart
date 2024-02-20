@@ -2,11 +2,10 @@ import 'dart:async';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:ttn_flix/di/service_locator_impl.dart';
-import 'package:ttn_flix/favourites/cubit/favourite_state.dart';
 import 'package:ttn_flix/home/cubit/home_state.dart';
 import 'package:ttn_flix/home/repository/ttnflix_home_repositiory.dart';
 import 'package:ttn_flix/network/ttnflix_custom_exception.dart';
-import 'package:ttn_flix/utils/database_Manager.dart';
+import 'package:ttn_flix/utils/database_manager.dart';
 
 class _HomeCubitConstant {
   static const int firstPage = 1;
@@ -27,14 +26,11 @@ class HomeCubit extends Cubit<HomeState> {
 
   Future<void> getCarouselListMoviesData() async {
     fetchWishListData();
-    print('getCarouselListMoviesData');
     try {
       final carousalResponse = await _ttnflixHomeRepository
           .getHomePageDate(_HomeCubitConstant.firstPage);
       final gridResponse = await _ttnflixHomeRepository
           .getHomePageDate(_HomeCubitConstant.secondPage);
-      // List<int> ids =
-      //     await ServiceLocatorImpl.serviceLocator<DBManager>().getAllIds();
 
       carousalResponse.movieList?.forEach((element) {
         if (wishListIds.contains(element.id)) {
@@ -63,8 +59,7 @@ class HomeCubit extends Cubit<HomeState> {
 
       emit(homeLoadedState.copyWith(showNextPage: true));
       final gridResponse = await _ttnflixHomeRepository.getHomePageDate(pageNo);
-      // List<int> ids =
-      //     await ServiceLocatorImpl.serviceLocator<DBManager>().getAllIds();
+
       gridResponse.movieList?.forEach((element) {
         if (wishListIds.contains(element.id)) {
           element.isFavourite = true;

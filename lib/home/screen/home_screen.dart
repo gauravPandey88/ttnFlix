@@ -1,12 +1,8 @@
 import 'package:auto_route/auto_route.dart';
-import 'package:carousel_slider/carousel_slider.dart';
-import 'package:dots_indicator/dots_indicator.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:ttn_flix/home/cubit/indicator_cubit.dart';
 import 'package:ttn_flix/home/widgets/carousal_widget.dart';
-import 'package:ttn_flix/favourites/cubit/favourite_cubit.dart';
 import 'package:ttn_flix/generated/l10n.dart';
 import 'package:ttn_flix/home/cubit/home_cubit.dart';
 import 'package:ttn_flix/home/cubit/home_state.dart';
