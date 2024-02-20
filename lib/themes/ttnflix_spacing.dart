@@ -22,6 +22,8 @@ class TtnflixSpacing {
   static const double spacing8 = 8;
   static const double spacing10 = 10;
 
+  static const double spacing100 = 100;
+
   static const double spacing105 = 105;
 
   /// spacing150
@@ -43,6 +45,8 @@ class TtnflixSpacing {
   static const double spacing20 = 20;
 
   static const double spacing22 = 22;
+
+  static const double spacing25 = 25;
 
   static const double spacing28 = 28;
 
@@ -77,12 +81,20 @@ class TtnflixSpacing {
 
   static const double spacing70 = 70;
 
+  static const double spacing75 = 75;
+
   /// spacing for divider
   static const double spacing26 = 26;
 
   static const double spacing85 = 85;
 
+  static const double spacing150 = 150;
+
   static const double spacing200 = 200;
+
+  static const double spacing250 = 250;
+
+  static const double spacing270 = 270;
 
   static const double spacing23 = 23;
 

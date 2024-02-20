@@ -15,11 +15,13 @@ class HomeLoadedState extends HomeState {
   final int currentPage;
   final int totalPages;
   final bool showNextPage;
+  final bool? selectIcon;
   final int? carousalMovieCurrentpage;
 
-   const HomeLoadedState(
+  const HomeLoadedState(
       {this.movieCarouselList,
       this.gridMovieList,
+      this.selectIcon,
       required this.currentPage,
       required this.totalPages,
       required this.showNextPage,
@@ -28,9 +30,11 @@ class HomeLoadedState extends HomeState {
   HomeLoadedState copyWith({
     final List<Movie>? movieCarouselList,
     final List<Movie>? gridMovieList,
+    List<int>? favourite,
     final int? currentPage,
     final int? totalPages,
     final bool? showNextPage,
+    final bool? selectIcon,
     final int? carousalMovieCurrentpage,
   }) {
     return HomeLoadedState(
@@ -38,23 +42,32 @@ class HomeLoadedState extends HomeState {
         gridMovieList: gridMovieList ?? this.gridMovieList,
         currentPage: currentPage ?? this.currentPage,
         totalPages: totalPages ?? this.totalPages,
-        carousalMovieCurrentpage: carousalMovieCurrentpage ?? this.carousalMovieCurrentpage,
+        selectIcon: selectIcon ?? this.selectIcon,
+        carousalMovieCurrentpage:
+            carousalMovieCurrentpage ?? this.carousalMovieCurrentpage,
         showNextPage: showNextPage ?? this.showNextPage);
   }
 
   @override
   List<Object?> get props => [
-    movieCarouselList,
-    gridMovieList,
-    currentPage,
-    totalPages,
-    showNextPage,
-    carousalMovieCurrentpage
-  ];
+        movieCarouselList,
+        gridMovieList,
+        selectIcon,
+        currentPage,
+        totalPages,
+        showNextPage,
+        carousalMovieCurrentpage
+      ];
 }
 
 class HomeErrorState extends HomeState {
   final String errorMessage;
 
   const HomeErrorState(this.errorMessage);
+}
+
+class AllWishListState extends HomeState {
+  AllWishListState(this.wishListItems);
+  final List<int> wishListItems;
+
 }

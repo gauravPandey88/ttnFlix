@@ -24,7 +24,7 @@ class TtnFlixTextStyle {
 
   static TextStyle _getHeading7() => GoogleFonts.inter(
         fontSize: 28,
-        fontWeight: FontWeight.w400,
+        fontWeight: FontWeight.w600,
         letterSpacing: 0.2,
       );
 
@@ -36,13 +36,13 @@ class TtnFlixTextStyle {
 
   static TextStyle _getHeading5() => GoogleFonts.inter(
         fontSize: 24,
-        fontWeight: FontWeight.w600,
+        fontWeight: FontWeight.w800,
         letterSpacing: 0.24,
       );
 
   static TextStyle _getHeading6() => GoogleFonts.inter(
         fontSize: 20,
-        fontWeight: FontWeight.w600,
+        fontWeight: FontWeight.w800,
         letterSpacing: 0.2,
       );
 
@@ -53,6 +53,11 @@ class TtnFlixTextStyle {
       );
 
   static TextStyle _getSubtitle2() => GoogleFonts.inter(
+        fontSize: 14,
+        fontWeight: FontWeight.w600,
+        letterSpacing: 0.14,
+      );
+  static TextStyle getBody2SemiBold() => GoogleFonts.inter(
         fontSize: 14,
         fontWeight: FontWeight.w600,
         letterSpacing: 0.14,
@@ -89,8 +94,8 @@ class TtnFlixTextStyle {
       );
 
   static TextStyle getBody1SemiBold() => GoogleFonts.inter(
-    fontSize: 16,
-    fontWeight: FontWeight.w600,
-    letterSpacing: 0.16,
-  );
+        fontSize: 16,
+        fontWeight: FontWeight.w600,
+        letterSpacing: 0.16,
+      );
 }

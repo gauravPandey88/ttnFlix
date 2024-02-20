@@ -4,6 +4,9 @@
 <dict>
 	<key>CFBundleDevelopmentRegion</key>
 	<string>$(DEVELOPMENT_LANGUAGE)</string>
+	<key>NSCameraUsageDescription</key>
+	<string>Allows you to choose a picture</string>
+	<key>NSPhotoLibraryAddUsageDescription</key> <string>Export images to camera roll.</string> <key>NSPhotoLibraryUsageDescription</key> <string>Select picture to send.</string> <key>UIBackgroundModes</key> <array> <string>fetch</string> <string>processing</string> <string>remote-notification</string> </array>
 	<key>CFBundleDisplayName</key>
 	<string>Ttn Flix</string>
 	<key>CFBundleExecutable</key>
