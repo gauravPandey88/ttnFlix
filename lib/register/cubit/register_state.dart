@@ -6,8 +6,26 @@ class GenderStateConstants {
   static const List<String> genderTypeRadioList = ['Male', 'Female', 'other'];
 }
 
-abstract class RegisterState extends DefaultEquatable {
+abstract class RegisterState  extends DefaultEquatable{
   const RegisterState();
+}
+
+class ImageLoadedState extends RegisterState {
+  final String? imagePath;
+
+  const ImageLoadedState( {
+    this.imagePath
+});
+
+  ImageLoadedState copyWith({
+    final String? imagePath = ""
+  }) {
+    return ImageLoadedState(
+        imagePath : imagePath ?? this.imagePath);
+  }
+
+  @override
+  List<Object?> get props => [imagePath];
 }
 
 class RegisterLoadedState extends RegisterState {
@@ -25,9 +43,11 @@ class RegisterLoadedState extends RegisterState {
   final String emailId;
   final String emailIdErrorMessage;
   final String confirmPasswordErrorMessage;
+  final String? message;
 
   const RegisterLoadedState(
       {this.name,
+      this.message,
       this.imagePath,
       this.pickedImage,
       this.genderTypeRadioList = GenderStateConstants.genderTypeRadioList,
@@ -56,8 +76,10 @@ class RegisterLoadedState extends RegisterState {
       String? emailId,
       String? emailIdErrorMessage,
       String? passwordErrorMessage,
+      String? message,
       String? confirmPasswordErrorMessage}) {
     return RegisterLoadedState(
+        message: message ?? this.message,
         name: name ?? this.name,
         imagePath: imagePath ?? this.imagePath,
         pickedImage: pickedImage ?? this.pickedImage,
@@ -66,8 +88,8 @@ class RegisterLoadedState extends RegisterState {
         emailId: emailId ?? this.emailId,
         password: password ?? this.password,
         confirmPassword: confirmPassword ?? confirmPassword,
-        initialSelectedGenderTypeIndex: initialSelectedAuditTypeIndex ??
-            initialSelectedGenderTypeIndex,
+        initialSelectedGenderTypeIndex:
+            initialSelectedAuditTypeIndex ?? initialSelectedGenderTypeIndex,
         isShowPassword: isShowPassword ?? this.isShowPassword,
         isShowConfrimPassword:
             isShowConfrimPassword ?? this.isShowConfrimPassword,
@@ -79,6 +101,7 @@ class RegisterLoadedState extends RegisterState {
 
   @override
   List<Object?> get props => [
+        message,
         name,
         imagePath,
         pickedImage,
@@ -93,4 +116,14 @@ class RegisterLoadedState extends RegisterState {
         emailIdErrorMessage,
         confirmPasswordErrorMessage,
       ];
+}
+
+class RegisterSuccessState extends RegisterState {}
+
+class RegisterErrorState extends RegisterState {
+  final String? message;
+  const RegisterErrorState(this.message);
+
+  @override
+  List<Object?> get props => [message];
 }

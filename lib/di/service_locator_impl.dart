@@ -1,8 +1,9 @@
-
-
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:ttn_flix/di/service_locator.dart';
+import 'package:ttn_flix/firebase_options.dart';
 import 'package:ttn_flix/utils/database_manager.dart';
 
 class ServiceLocatorImpl implements ServiceLocator {
@@ -10,30 +11,33 @@ class ServiceLocatorImpl implements ServiceLocator {
 
   @override
   Future<void> initialise() async {
-
     if (!isRegistered<ServiceLocator>()) {
       serviceLocator.registerSingleton<ServiceLocator>(
           ServiceLocator.ttnflixServiceLocator);
     }
 
-
-     _initSharedPref();
+    _firebaseRegister();
+    _initSharedPref();
 
     if (!isRegistered<DBManager>()) {
-      serviceLocator.registerSingleton<DBManager>(
-          DBManager());
+      serviceLocator.registerSingleton<DBManager>(DBManager());
     }
-
-   // serviceLocator.registerSingleton<DBManager>(DBManager());
-
   }
+
   Future<void> _initSharedPref() async {
     final sharedPreferences = await SharedPreferences.getInstance();
     if (!isRegistered<SharedPreferences>()) {
-      serviceLocator.registerSingleton<SharedPreferences>(
-          sharedPreferences);
+      serviceLocator.registerSingleton<SharedPreferences>(sharedPreferences);
     }
-    // _serviceLocator.registerSingleton<SharedPreferences>(sharedPreferences);
+  }
+
+  Future<void> _firebaseRegister() async {
+    await Firebase.initializeApp(
+      options: DefaultFirebaseOptions.currentPlatform,
+    );
+    if (!isRegistered<FirebaseAuth>()) {
+      serviceLocator.registerSingleton<FirebaseAuth>(FirebaseAuth.instance);
+    }
   }
 
   @override

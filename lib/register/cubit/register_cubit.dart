@@ -15,33 +15,22 @@ import 'package:ttn_flix/utils/encrypy.dart';
 import 'package:ttn_flix/utils/validation_helper.dart';
 
 class RegisterCubit extends Cubit<RegisterState> {
-  final TextEditingController dateofBirthController = TextEditingController();
-  final TextEditingController nameTextController = TextEditingController();
-  final TextEditingController emailTextController = TextEditingController();
-  final TextEditingController passwordTextController = TextEditingController();
-  final TextEditingController confirmPasswordTextController =
-      TextEditingController();
 
   RegisterCubit({Key? key, SharedPreferences? sharedPreferences})
       : _sharedPreferences = sharedPreferences ?? SL.get<SharedPreferences>(),
-        super(const RegisterLoadedState());
+        super(const ImageLoadedState());
 
   String? imagePath;
   File? pickedImage;
   String? gender = "0";
-  bool _passwordVisible = false;
-  bool _confirmPasswordVisible = false;
   final SharedPreferences _sharedPreferences;
   UserModel userLoad = UserModel();
 
   Future<void> addImage() async {
     final ImagePicker picker = ImagePicker();
     final XFile? image = await picker.pickImage(source: ImageSource.gallery);
-    if (state is RegisterLoadedState) {
-      var currentState = state as RegisterLoadedState;
-      imagePath = image?.path;
-      emit(currentState.copyWith(imagePath: image?.path));
-    }
+    imagePath = image?.path;
+    emit(const ImageLoadedState().copyWith(imagePath: image?.path));
   }
 
   void setSelectedGenderType({required int selectedIndex}) {
@@ -55,140 +44,53 @@ class RegisterCubit extends Cubit<RegisterState> {
     }
   }
 
-  String _getEmailIdErrorText() {
-    final emailId = emailTextController.text.trim();
-    return (emailId.isNotEmpty && !ValidationHelper.isValidEmail(emailId))
-        ? S.current.invalidEmail
-        : '';
-  }
-
-  void onEmailIdChange({required String emailId}) {
-    if (state is RegisterLoadedState) {
-      final currentState = (state as RegisterLoadedState);
-      emit(currentState.copyWith(
-          emailId: emailId,
-          emailIdErrorMessage: _getEmailIdErrorText(),
-          imagePath: imagePath,
-          pickedImage: pickedImage));
-    }
-  }
-
-  String _getPasswordErrorText() {
-    final password = passwordTextController.text.trim();
-    return (password.isNotEmpty && !ValidationHelper.isPasswordValid(password))
-        ? S.current.passwordValidation
-        : '';
-  }
-
-  String _getConfirmPasswordErrorText() {
-    final confirmPassword = confirmPasswordTextController.text.trim();
-    return (confirmPassword.isNotEmpty &&
-            !ValidationHelper.isPasswordValid(confirmPassword))
-        ? S.current.passwordValidation
-        : '';
-  }
-
-  void onConfirmPasswordChange({required String password}) {
-    if (state is RegisterLoadedState) {
-      final currentState = (state as RegisterLoadedState);
-      emit(currentState.copyWith(
-          confirmpPassword: password,
-          confirmPasswordErrorMessage: _getConfirmPasswordErrorText(),
-          imagePath: imagePath,
-          pickedImage: pickedImage));
-    }
-  }
-
-  void onPasswordChange({required String password}) {
-    if (state is RegisterLoadedState) {
-      final currentState = (state as RegisterLoadedState);
-      emit(currentState.copyWith(
-          password: password,
-          passwordErrorMessage: _getPasswordErrorText(),
-          imagePath: imagePath,
-          pickedImage: pickedImage));
-    }
-  }
-
-  void showAndHidePassword() {
-    if (state is RegisterLoadedState) {
-      var currentState = state as RegisterLoadedState;
-      _passwordVisible = !_passwordVisible;
-      emit(currentState.copyWith(
-          isShowPassword: _passwordVisible,
-          imagePath: imagePath,
-          pickedImage: pickedImage));
-    }
-  }
-
-  void showAndHideConfirmPassword() {
-    if (state is RegisterLoadedState) {
-      var currentState = state as RegisterLoadedState;
-      _confirmPasswordVisible = !_confirmPasswordVisible;
-      emit(currentState.copyWith(
-          isShowConfrimPassword: _confirmPasswordVisible,
-          imagePath: imagePath,
-          pickedImage: pickedImage));
-    }
-  }
-
-  Future<UserModel> getSavedInfo() async {
-    Map<String, dynamic> userMap = jsonDecode(
-        _sharedPreferences.getString(S.current.userData) ?? {}.toString());
-    UserModel user = UserModel.fromJson(userMap);
-
-    var currentState = state as RegisterLoadedState;
-    emit(currentState.copyWith(
-        emailId: user.emailAddress, password: user.password));
-    return user;
-  }
-
-  String _getPasswordEncrypt() {
-    final password = passwordTextController.text;
+  String getPasswordEncrypt({required String? encryptPassword}) {
     final encrypted =
-        Encrypt.encrypt(TtnflixApiUrl.encryptKey, password).base64;
+        Encrypt.encrypt(TtnflixApiUrl.encryptKey, encryptPassword ?? "").base64;
     return encrypted.toString();
   }
 
-  loadSharedPrefs() async {
+  loadSharedPrefs({
+    required String name,
+    required String dob,
+    required String email,
+    required String password,
+  }) async {
     //  store the user entered data in user object
     UserModel user1 = UserModel(
-        userName: nameTextController.text,
-        emailAddress: emailTextController.text,
-        dateOfBirth: dateofBirthController.text,
+        userName: name,
+        emailAddress: email,
+        dateOfBirth: dob,
         image: imagePath,
         gender: gender,
-        password: _getPasswordEncrypt().toString(),
+        password: password,
         isLogin: true,
         isOnboardingShow: true,
         timestamp: DateTime.now().millisecondsSinceEpoch);
     // encode / convert object into json string
     String user = jsonEncode(user1);
+    print(user);
     //save the data into sharedPreferences using key-value pairs
     _sharedPreferences.setString(S.current.userData, user);
   }
 
-   Future<User?> registerUsingEmailPassword() async {
+  void registerUsingEmailPassword(
+      {required String name, required String email, required String password}) async {
     FirebaseAuth auth = FirebaseAuth.instance;
     User? user;
     try {
+      emit(const RegisterLoadedState());
       UserCredential userCredential = await auth.createUserWithEmailAndPassword(
-        email: emailTextController.text,
-        password: _getPasswordEncrypt().toString(),
+        email: email,
+        password: password,
       );
       user = userCredential.user;
-      await user!.updateDisplayName(nameTextController.text);
+      await user!.updateDisplayName(name);
       await user.reload();
       user = auth.currentUser;
+      emit(RegisterSuccessState());
     } on FirebaseAuthException catch (e) {
-      if (e.code == 'weak-password') {
-        print('The password provided is too weak.');
-      } else if (e.code == 'email-already-in-use') {
-        print('The account already exists for that email.');
-      }
-    } catch (e) {
-      print(e);
+      emit(RegisterErrorState(e.code));
     }
-    return user;
   }
 }

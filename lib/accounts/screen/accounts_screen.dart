@@ -1,4 +1,5 @@
 import 'package:auto_route/auto_route.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -179,7 +180,7 @@ class AccountBody extends StatelessWidget {
         title: S.current.logout,
         message: S.current.logoutTitle,
         confirmBtnText: S.current.logout,
-        confirmTap: () {
+        confirmTap: () async {
           BlocProvider.of<AccountsCubit>(context).loadSharedPrefs(
               image: currentState.image,
               name: currentState.name,
@@ -189,6 +190,7 @@ class AccountBody extends StatelessWidget {
               isLogin: false,
               timeStamp: currentState.timeStamp,
               email: currentState.emailAddress);
+          await FirebaseAuth.instance.signOut();
           context.router.push(
             LoginScreenRoute(),
           );

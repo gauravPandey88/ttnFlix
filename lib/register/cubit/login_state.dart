@@ -79,10 +79,11 @@ class LoginLoadedState extends LoginState {
 class LoginSuccessState extends LoginState {}
 
 class LoginErrorState extends LoginState {
+  final String? message;
   const LoginErrorState(this.message);
 
-  final String? message;
-
   @override
-  List<Object> get props => [];
+  List<Object?> get props => [
+    message
+  ];
 }

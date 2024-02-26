@@ -6,12 +6,13 @@ import 'package:ttn_flix/di/service_locator_impl.dart';
 import 'package:ttn_flix/generated/l10n.dart';
 import 'package:ttn_flix/navigation/ttnflix_auto_route.dart';
 import 'package:ttn_flix/themes/ttnflix_theme.dart';
-import 'firebase_options.dart';
+ import 'firebase_options.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await AppLaunchModule().initialise();
   await ServiceLocatorImpl().initialise();
+
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );

@@ -44,11 +44,13 @@ class HomeBody extends StatelessWidget {
       backgroundColor:
           TtnflixColors.textBlackColor.platformBrightnessColor(context),
       appBar: AppBar(
-        title: Text(
-          S.current.home,
-          style: TtnFlixTextStyle.defaultTextTheme.headlineSmall?.copyWith(
-              color: TtnflixColors.frozenListYellow
-                  .platformBrightnessColor(context)),
+        title: Center(
+          child: Text(
+            S.current.home,
+            style: TtnFlixTextStyle.defaultTextTheme.headlineSmall?.copyWith(
+                color: TtnflixColors.frozenListYellow
+                    .platformBrightnessColor(context)),
+          ),
         ),
         backgroundColor:
             TtnflixColors.textBlackColor.platformBrightnessColor(context),

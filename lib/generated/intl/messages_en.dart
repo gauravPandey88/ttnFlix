@@ -58,6 +58,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "home": MessageLookupByLibrary.simpleMessage("Home"),
         "invalidEmail":
             MessageLookupByLibrary.simpleMessage("Email Address is invalid"),
+        "loading": MessageLookupByLibrary.simpleMessage("Loading"),
         "login": MessageLookupByLibrary.simpleMessage("Login"),
         "loginTitle": MessageLookupByLibrary.simpleMessage(
             "Please login to continue with your account"),
