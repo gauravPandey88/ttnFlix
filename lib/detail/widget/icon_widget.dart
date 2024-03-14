@@ -10,7 +10,7 @@ import 'package:ttn_flix/utils/show_snackbar.dart';
 
 @RoutePage()
 class IconWidget extends StatelessWidget {
-  IconWidget({super.key, required this.movie,  this.favouritesAction});
+  const IconWidget({super.key, required this.movie,  this.favouritesAction});
   final Movie movie;
   final Function(bool)? favouritesAction;
   @override

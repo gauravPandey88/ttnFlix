@@ -19,7 +19,7 @@ class AccountsCubit extends Cubit<AccountsState> {
   Future<UserModel> getSavedInfo() async {
     SharedPreferences preferences = await SharedPreferences.getInstance();
     Map<String, dynamic> userMap = jsonDecode(
-        preferences.getString(S.current.userData) ?? Map().toString());
+        preferences.getString(S.current.userData) ?? {}.toString());
     UserModel user = UserModel.fromJson(userMap);
 
     var currentState = state as AccountLoadedState;
@@ -57,7 +57,6 @@ class AccountsCubit extends Cubit<AccountsState> {
         isLogin: isLogin);
     // encode / convert object into json string
     String user = jsonEncode(user1);
-    print(user);
     //save the data into sharedPreferences using key-value pairs
     _sharedPreferences.setString(S.current.userData, user);
   }

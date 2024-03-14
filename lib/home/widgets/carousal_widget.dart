@@ -2,7 +2,6 @@ import 'package:carousel_slider/carousel_slider.dart';
 import 'package:dots_indicator/dots_indicator.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:ttn_flix/home/cubit/home_cubit.dart';
 import 'package:ttn_flix/home/cubit/home_state.dart';
 import 'package:ttn_flix/home/cubit/indicator_cubit.dart';
 import 'package:ttn_flix/home/cubit/indicator_state.dart';
@@ -12,7 +11,6 @@ import 'package:ttn_flix/themes/ttnflix_colors.dart';
 
 class _CarousalWidgetConstant {
   static const double movieListHeight = 215.0;
-  static const double carouselHeight = 280.0;
   static const double carouselOptionsHeight = 280.0;
   static const int carouselRotationDuration = 800;
   static const int carouselPlayInterval = 3;
@@ -80,7 +78,6 @@ class CarousalWidget extends StatelessWidget {
           alignment: Alignment.bottomCenter,
           child: BlocBuilder<IndicatorCubit, IndicatorState>(
             builder: (context, indicatorState) {
-              print('indicatorState');
               if (indicatorState is IndicatorLoadedState) {
                 return DotsIndicator(
                   dotsCount: _CarousalWidgetConstant.dotsTotalCount,

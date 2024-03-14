@@ -95,9 +95,11 @@ abstract class _$TtnflixAppRouter extends RootStackRouter {
       );
     },
     SignupScreenRoute.name: (routeData) {
+      final args = routeData.argsAs<SignupScreenRouteArgs>(
+          orElse: () => const SignupScreenRouteArgs());
       return AutoRoutePage<dynamic>(
         routeData: routeData,
-        child: const SignupScreen(),
+        child: SignupScreen(key: args.key),
       );
     },
     SplashScreenRoute.name: (routeData) {
@@ -367,16 +369,31 @@ class OnBoardingScreenRouteArgs {
 
 /// generated route for
 /// [SignupScreen]
-class SignupScreenRoute extends PageRouteInfo<void> {
-  const SignupScreenRoute({List<PageRouteInfo>? children})
-      : super(
+class SignupScreenRoute extends PageRouteInfo<SignupScreenRouteArgs> {
+  SignupScreenRoute({
+    Key? key,
+    List<PageRouteInfo>? children,
+  }) : super(
           SignupScreenRoute.name,
+          args: SignupScreenRouteArgs(key: key),
           initialChildren: children,
         );
 
   static const String name = 'SignupScreenRoute';
 
-  static const PageInfo<void> page = PageInfo<void>(name);
+  static const PageInfo<SignupScreenRouteArgs> page =
+      PageInfo<SignupScreenRouteArgs>(name);
+}
+
+class SignupScreenRouteArgs {
+  const SignupScreenRouteArgs({this.key});
+
+  final Key? key;
+
+  @override
+  String toString() {
+    return 'SignupScreenRouteArgs{key: $key}';
+  }
 }
 
 /// generated route for

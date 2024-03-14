@@ -49,9 +49,13 @@ dependencies:
   shared_preferences: ^2.2.0
   encrypt: ^5.0.3
   sqflite: ^2.3.1
+  bloc_test: ^9.1.6
   mockito: ^5.4.4
   flutter_localizations:
     sdk: flutter
+  firebase_core: ^2.25.4
+  firebase_auth: ^4.17.7
+
 
 
 dev_dependencies:

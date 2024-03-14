@@ -44,5 +44,6 @@
     "editProfile": "EditProfile",
     "accounts": "Accounts",
     "other": "Other",
-    "onboarding" : "OnBoarding"
+    "onboarding" : "OnBoarding",
+    "loading":"Loading"
 }

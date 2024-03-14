@@ -67,7 +67,7 @@ class HomeErrorState extends HomeState {
 }
 
 class AllWishListState extends HomeState {
-  AllWishListState(this.wishListItems);
+  const AllWishListState(this.wishListItems);
   final List<int> wishListItems;
 
 }

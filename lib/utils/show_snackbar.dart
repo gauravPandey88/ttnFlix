@@ -5,10 +5,12 @@ import 'package:ttn_flix/themes/ttnflix_typography.dart';
 extension Snackbar on String {
   void showSnackbar(BuildContext context) {
     final snackBar = SnackBar(
-      content: Text(
-        this,
-        style: TtnFlixTextStyle.defaultTextTheme.titleMedium
-            ?.copyWith(color: TtnflixColors.textBlackColor.platformBrightnessColor(context)),
+      content: Center(
+        child: Text(
+          this,
+          style: TtnFlixTextStyle.defaultTextTheme.titleMedium
+              ?.copyWith(color: TtnflixColors.textBlackColor.platformBrightnessColor(context)),
+        ),
       ),
       backgroundColor:
           TtnflixColors.frozenListYellow.platformBrightnessColor(context),

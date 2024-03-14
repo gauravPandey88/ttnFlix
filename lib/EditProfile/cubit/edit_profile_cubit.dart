@@ -93,7 +93,7 @@ class EditProfileCubit extends Cubit<EditProfileState> {
 
   Future<UserModel> getSavedInfo() async {
     Map<String, dynamic> userMap = jsonDecode(
-        _sharedPreferences.getString(S.current.userData) ?? Map().toString());
+        _sharedPreferences.getString(S.current.userData) ?? {}.toString());
     UserModel user = UserModel.fromJson(userMap);
     nameTextController.text = user.userName ?? "";
     passwordTextController.text =
@@ -102,7 +102,6 @@ class EditProfileCubit extends Cubit<EditProfileState> {
     selectGender = user.gender;
     timeStamp = user.timestamp;
     var currentState = state as EditProfileLoadedState;
-    print(user.timestamp);
     emit(currentState.copyWith(
         imagePath: user.image,
         name: user.userName,
@@ -136,6 +135,7 @@ class EditProfileCubit extends Cubit<EditProfileState> {
         isOnboardingShow: true,
         timestamp: timeStamp);
     // encode / convert object into json string
+
     String user = jsonEncode(user1);
     print(user);
     //save the data into sharedPreferences using key-value pairs

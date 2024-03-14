@@ -27,11 +27,13 @@ class FavouritesScreen extends StatelessWidget {
       create: (context) => FavouriteCubit()..getWishlist(),
       child: Scaffold(
           appBar: AppBar(
-            title: Text(S.current.favourites,
-                style: TtnFlixTextStyle.defaultTextTheme.headlineSmall
-                    ?.copyWith(
-                        color: TtnflixColors.frozenListYellow
-                            .platformBrightnessColor(context))),
+            title: Center(
+              child: Text(S.current.favourites,
+                  style: TtnFlixTextStyle.defaultTextTheme.headlineSmall
+                      ?.copyWith(
+                          color: TtnflixColors.frozenListYellow
+                              .platformBrightnessColor(context))),
+            ),
             backgroundColor:
                 TtnflixColors.textBlackColor.platformBrightnessColor(context),
           ),

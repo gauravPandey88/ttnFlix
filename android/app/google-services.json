@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "215337828550",
+    "project_id": "ttnflix-d208e",
+    "storage_bucket": "ttnflix-d208e.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:215337828550:android:db91e85a71b2204a7017c7",
+        "android_client_info": {
+          "package_name": "com.example.ttn_flix"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBeH78kmvsIPyZMGPsk-q8ZuKlElcR7EjQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

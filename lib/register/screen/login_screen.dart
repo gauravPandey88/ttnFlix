@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:auto_route/auto_route.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -9,11 +10,15 @@ import 'package:ttn_flix/generated/l10n.dart';
 import 'package:ttn_flix/navigation/ttnflix_auto_route.dart';
 import 'package:ttn_flix/register/cubit/login_cubit.dart';
 import 'package:ttn_flix/register/cubit/login_state.dart';
+import 'package:ttn_flix/register/cubit/text_field_cubit.dart';
+import 'package:ttn_flix/register/cubit/text_field_state.dart';
 import 'package:ttn_flix/register/model/user_model.dart';
 import 'package:ttn_flix/themes/ttnflix_colors.dart';
 import 'package:ttn_flix/themes/ttnflix_spacing.dart';
 import 'package:ttn_flix/themes/ttnflix_typography.dart';
+import 'package:ttn_flix/utils/show_laoder.dart';
 import 'package:ttn_flix/utils/show_snackbar.dart';
+import 'package:ttn_flix/utils/validator.dart';
 
 @RoutePage()
 class LoginScreen extends StatelessWidget {
@@ -23,18 +28,42 @@ class LoginScreen extends StatelessWidget {
 
   final SharedPreferences _sharedPreferences;
   final _formKey = GlobalKey<FormState>();
+  final TextEditingController emailTextController = TextEditingController();
+  final TextEditingController passwordTextController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (context) => LoginCubit()..getSavedInfo(),
+      create: (context) => LoginCubit(),
       child: Scaffold(
         backgroundColor:
             TtnflixColors.textBlackColor.platformBrightnessColor(context),
-        body: BlocBuilder<LoginCubit, LoginState>(
+        body: BlocConsumer<LoginCubit, LoginState>(
+          listener: (context, state) {
+            if (state is LoginErrorState) {
+              Navigator.of(context).pop();
+              state.message?.showSnackbar(context);
+            } else if (state is LoginSuccessState) {
+              Navigator.of(context).pop();
+              Map<String, dynamic> userMap = jsonDecode(
+                  _sharedPreferences.getString(S.of(context).userData) ??
+                      {}.toString());
+              UserModel user = UserModel.fromJson(userMap);
+              final cubit = BlocProvider.of<LoginCubit>(context);
+              cubit.loadSharedPrefs(
+                  name: user.userName,
+                  email: emailTextController.text,
+                  password: passwordTextController.text,
+                  dateofBirth: user.dateOfBirth,
+                  gender: user.gender,
+                  image: user.image);
+              context.router.push(const BottomBarNavigationRoute());
+            }
+          },
           builder: (context, state) {
-            if (state is LoginLoadedState) {
-              return SingleChildScrollView(
+            return SingleChildScrollView(
+              child: Form(
+                key: _formKey,
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
@@ -69,30 +98,24 @@ class LoginScreen extends StatelessWidget {
                                       .platformBrightnessColor(context))),
                     ),
                     Padding(
-                      padding: const EdgeInsets.only(
-                          top: TtnflixSpacing.spacing10,
-                          left: TtnflixSpacing.spacing10,
-                          right: TtnflixSpacing.spacing10),
-                      child: TextField(
-                        cursorColor: TtnflixColors.titleColor
-                            .platformBrightnessColor(context),
-                        controller: BlocProvider.of<LoginCubit>(context)
-                            .emailTextController,
-                        style: TextStyle(
-                            color: TtnflixColors.titleColor
-                                .platformBrightnessColor(context)),
-                        onChanged: (value) {
-                          BlocProvider.of<LoginCubit>(context)
-                              .onEmailIdChange(emailId: value.trim());
-                        },
-                        decoration: buildInputDecoration(
-                            context: context,
-                            state: state,
-                            hintText: S.of(context).email,
-                            errorText: state.emailIdErrorMessage,
-                        isSuffixIcon: false),
-                      ),
-                    ),
+                        padding: const EdgeInsets.only(
+                            top: TtnflixSpacing.spacing10,
+                            left: TtnflixSpacing.spacing10,
+                            right: TtnflixSpacing.spacing10),
+                        child: TextFormField(
+                          cursorColor: TtnflixColors.titleColor
+                              .platformBrightnessColor(context),
+                          controller: emailTextController,
+                          validator: (value) =>
+                              Validator.validateEmail(email: value ?? ''),
+                          style: TextStyle(
+                              color: TtnflixColors.titleColor
+                                  .platformBrightnessColor(context)),
+                          decoration: buildInputDecoration(
+                              context: context,
+                              hintText: S.of(context).email,
+                              isSuffixIcon: false),
+                        )),
                     Padding(
                       padding: const EdgeInsets.only(
                           top: TtnflixSpacing.spacing20,
@@ -108,26 +131,36 @@ class LoginScreen extends StatelessWidget {
                           top: TtnflixSpacing.spacing10,
                           left: TtnflixSpacing.spacing10,
                           right: TtnflixSpacing.spacing10),
-                      child: TextField(
-                        obscureText:
-                            state.isShowPassword ?? false ? false : true,
-                        controller: BlocProvider.of<LoginCubit>(context)
-                            .passwordTextController,
-                        cursorColor: TtnflixColors.titleColor
-                            .platformBrightnessColor(context),
-                        style: TextStyle(
-                            color: TtnflixColors.titleColor
-                                .platformBrightnessColor(context)),
-                        onChanged: (value) {
-                          BlocProvider.of<LoginCubit>(context)
-                              .onPasswordChange(password: value.trim());
-                        },
-                        decoration:  buildInputDecoration(
-                            context: context,
-                            state: state,
-                            hintText: S.of(context).password,
-                            errorText: state.passwordErrorMessage,
-                            isSuffixIcon: true),
+                      child: BlocProvider(
+                        create: (context) => TextFieldCubit(),
+                        child: BlocBuilder<TextFieldCubit, TextFieldState>(
+                          builder: (context, state) {
+                            if (state is TextFieldLoadingState) {
+                              return TextFormField(
+                                obscureText: state.isShowPassword ?? false
+                                    ? false
+                                    : true,
+                                controller: passwordTextController,
+                                cursorColor: TtnflixColors.titleColor
+                                    .platformBrightnessColor(context),
+                                style: TextStyle(
+                                    color: TtnflixColors.titleColor
+                                        .platformBrightnessColor(context)),
+                                validator: (value) =>
+                                    Validator.validatePassword(
+                                        password: value ?? ''),
+                                decoration: buildInputDecoration(
+                                    context: context,
+                                    state: state,
+                                    hintText: S.of(context).password,
+                                    errorText: state.passwordErrorMessage,
+                                    isSuffixIcon: true),
+                              );
+                            } else {
+                              return const SizedBox.shrink();
+                            }
+                          },
+                        ),
                       ),
                     ),
                     const SizedBox(
@@ -144,8 +177,9 @@ class LoginScreen extends StatelessWidget {
                                 TtnflixSpacing.spacing20)),
                         child: TextButton(
                           onPressed: () {
-                         //   BlocProvider.of<LoginCubit>(context).validateLogin();
-                            _onLogin(state, context);
+                            if (_formKey.currentState!.validate()) {
+                              _onLogin(context: context);
+                            }
                           },
                           child: Text(
                             S.of(context).login,
@@ -162,7 +196,7 @@ class LoginScreen extends StatelessWidget {
                     ),
                     Center(
                       child: InkWell(
-                        onTap: () => context.router.push(const SignupScreenRoute()),
+                        onTap: () => context.router.push(SignupScreenRoute()),
                         child: Text(S.of(context).newUser,
                             style: TtnFlixTextStyle.defaultTextTheme.titleMedium
                                 ?.copyWith(
@@ -172,10 +206,8 @@ class LoginScreen extends StatelessWidget {
                     )
                   ],
                 ),
-              );
-            } else {
-              return const SizedBox.shrink();
-            }
+              ),
+            );
           },
         ),
       ),
@@ -184,9 +216,9 @@ class LoginScreen extends StatelessWidget {
 
   InputDecoration buildInputDecoration(
       {required BuildContext context,
-      required LoginLoadedState state,
+      TextFieldLoadingState? state,
       required String hintText,
-      required String errorText,
+      String? errorText,
       bool isSuffixIcon = false}) {
     return InputDecoration(
         filled: true,
@@ -209,11 +241,11 @@ class LoginScreen extends StatelessWidget {
                     TtnflixSpacing.spacing0),
                 child: GestureDetector(
                     onTap: () {
-                      BlocProvider.of<LoginCubit>(context)
+                      BlocProvider.of<TextFieldCubit>(context)
                           .showAndHidePassword();
                     },
                     child: Icon(
-                      state.isShowPassword ?? false
+                      state?.isShowPassword ?? false
                           ? Icons.visibility_rounded
                           : Icons.visibility_off_rounded,
                       size: TtnflixSpacing.spacing24,
@@ -222,55 +254,16 @@ class LoginScreen extends StatelessWidget {
                     )),
               )
             : null,
-        errorText: errorText.isNotEmpty ? errorText : null,
         errorStyle: TextStyle(
             color: TtnflixColors.frozenListYellow
                 .platformBrightnessColor(context)));
   }
 
-  // void _validateForm(BuildContext context) async {
-  //   if (_formKey.currentState?.validate() == true) {
-  //     SystemChannels.textInput.invokeMethod("TextInput.hide");
-  //     BlocProvider.of<LoginCubit>(context).loadSharedPrefs();
-  //   } else {
-  //     S.of(context).enterEmailAndPassword.showSnackbar(context);
-  //   }
-  // }
-
-  void _onLogin(LoginLoadedState state, BuildContext context) {
-    Map<String, dynamic> userMap = jsonDecode(
-        _sharedPreferences.getString(S.of(context).userData) ??
-            Map().toString());
-    UserModel user = UserModel.fromJson(userMap);
-
+  void _onLogin({required BuildContext context}) {
     final cubit = BlocProvider.of<LoginCubit>(context);
-
-    if (cubit.emailTextController.text.isEmpty &&
-        cubit.passwordTextController.text.isEmpty) {
-      S.of(context).enterEmailAndPassword.showSnackbar(context);
-    } else if (cubit.emailTextController.text.isEmpty) {
-      S.of(context).enterEmail.showSnackbar(context);
-    } else if (state.emailIdErrorMessage.isNotEmpty) {
-      S.of(context).enterCorrectEmail.showSnackbar(context);
-    } else if (cubit.passwordTextController.text.isEmpty) {
-      S.of(context).enterPassword.showSnackbar(context);
-    } else if (state.passwordErrorMessage.isNotEmpty) {
-      S.of(context).enterCorrectPassword.showSnackbar(context);
-    } else {
-      if (cubit.emailTextController.text == user.emailAddress &&
-          cubit.passwordTextController.text ==
-              cubit.getPasswordDecrypt(encryptPassword: user.password)) {
-        cubit.loadSharedPrefs(
-            name: state.name,
-            email: state.emailId,
-            password: cubit.getPasswordEncrypt(encryptPassword: state.password),
-            dateofBirth: state.dateOfBirth,
-            gender: state.gender,
-            image: state.image);
-        context.router.push(const BottomBarNavigationRoute());
-      } else {
-        S.of(context).enterEmailAndPasswordIncorrect.showSnackbar(context);
-      }
-    }
+    ShowLoader().showAlertDialog(context);
+    cubit.signInUsingEmailPassword(
+        email: emailTextController.text,
+        password: passwordTextController.text);
   }
 }

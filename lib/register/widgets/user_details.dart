@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:ttn_flix/themes/ttnflix_colors.dart';
 import 'package:ttn_flix/themes/ttnflix_spacing.dart';
@@ -16,7 +15,7 @@ class UserDetails extends StatelessWidget {
       this.labelText,
       this.labelStyle,
       required this.obscureText,
-      this.suffixIcon});
+      this.suffixIcon, this.validator});
   final String? title;
   final String? data;
   final String? errorText;
@@ -27,6 +26,7 @@ class UserDetails extends StatelessWidget {
   final TextStyle? labelStyle;
   final bool obscureText;
   final Widget? suffixIcon;
+  final FormFieldValidator? validator;
 
   @override
   Widget build(BuildContext context) {
@@ -46,7 +46,7 @@ class UserDetails extends StatelessWidget {
               top: TtnflixSpacing.spacing10,
               left: TtnflixSpacing.spacing10,
               right: TtnflixSpacing.spacing10),
-          child: TextField(
+          child: TextFormField(
             obscureText: obscureText,
             controller:
                 controller, //BlocProvider.of<RegisterCubit>(context).nameTextController,
@@ -57,6 +57,7 @@ class UserDetails extends StatelessWidget {
                     TtnflixColors.titleColor.platformBrightnessColor(context)),
             onChanged: onChanged,
             onTap: onTap,
+            validator: validator,
             decoration: InputDecoration(
                 filled: true,
                 fillColor: TtnflixColors.inputBoxColor

@@ -3,7 +3,7 @@ import 'package:ttn_flix/di/service_locator_impl.dart';
 import 'package:ttn_flix/generated/l10n.dart';
 import 'package:ttn_flix/home/favouriteList/cubit/favourite_list_state.dart';
 import 'package:ttn_flix/home/model/ttnflix_movies.dart';
-import 'package:ttn_flix/utils/database_Manager.dart';
+import 'package:ttn_flix/utils/database_manager.dart';
 
 class FavouriteListCubit extends Cubit<FavouriteListState> {
   FavouriteListCubit({DBManager? dbManager})

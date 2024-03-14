@@ -1,5 +1,4 @@
 import 'package:auto_route/auto_route.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/date_symbol_data_local.dart';
@@ -222,7 +221,7 @@ class EditProfile extends StatelessWidget {
                       child: Text(S.current.password,
                           style: TtnFlixTextStyle.defaultTextTheme.titleSmall
                               ?.copyWith(
-                                  color: TtnflixColors.cellTextColor
+                                  color: TtnflixColors.titleColor
                                       .platformBrightnessColor(context))),
                     ),
                     Padding(
@@ -298,7 +297,7 @@ class EditProfile extends StatelessWidget {
                       child: Text(S.current.gender,
                           style: TtnFlixTextStyle.defaultTextTheme.titleSmall
                               ?.copyWith(
-                                  color: TtnflixColors.cellTextColor
+                                  color: TtnflixColors.titleColor
                                       .platformBrightnessColor(context))),
                     ),
                     Padding(
