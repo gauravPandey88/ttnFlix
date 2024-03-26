@@ -1,4 +1,6 @@
 import 'dart:convert';
+import 'dart:io';
+import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -25,19 +27,26 @@ class EditProfileCubit extends Cubit<EditProfileState> {
 
   final SharedPreferences _sharedPreferences;
   UserModel userLoad = UserModel();
-  String? imagePath;
   String? selectGender;
   int? timeStamp;
   bool _passwordVisible = false;
+  String? imagePath;
+  File? selectedImage;
+  String? _image;
 
   Future<void> addImage() async {
-    final ImagePicker picker = ImagePicker();
-    final XFile? image = await picker.pickImage(source: ImageSource.gallery);
+    XFile? returnImage =
+    await ImagePicker().pickImage(source: ImageSource.gallery);
+    if (returnImage == null) return;
+    var imageBytes = await returnImage.readAsBytes();
+    selectedImage = File(returnImage.path);
     if (state is EditProfileLoadedState) {
       var currentState = state as EditProfileLoadedState;
-      imagePath = image?.path;
+      String s = String.fromCharCodes(imageBytes);
+      _image = s;
+      imagePath = _image;
       emit(currentState.copyWith(
-          imagePath: image?.path, genderType: selectGender));
+          imagePath: _image, genderType: selectGender));
     }
   }
 
@@ -137,7 +146,6 @@ class EditProfileCubit extends Cubit<EditProfileState> {
     // encode / convert object into json string
 
     String user = jsonEncode(user1);
-    print(user);
     //save the data into sharedPreferences using key-value pairs
     _sharedPreferences.setString(S.current.userData, user);
   }

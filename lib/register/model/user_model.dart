@@ -1,3 +1,6 @@
+
+import 'dart:typed_data';
+
 class UserModel {
   late final String? userName;
   final String? emailAddress;

@@ -12,6 +12,7 @@ import 'package:ttn_flix/home/repository/ttnflix_home_repositiory.dart';
 import 'package:ttn_flix/themes/ttnflix_colors.dart';
 import 'package:ttn_flix/themes/ttnflix_spacing.dart';
 import 'package:ttn_flix/themes/ttnflix_typography.dart';
+import 'package:ttn_flix/utils/context_extension.dart';
 
 class _HomeScreenConstant {
   static const double carouselHeight = 280.0;
@@ -77,8 +78,8 @@ class HomeBody extends StatelessWidget {
                         vertical: TtnflixSpacing.spacing8,
                         horizontal: TtnflixSpacing.spacing8),
                     gridDelegate:
-                        const SliverGridDelegateWithFixedCrossAxisCount(
-                      crossAxisCount: _HomeScreenConstant.crossAxisCount,
+                         SliverGridDelegateWithFixedCrossAxisCount(
+                      crossAxisCount: context.isLargeScreen ? 4 : context.isMediumScreen ? 3 : 2,
                       crossAxisSpacing: TtnflixSpacing.spacing8,
                       mainAxisSpacing: TtnflixSpacing.spacing8,
                       mainAxisExtent: _HomeScreenConstant

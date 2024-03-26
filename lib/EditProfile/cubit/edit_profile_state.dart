@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'dart:typed_data';
 
 import 'package:ttn_flix/utils/default_equatable.dart';
 
@@ -18,7 +19,6 @@ class EditProfileLoadedState extends EditProfileState {
   final String? name;
   final String? emailId;
   final String? imagePath;
-  final File? pickedImage;
   final String passwordErrorMessage;
   final String confirmPasswordErrorMessage;
   final String password;
@@ -37,7 +37,6 @@ class EditProfileLoadedState extends EditProfileState {
     this.password = '',
     this.confirmPassword = '',
     this.imagePath,
-    this.pickedImage,
     this.isShowPassword,
     this.isShowConfrimPassword,
     this.dateofBirth,
@@ -50,8 +49,7 @@ class EditProfileLoadedState extends EditProfileState {
   });
 
   EditProfileLoadedState copyWith({
-    final String? imagePath = "",
-    final File? pickedImage,
+    final String? imagePath,
     final String? name,
     String? password,
     int? timeStamp,
@@ -79,7 +77,6 @@ class EditProfileLoadedState extends EditProfileState {
       isShowConfrimPassword ?? this.isShowConfrimPassword,
       isShowPassword: isShowPassword ?? this.isShowPassword,
       imagePath: imagePath ?? this.imagePath,
-      pickedImage: pickedImage ?? this.pickedImage,
       dateofBirth: dateofBirth ?? this.dateofBirth,
       genderType: genderType ?? this.genderType,
       genderTypeRadioList: genderTypeRadioList ?? this.genderTypeRadioList,
@@ -99,7 +96,6 @@ class EditProfileLoadedState extends EditProfileState {
     passwordErrorMessage,
     confirmPasswordErrorMessage,
     imagePath,
-    pickedImage,
     dateofBirth,
     genderType,
     genderTypeRadioList,

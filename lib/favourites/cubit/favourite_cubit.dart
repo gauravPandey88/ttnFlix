@@ -3,6 +3,9 @@ import 'package:ttn_flix/di/service_locator_impl.dart';
 import 'package:ttn_flix/favourites/cubit/favourite_state.dart';
 import 'package:ttn_flix/utils/database_manager.dart';
 
+import '../../home/model/ttnflix_movies.dart';
+import '../../utils/shared_preferences.dart';
+
 class FavouriteCubit extends Cubit<FavouriteState> {
   FavouriteCubit() : super(FavouriteInitState()) {
     getWishlist();
@@ -10,7 +13,11 @@ class FavouriteCubit extends Cubit<FavouriteState> {
 
   void getWishlist() async {
     var db = ServiceLocatorImpl.serviceLocator<DBManager>();
-    var result = await db.queryAllMovies();
+    var result = ServiceLocatorImpl.serviceLocator<SharedPreferencesService>().getList<Movie>('favouriteList', Movie.fromJson);
+    result.forEach((element) {
+      element.isFavourite = true;
+    });
+    //await db.queryAllMovies();
     emit(FavouriteListState(result));
   }
 }

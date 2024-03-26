@@ -49,6 +49,7 @@ class LoginCubit extends Cubit<LoginState> {
         timestamp: DateTime.timestamp().millisecondsSinceEpoch);
     // encode / convert object into json string
     String user = jsonEncode(user1);
+    print(user);
     //save the data into sharedPreferences using key-value pairs
     _sharedPreferences.setString(S.current.userData, user);
   }

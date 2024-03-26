@@ -18,7 +18,7 @@ class TtnflixMoviesModel {
       _$TtnflixMoviesModelFromJson(data);
 }
 
-@JsonSerializable(createToJson: false)
+@JsonSerializable(createToJson: true)
 class Movie {
   @JsonKey(includeFromJson: false)
   bool isFavourite = false;
@@ -55,6 +55,7 @@ class Movie {
       this.voteCount);
 
   factory Movie.fromJson(Map<String, dynamic> data) => _$MovieFromJson(data);
+  Map<String, dynamic> toJson() => _$MovieToJson(this);
 
   String getContentRating() {
     return adult! ? "A" : "U/A";

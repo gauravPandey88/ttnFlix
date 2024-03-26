@@ -4,13 +4,14 @@
 
 // ignore_for_file: no_leading_underscores_for_library_prefixes
 import 'dart:async' as _i7;
+import 'dart:typed_data' as _i9;
 
 import 'package:firebase_auth/firebase_auth.dart' as _i5;
 import 'package:firebase_core/firebase_core.dart' as _i4;
-import 'package:flutter_bloc/flutter_bloc.dart' as _i9;
+import 'package:flutter_bloc/flutter_bloc.dart' as _i10;
 import 'package:mockito/mockito.dart' as _i1;
 import 'package:mockito/src/dummies.dart' as _i8;
-import 'package:shared_preferences/shared_preferences.dart' as _i10;
+import 'package:shared_preferences/shared_preferences.dart' as _i11;
 import 'package:ttn_flix/register/cubit/login_cubit.dart' as _i6;
 import 'package:ttn_flix/register/cubit/login_state.dart' as _i3;
 import 'package:ttn_flix/register/model/user_model.dart' as _i2;
@@ -198,7 +199,7 @@ class MockLoginCubit extends _i1.Mock implements _i6.LoginCubit {
 
   @override
   void loadSharedPrefs({
-    String? image,
+    _i9.Uint8List? image,
     String? name,
     String? dateofBirth,
     String? email,
@@ -248,7 +249,7 @@ class MockLoginCubit extends _i1.Mock implements _i6.LoginCubit {
       );
 
   @override
-  void onChange(_i9.Change<_i3.LoginState>? change) => super.noSuchMethod(
+  void onChange(_i10.Change<_i3.LoginState>? change) => super.noSuchMethod(
         Invocation.method(
           #onChange,
           [change],
@@ -302,7 +303,7 @@ class MockLoginCubit extends _i1.Mock implements _i6.LoginCubit {
 /// A class which mocks [SharedPreferences].
 ///
 /// See the documentation for Mockito's code generation for more information.
-class MockSharedPreferences extends _i1.Mock implements _i10.SharedPreferences {
+class MockSharedPreferences extends _i1.Mock implements _i11.SharedPreferences {
   MockSharedPreferences() {
     _i1.throwOnMissingStub(this);
   }

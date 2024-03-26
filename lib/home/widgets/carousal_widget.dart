@@ -8,9 +8,10 @@ import 'package:ttn_flix/home/cubit/indicator_state.dart';
 import 'package:ttn_flix/home/favouriteList/cubit/favourite_list_cubit.dart';
 import 'package:ttn_flix/home/widgets/movie_list.dart';
 import 'package:ttn_flix/themes/ttnflix_colors.dart';
+import 'package:ttn_flix/utils/context_extension.dart';
 
 class _CarousalWidgetConstant {
-  static const double movieListHeight = 215.0;
+  static const double movieListHeight = 195.0;
   static const double carouselOptionsHeight = 280.0;
   static const int carouselRotationDuration = 800;
   static const int carouselPlayInterval = 3;
@@ -18,57 +19,56 @@ class _CarousalWidgetConstant {
   static const double dotsInitialSize = 8.0;
   static const double dotsActiveSize = 16.0;
   static const int dotsTotalCount = 10;
-  static const double viewPortFraction = 1;
+  static const double viewPortFraction = 0.5;
   static const int itemCount = 10;
 }
 
 class CarousalWidget extends StatelessWidget {
   const CarousalWidget({
-    super.key, required this.state,
+    super.key,
+    required this.state,
   });
 
   final HomeLoadedState state;
-
 
   @override
   Widget build(BuildContext context) {
     return Stack(children: [
       CarouselSlider.builder(
         itemCount: _CarousalWidgetConstant.itemCount,
-        itemBuilder:
-            (BuildContext context, int itemIndex, int pageViewIndex) {
-
+        itemBuilder: (BuildContext context, int itemIndex, int pageViewIndex) {
           return BlocProvider<FavouriteListCubit>(
             create: (BuildContext context) => FavouriteListCubit(),
             child: MovieListWidgets(
               context: context,
               height: _CarousalWidgetConstant.movieListHeight,
               carousalImage:
-              state.movieCarouselList?[itemIndex].backdropPath ?? '',
+                  state.movieCarouselList?[itemIndex].backdropPath ?? '',
               movie: state.movieCarouselList![itemIndex],
               movieName: state.movieCarouselList?[itemIndex].title,
-              language: state
-                  .movieCarouselList?[itemIndex].originalLanguage
+              language: state.movieCarouselList?[itemIndex].originalLanguage
                   ?.toUpperCase(),
             ),
           );
         },
         options: CarouselOptions(
           height: _CarousalWidgetConstant.carouselOptionsHeight,
-          viewportFraction: _CarousalWidgetConstant.viewPortFraction,
+          viewportFraction: context.isLargeScreen
+              ? 0.5
+              : context.isMediumScreen
+                  ? 0.8
+                  : 1, //_CarousalWidgetConstant.viewPortFraction,
           enableInfiniteScroll: true,
           reverse: false,
           autoPlay: true,
           autoPlayInterval: const Duration(
               seconds: _CarousalWidgetConstant.carouselPlayInterval),
           autoPlayAnimationDuration: const Duration(
-              milliseconds:
-              _CarousalWidgetConstant.carouselRotationDuration),
+              milliseconds: _CarousalWidgetConstant.carouselRotationDuration),
           autoPlayCurve: Curves.fastOutSlowIn,
           enlargeCenterPage: true,
           onPageChanged: (index, reason) {
-            BlocProvider.of<IndicatorCubit>(context)
-                .updatePageIndicator(index);
+            BlocProvider.of<IndicatorCubit>(context).updatePageIndicator(index);
           },
           scrollDirection: Axis.horizontal,
         ),

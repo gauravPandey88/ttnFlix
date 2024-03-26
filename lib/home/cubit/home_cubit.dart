@@ -3,9 +3,11 @@ import 'dart:async';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:ttn_flix/di/service_locator_impl.dart';
 import 'package:ttn_flix/home/cubit/home_state.dart';
+import 'package:ttn_flix/home/model/ttnflix_movies.dart';
 import 'package:ttn_flix/home/repository/ttnflix_home_repositiory.dart';
 import 'package:ttn_flix/network/ttnflix_custom_exception.dart';
-import 'package:ttn_flix/utils/database_manager.dart';
+import 'package:ttn_flix/utils/shared_preferences.dart';
+
 
 class _HomeCubitConstant {
   static const int firstPage = 1;
@@ -14,14 +16,16 @@ class _HomeCubitConstant {
 
 class HomeCubit extends Cubit<HomeState> {
   final TtnflixHomeRepository _ttnflixHomeRepository;
-  List<int> wishListIds = [];
+  List<Movie> wishListIds = [];
 
   HomeCubit(
     this._ttnflixHomeRepository,
   ) : super(const HomeLoadingState());
 
+
+
   void fetchWishListData() async {
-    wishListIds = await ServiceLocatorImpl.serviceLocator<DBManager>().getAllIds();
+    wishListIds = ServiceLocatorImpl.serviceLocator<SharedPreferencesService>().getList<Movie>('favouriteList', Movie.fromJson);
   }
 
   Future<void> getCarouselListMoviesData() async {
@@ -33,12 +37,13 @@ class HomeCubit extends Cubit<HomeState> {
           .getHomePageDate(_HomeCubitConstant.secondPage);
 
       carousalResponse.movieList?.forEach((element) {
-        if (wishListIds.contains(element.id)) {
+        if (wishListIds.map((e ) => e.id).toList().contains(element.id)) {
           element.isFavourite = true;
         }
       });
+
       gridResponse.movieList?.forEach((element) {
-        if (wishListIds.contains(element.id)) {
+        if (wishListIds.map((e ) => e.id).toList().contains(element.id)) {
           element.isFavourite = true;
         }
       });
@@ -61,7 +66,7 @@ class HomeCubit extends Cubit<HomeState> {
       final gridResponse = await _ttnflixHomeRepository.getHomePageDate(pageNo);
 
       gridResponse.movieList?.forEach((element) {
-        if (wishListIds.contains(element.id)) {
+        if (wishListIds.map((e ) => e.id).toList().contains(element.id)) {
           element.isFavourite = true;
         }
       });

@@ -9,6 +9,7 @@ import 'package:ttn_flix/network/ttnflix_api_url.dart';
 import 'package:ttn_flix/themes/ttnflix_colors.dart';
 import 'package:ttn_flix/themes/ttnflix_spacing.dart';
 import 'package:ttn_flix/themes/ttnflix_typography.dart';
+import 'package:ttn_flix/utils/context_extension.dart';
 import 'package:ttn_flix/widgets/icon/ttnflix_icon.dart';
 import 'package:ttn_flix/widgets/text/ttnflix_text.dart';
 
@@ -57,165 +58,170 @@ class MovieDetailScreen extends StatelessWidget {
         ),
       ),
       body: SingleChildScrollView(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            SizedBox(
-              height: MediaQuery.of(context).size.height / _MovieDetailScreenConstant.height,
-              width: MediaQuery.of(context).size.width,
-              child: Container(
-                decoration: BoxDecoration(
-                  image: DecorationImage(
-                      image: NetworkImage(
-                          "${TtnflixApiUrl.imageBaseUrl}${movie.posterPath}"),
-                      fit: BoxFit.fill),
+        child: Center(
+          child: SizedBox(
+            width: context.isSmallScreen ? context.width : context.width/2,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                SizedBox(
+                  height: MediaQuery.of(context).size.height / _MovieDetailScreenConstant.height,
+                  width: MediaQuery.of(context).size.width,
+                  child: Container(
+                    decoration: BoxDecoration(
+                      image: DecorationImage(
+                          image: NetworkImage(
+                              "${TtnflixApiUrl.imageBaseUrl}${movie.posterPath}"),
+                          fit: BoxFit.fill),
+                    ),
+                  ),
                 ),
-              ),
-            ),
-            const SizedBox(
-              height: TtnflixSpacing.spacing10,
-            ),
-            Padding(
-              padding: const EdgeInsets.all(TtnflixSpacing.spacing8),
-              child: TtnflixTextWidget(title: movie.title ?? '',
-                style: TtnFlixTextStyle.defaultTextTheme.headlineSmall
-                    ?.copyWith(
+                const SizedBox(
+                  height: TtnflixSpacing.spacing10,
+                ),
+                Padding(
+                  padding: const EdgeInsets.all(TtnflixSpacing.spacing8),
+                  child: TtnflixTextWidget(title: movie.title ?? '',
+                    style: TtnFlixTextStyle.defaultTextTheme.headlineSmall
+                        ?.copyWith(
+                            color: TtnflixColors.frozenListYellow
+                                .platformBrightnessColor(context)),
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.all(TtnflixSpacing.spacing8),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Row(
+                        children: [
+                          TtnflixIconWidget(
+                            icon: Icons.aspect_ratio,
+                            color: TtnflixColors.frozenListYellow
+                                .platformBrightnessColor(context),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.only(left: TtnflixSpacing.spacing5),
+                            child: TtnflixTextWidget(
+                              title: movie.getContentRating(),
+                              style: TtnFlixTextStyle.defaultTextTheme.titleSmall
+                                  ?.copyWith(
+                                      color: TtnflixColors.frozenListYellow
+                                          .platformBrightnessColor(context)),
+                            ),
+                          )
+                        ],
+                      ),
+                      Row(
+                        children: [
+                          TtnflixIconWidget(
+                            icon: Icons.movie,
+                            color: TtnflixColors.frozenListYellow
+                                .platformBrightnessColor(context),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.only(left: TtnflixSpacing.spacing5),
+                            child: TtnflixTextWidget(
+                              title: movie.mediaType ?? '',
+                              style: TtnFlixTextStyle.defaultTextTheme.titleSmall
+                                  ?.copyWith(
+                                      color: TtnflixColors.frozenListYellow
+                                          .platformBrightnessColor(context)),
+                            ),
+                          )
+                        ],
+                      ),
+                      Row(
+                        children: [
+                          TtnflixIconWidget(
+                            icon: Icons.language,
+                            color: TtnflixColors.frozenListYellow
+                                .platformBrightnessColor(context),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.only(left: TtnflixSpacing.spacing5),
+                            child: TtnflixTextWidget(
+                              title: movie.originalLanguage?.toUpperCase() ?? '',
+                              style: TtnFlixTextStyle.defaultTextTheme.titleSmall
+                                  ?.copyWith(
+                                      color: TtnflixColors.frozenListYellow
+                                          .platformBrightnessColor(context)),
+                            ),
+                          )
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(left: TtnflixSpacing.spacing8),
+                  child: TtnflixTextWidget(
+                    title: S.of(context).overview,
+                    textDirection: TextDirection.ltr,
+                    style: TtnFlixTextStyle.defaultTextTheme.labelLarge?.copyWith(
                         color: TtnflixColors.frozenListYellow
                             .platformBrightnessColor(context)),
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.all(TtnflixSpacing.spacing8),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Row(
-                    children: [
-                      TtnflixIconWidget(
-                        icon: Icons.aspect_ratio,
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(left: TtnflixSpacing.spacing8),
+                  child: TtnflixTextWidget(
+                    title: movie.overview ?? '',
+                    textDirection: TextDirection.ltr,
+                    style: TtnFlixTextStyle.defaultTextTheme.titleSmall?.copyWith(
                         color: TtnflixColors.frozenListYellow
-                            .platformBrightnessColor(context),
+                            .platformBrightnessColor(context)),
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.all(TtnflixSpacing.spacing8),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Row(
+                        children: [
+                          TtnflixIconWidget(
+                            icon: Icons.calendar_month,
+                            color: TtnflixColors.frozenListYellow
+                                .platformBrightnessColor(context),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.only(left: TtnflixSpacing.spacing8),
+                            child: TtnflixTextWidget(
+                              title: movie.releaseDate ?? '',
+                              style: TtnFlixTextStyle.defaultTextTheme.titleSmall
+                                  ?.copyWith(
+                                      color: TtnflixColors.frozenListYellow
+                                          .platformBrightnessColor(context)),
+                            ),
+                          )
+                        ],
                       ),
-                      Padding(
-                        padding: const EdgeInsets.only(left: TtnflixSpacing.spacing5),
-                        child: TtnflixTextWidget(
-                          title: movie.getContentRating(),
-                          style: TtnFlixTextStyle.defaultTextTheme.titleSmall
-                              ?.copyWith(
-                                  color: TtnflixColors.frozenListYellow
-                                      .platformBrightnessColor(context)),
-                        ),
-                      )
+                      Row(
+                        children: [
+                          TtnflixIconWidget(
+                            icon: Icons.thumb_up,
+                            color: TtnflixColors.frozenListYellow
+                                .platformBrightnessColor(context),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.only(left: TtnflixSpacing.spacing8),
+                            child: TtnflixTextWidget(
+                              title:  movie.voteAverage.toString(),
+                              style: TtnFlixTextStyle.defaultTextTheme.titleSmall
+                                  ?.copyWith(
+                                      color: TtnflixColors.frozenListYellow
+                                          .platformBrightnessColor(context)),
+                            ),
+                          )
+                        ],
+                      ),
                     ],
                   ),
-                  Row(
-                    children: [
-                      TtnflixIconWidget(
-                        icon: Icons.movie,
-                        color: TtnflixColors.frozenListYellow
-                            .platformBrightnessColor(context),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.only(left: TtnflixSpacing.spacing5),
-                        child: TtnflixTextWidget(
-                          title: movie.mediaType ?? '',
-                          style: TtnFlixTextStyle.defaultTextTheme.titleSmall
-                              ?.copyWith(
-                                  color: TtnflixColors.frozenListYellow
-                                      .platformBrightnessColor(context)),
-                        ),
-                      )
-                    ],
-                  ),
-                  Row(
-                    children: [
-                      TtnflixIconWidget(
-                        icon: Icons.language,
-                        color: TtnflixColors.frozenListYellow
-                            .platformBrightnessColor(context),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.only(left: TtnflixSpacing.spacing5),
-                        child: TtnflixTextWidget(
-                          title: movie.originalLanguage?.toUpperCase() ?? '',
-                          style: TtnFlixTextStyle.defaultTextTheme.titleSmall
-                              ?.copyWith(
-                                  color: TtnflixColors.frozenListYellow
-                                      .platformBrightnessColor(context)),
-                        ),
-                      )
-                    ],
-                  ),
-                ],
-              ),
+                ),
+              ],
             ),
-            Padding(
-              padding: const EdgeInsets.only(left: TtnflixSpacing.spacing8),
-              child: TtnflixTextWidget(
-                title: S.of(context).overview,
-                textDirection: TextDirection.ltr,
-                style: TtnFlixTextStyle.defaultTextTheme.labelLarge?.copyWith(
-                    color: TtnflixColors.frozenListYellow
-                        .platformBrightnessColor(context)),
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.only(left: TtnflixSpacing.spacing8),
-              child: TtnflixTextWidget(
-                title: movie.overview ?? '',
-                textDirection: TextDirection.ltr,
-                style: TtnFlixTextStyle.defaultTextTheme.titleSmall?.copyWith(
-                    color: TtnflixColors.frozenListYellow
-                        .platformBrightnessColor(context)),
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.all(TtnflixSpacing.spacing8),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Row(
-                    children: [
-                      TtnflixIconWidget(
-                        icon: Icons.calendar_month,
-                        color: TtnflixColors.frozenListYellow
-                            .platformBrightnessColor(context),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.only(left: TtnflixSpacing.spacing8),
-                        child: TtnflixTextWidget(
-                          title: movie.releaseDate ?? '',
-                          style: TtnFlixTextStyle.defaultTextTheme.titleSmall
-                              ?.copyWith(
-                                  color: TtnflixColors.frozenListYellow
-                                      .platformBrightnessColor(context)),
-                        ),
-                      )
-                    ],
-                  ),
-                  Row(
-                    children: [
-                      TtnflixIconWidget(
-                        icon: Icons.thumb_up,
-                        color: TtnflixColors.frozenListYellow
-                            .platformBrightnessColor(context),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.only(left: TtnflixSpacing.spacing8),
-                        child: TtnflixTextWidget(
-                          title:  movie.voteAverage.toString(),
-                          style: TtnFlixTextStyle.defaultTextTheme.titleSmall
-                              ?.copyWith(
-                                  color: TtnflixColors.frozenListYellow
-                                      .platformBrightnessColor(context)),
-                        ),
-                      )
-                    ],
-                  ),
-                ],
-              ),
-            ),
-          ],
+          ),
         ),
       ),
     );
