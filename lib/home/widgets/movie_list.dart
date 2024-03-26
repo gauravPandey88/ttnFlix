@@ -148,16 +148,19 @@ class MovieListWidgets extends StatelessWidget with ChangeNotifier  {
             const SizedBox(
               height: TtnflixSpacing.spacing5,
             ),
-            RichText(
-              text: TextSpan(
-                text: movieName ?? "",
-                style: TtnFlixTextStyle.defaultTextTheme.titleMedium?.copyWith(
-                    color: TtnflixColors.frozenListYellow
-                        .platformBrightnessColor(context),
-                    overflow: TextOverflow.ellipsis),
+            Flexible(
+              flex: 10,
+              child: RichText(
+                text: TextSpan(
+                  text: movieName ?? "",
+                  style: TtnFlixTextStyle.defaultTextTheme.titleMedium?.copyWith(
+                      color: TtnflixColors.frozenListYellow
+                          .platformBrightnessColor(context),
+                      overflow: TextOverflow.ellipsis),
+                ),
+                maxLines: 1,
+                softWrap: true,
               ),
-              maxLines: 1,
-              softWrap: true,
             )
           ],
         );

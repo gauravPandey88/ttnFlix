@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'dart:typed_data';
 
 import 'package:ttn_flix/utils/default_equatable.dart';
 
@@ -14,11 +15,11 @@ class ImageLoadedState extends RegisterState {
   final String? imagePath;
 
   const ImageLoadedState( {
-    this.imagePath
+    this.imagePath,
 });
 
   ImageLoadedState copyWith({
-    final String? imagePath = ""
+    final String? imagePath,
   }) {
     return ImageLoadedState(
         imagePath : imagePath ?? this.imagePath);
@@ -31,7 +32,6 @@ class ImageLoadedState extends RegisterState {
 class RegisterLoadedState extends RegisterState {
   final String? name;
   final String? imagePath;
-  final File? pickedImage;
   final List<String> genderTypeRadioList;
   final int initialSelectedGenderTypeIndex;
   final String? genderType;
@@ -49,7 +49,6 @@ class RegisterLoadedState extends RegisterState {
       {this.name,
       this.message,
       this.imagePath,
-      this.pickedImage,
       this.genderTypeRadioList = GenderStateConstants.genderTypeRadioList,
       this.initialSelectedGenderTypeIndex = 0,
       this.genderType,
@@ -63,8 +62,7 @@ class RegisterLoadedState extends RegisterState {
       this.confirmPasswordErrorMessage = ''});
 
   RegisterLoadedState copyWith(
-      {final String? imagePath = "",
-      final File? pickedImage,
+      {final String? imagePath,
       String? genderType,
       final String? name,
       List<String>? genderTypeRadioList,
@@ -82,7 +80,6 @@ class RegisterLoadedState extends RegisterState {
         message: message ?? this.message,
         name: name ?? this.name,
         imagePath: imagePath ?? this.imagePath,
-        pickedImage: pickedImage ?? this.pickedImage,
         genderTypeRadioList: genderTypeRadioList ?? this.genderTypeRadioList,
         genderType: genderType ?? this.genderType,
         emailId: emailId ?? this.emailId,
@@ -104,7 +101,6 @@ class RegisterLoadedState extends RegisterState {
         message,
         name,
         imagePath,
-        pickedImage,
         genderTypeRadioList,
         genderType,
         initialSelectedGenderTypeIndex,

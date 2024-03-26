@@ -1,3 +1,5 @@
+import 'dart:typed_data';
+
 import 'package:auto_route/auto_route.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -14,6 +16,7 @@ import 'package:ttn_flix/themes/ttnflix_colors.dart';
 import 'package:ttn_flix/themes/ttnflix_spacing.dart';
 import 'package:ttn_flix/themes/ttnflix_typography.dart';
 import 'package:ttn_flix/utils/app_alert.dart';
+import 'package:ttn_flix/utils/context_extension.dart';
 
 class _AccountsScreenConstant {
   static const String maleGender = "0";
@@ -93,78 +96,92 @@ class AccountBody extends StatelessWidget {
             backgroundColor:
                 TtnflixColors.textBlackColor.platformBrightnessColor(context),
             body: SingleChildScrollView(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Center(
-                    child: Padding(
-                      padding: const EdgeInsets.all(TtnflixSpacing.spacing10),
-                      child: Container(
-                        height: TtnflixSpacing.spacing150,
-                        width: TtnflixSpacing.spacing150,
-                        decoration: BoxDecoration(
-                          borderRadius: const BorderRadius.all(
-                              Radius.circular(TtnflixSpacing.spacing75)),
-                          image: DecorationImage(
-                              image: AssetImage(currentState.image == ''
-                                  ? currentState.gender == _AccountsScreenConstant.maleGender
-                                      ? Assets.images.avtarMan.path
-                                      : currentState.gender == _AccountsScreenConstant.femaleGender
-                                          ? Assets.images.avtarFemale.path
-                                          : Assets.images.avtarTransgender.path
-                                  : currentState.image ?? ''),
-                              fit: BoxFit.cover),
+              child: Center(
+                child: SizedBox(
+                  width:
+                      context.isSmallScreen ? context.width : context.width / 2,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Center(
+                        child: Padding(
+                          padding:
+                              const EdgeInsets.all(TtnflixSpacing.spacing10),
+                          child: SizedBox(
+                            height: TtnflixSpacing.spacing150,
+                            width: TtnflixSpacing.spacing150,
+                            child: currentState.image != null
+                                ? CircleAvatar(
+                                    backgroundImage:
+                                        MemoryImage(Uint8List.fromList(currentState.image!.codeUnits)))
+                                : currentState.gender ==
+                                        _AccountsScreenConstant.maleGender
+                                    ? CircleAvatar(
+                                        backgroundImage: AssetImage(
+                                            Assets.images.avtarMan.path))
+                                    : currentState.gender ==
+                                            _AccountsScreenConstant.femaleGender
+                                        ? CircleAvatar(
+                                            backgroundImage: AssetImage(
+                                                Assets.images.avtarFemale.path))
+                                        : CircleAvatar(
+                                            backgroundImage: AssetImage(Assets
+                                                .images.avtarTransgender.path)),
+                          ),
                         ),
                       ),
-                    ),
+                      Center(
+                        child: Padding(
+                          padding: const EdgeInsets.only(
+                              top: TtnflixSpacing.spacing10),
+                          child: Text(currentState.name ?? '-',
+                              style: TtnFlixTextStyle
+                                  .defaultTextTheme.titleLarge
+                                  ?.copyWith(
+                                      color: TtnflixColors.titleColor
+                                          .platformBrightnessColor(context))),
+                        ),
+                      ),
+                      ProfileList(
+                          context: context,
+                          tittle: S.current.email,
+                          icon: Icons.email,
+                          data: currentState.emailAddress),
+                      Divider(
+                        height: TtnflixSpacing.spacing20,
+                        color: TtnflixColors.frozenListYellow
+                            .platformBrightnessColor(context),
+                      ),
+                      ProfileList(
+                          context: context,
+                          icon: Icons.calendar_month,
+                          tittle: S.current.dateOfBirth,
+                          data: currentState.dateOfBirth),
+                      Divider(
+                        height: TtnflixSpacing.spacing20,
+                        color: TtnflixColors.frozenListYellow
+                            .platformBrightnessColor(context),
+                      ),
+                      ProfileList(
+                          context: context,
+                          icon: currentState.gender ==
+                                  _AccountsScreenConstant.maleGender
+                              ? Icons.male
+                              : currentState.gender ==
+                                      _AccountsScreenConstant.femaleGender
+                                  ? Icons.female
+                                  : Icons.transgender,
+                          tittle: S.current.gender,
+                          data: currentState.gender ==
+                                  _AccountsScreenConstant.maleGender
+                              ? S.current.male
+                              : currentState.gender ==
+                                      _AccountsScreenConstant.femaleGender
+                                  ? S.current.female
+                                  : S.current.other),
+                    ],
                   ),
-                  Center(
-                    child: Padding(
-                      padding:
-                          const EdgeInsets.only(top: TtnflixSpacing.spacing10),
-                      child: Text(currentState.name ?? '-',
-                          style: TtnFlixTextStyle.defaultTextTheme.titleLarge
-                              ?.copyWith(color: TtnflixColors.titleColor.platformBrightnessColor(context))),
-                    ),
-                  ),
-                  ProfileList(
-                      context: context,
-                      tittle: S.current.email,
-                      icon: Icons.email,
-                      data: currentState.emailAddress),
-                  Divider(
-                    height: TtnflixSpacing.spacing20,
-                    color: TtnflixColors.frozenListYellow
-                        .platformBrightnessColor(context),
-                  ),
-                  ProfileList(
-                      context: context,
-                      icon: Icons.calendar_month,
-                      tittle: S.current.dateOfBirth,
-                      data: currentState.dateOfBirth),
-                  Divider(
-                    height: TtnflixSpacing.spacing20,
-                    color: TtnflixColors.frozenListYellow
-                        .platformBrightnessColor(context),
-                  ),
-                  ProfileList(
-                      context: context,
-                      icon: currentState.gender ==
-                              _AccountsScreenConstant.maleGender
-                          ? Icons.male
-                          : currentState.gender ==
-                                  _AccountsScreenConstant.femaleGender
-                              ? Icons.female
-                              : Icons.transgender,
-                      tittle: S.current.gender,
-                      data: currentState.gender ==
-                              _AccountsScreenConstant.maleGender
-                          ? S.current.male
-                          : currentState.gender ==
-                                  _AccountsScreenConstant.femaleGender
-                              ? S.current.female
-                              : S.current.other),
-                ],
+                ),
               ),
             ),
           );

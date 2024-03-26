@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'dart:typed_data';
 
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
@@ -17,6 +18,7 @@ import 'package:ttn_flix/register/widgets/user_details.dart';
 import 'package:ttn_flix/themes/ttnflix_colors.dart';
 import 'package:ttn_flix/themes/ttnflix_spacing.dart';
 import 'package:ttn_flix/themes/ttnflix_typography.dart';
+import 'package:ttn_flix/utils/context_extension.dart';
 import 'package:ttn_flix/utils/date_picker.dart';
 import 'package:ttn_flix/utils/date_util.dart';
 import 'package:ttn_flix/utils/show_laoder.dart';
@@ -79,239 +81,262 @@ class SignupScreen extends StatelessWidget {
           return SingleChildScrollView(
             child: Form(
               key: _formKey,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: <Widget>[
-                  Center(
-                    child: Padding(
-                      padding: const EdgeInsets.all(TtnflixSpacing.spacing10),
-                      child: BlocBuilder<RegisterCubit, RegisterState>(
-                        buildWhen: (previous, current) =>
-                            current is ImageLoadedState,
-                        builder: (context, state) {
-                          if (state is ImageLoadedState) {
-                            return Container(
-                              height: TtnflixSpacing.spacing150,
-                              width: TtnflixSpacing.spacing150,
-                              decoration: BoxDecoration(
-                                borderRadius: const BorderRadius.all(
-                                    Radius.circular(TtnflixSpacing.spacing75)),
-                                image: DecorationImage(
-                                    image: AssetImage(
-                                        state.imagePath?.isEmpty ?? true
-                                            ? Assets.images.avtarMan.path
-                                            : state.imagePath ?? ""),
-                                    fit: BoxFit.cover),
-                              ),
-                              child: Align(
-                                alignment: Alignment.bottomRight,
-                                child: Container(
-                                  decoration: BoxDecoration(
-                                    color: TtnflixColors.frozenListYellow
-                                        .platformBrightnessColor(context),
-                                    borderRadius: const BorderRadius.all(
-                                        Radius.circular(
-                                            TtnflixSpacing.spacing30)),
-                                  ),
-                                  child: IconButton(
-                                      onPressed: () async {
+              child: Center(
+                child: SizedBox(
+                  width:
+                      context.isSmallScreen ? context.width : context.width / 2,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: <Widget>[
+                      Center(
+                        child: Padding(
+                          padding:
+                              const EdgeInsets.all(TtnflixSpacing.spacing10),
+                          child: BlocBuilder<RegisterCubit, RegisterState>(
+                            buildWhen: (previous, current) =>
+                                current is ImageLoadedState,
+                            builder: (context, state) {
+                              if (state is ImageLoadedState) {
+                                return Stack(
+                                  alignment: Alignment.bottomCenter,
+                                  children: [
+                                    SizedBox(
+                                        height: TtnflixSpacing.spacing150,
+                                        width: TtnflixSpacing.spacing150,
+                                        child:
+                                            state.imagePath != null
+                                                ? CircleAvatar(
+                                                    backgroundImage:
+                                                        MemoryImage(Uint8List.fromList(state.imagePath!.codeUnits)),
+                                                  )
+                                                : CircleAvatar(
+                                                    backgroundImage: AssetImage(
+                                                        Assets.images.avtarMan
+                                                            .path))),
+                                    Positioned(
+                                      child: Align(
+                                        alignment: Alignment.bottomCenter,
+                                        child: Container(
+                                          decoration: BoxDecoration(
+                                            color: TtnflixColors
+                                                .frozenListYellow
+                                                .platformBrightnessColor(
+                                                    context),
+                                            borderRadius: const BorderRadius
+                                                .all(Radius.circular(
+                                                    TtnflixSpacing.spacing30)),
+                                          ),
+                                          child: IconButton(
+                                              onPressed: () async {
+                                                BlocProvider.of<RegisterCubit>(
+                                                        context)
+                                                    .addImage();
+                                              },
+                                              icon: Icon(
+                                                Icons.camera_alt_rounded,
+                                                color: TtnflixColors
+                                                    .textBlackColor
+                                                    .platformBrightnessColor(
+                                                        context),
+                                              )),
+                                        ),
+                                      ),
+                                    )
+                                  ],
 
-                                        BlocProvider.of<RegisterCubit>(context)
-                                            .addImage();
+                                );
+
+                              } else {
+                                return const SizedBox.shrink();
+                              }
+                            },
+                          ),
+                        ),
+                      ),
+                      UserDetails(
+                          obscureText: false,
+                          title: S.of(context).name,
+                          controller: nameTextController,
+                          validator: (value) =>
+                              Validator.validateName(name: value)),
+                      UserDetails(
+                          obscureText: false,
+                          title: S.of(context).emailAddress,
+                          controller: emailTextController,
+                          validator: (value) =>
+                              Validator.validateEmail(email: value)),
+                      UserDetails(
+                        obscureText: false,
+                        title: S.of(context).dateOfBirth,
+                        controller: dateOfBirthController,
+                        onTap: () {
+                          initializeDateFormatting();
+                          DatePicker(context, date: (date) {
+                            dateOfBirthController.text =
+                                getFormattedDate(date.toString());
+                          }).show();
+                        },
+                        validator: (value) => Validator.emptyValidate(
+                            value: value, message: S.of(context).enterDOB),
+                        labelStyle: TtnFlixTextStyle
+                            .defaultTextTheme.titleMedium
+                            ?.copyWith(
+                                color: TtnflixColors.cellTextColor
+                                    .platformBrightnessColor(context)),
+                      ),
+                      BlocProvider(
+                        create: (context) => TextFieldCubit(),
+                        child: BlocBuilder<TextFieldCubit, TextFieldState>(
+                          builder: (context, state) {
+                            if (state is TextFieldLoadingState) {
+                              return UserDetails(
+                                obscureText: state.isShowPassword ?? false
+                                    ? false
+                                    : true,
+                                title: S.of(context).password,
+                                controller: passwordTextController,
+                                validator: (value) =>
+                                    Validator.validatePassword(password: value),
+                                suffixIcon: Padding(
+                                  padding: const EdgeInsets.fromLTRB(
+                                      TtnflixSpacing.spacing0,
+                                      TtnflixSpacing.spacing0,
+                                      TtnflixSpacing.spacing4,
+                                      TtnflixSpacing.spacing0),
+                                  child: GestureDetector(
+                                      onTap: () {
+                                        BlocProvider.of<TextFieldCubit>(context)
+                                            .showAndHidePassword();
                                       },
-                                      icon: Icon(
-                                        Icons.camera_alt_rounded,
-                                        color: TtnflixColors.textBlackColor
+                                      child: Icon(
+                                        state.isShowPassword ?? false
+                                            ? Icons.visibility_rounded
+                                            : Icons.visibility_off_rounded,
+                                        size: TtnflixSpacing.spacing24,
+                                        color: TtnflixColors.titleColor
                                             .platformBrightnessColor(context),
                                       )),
                                 ),
-                              ),
-                            );
-                          } else {
-                            return const SizedBox.shrink();
-                          }
-                        },
-                      ),
-                    ),
-                  ),
-                  UserDetails(
-                      obscureText: false,
-                      title: S.of(context).name,
-                      controller: nameTextController,
-                      validator: (value) =>
-                          Validator.validateName(name: value)),
-                  UserDetails(
-                      obscureText: false,
-                      title: S.of(context).emailAddress,
-                      controller: emailTextController,
-                      validator: (value) =>
-                          Validator.validateEmail(email: value)),
-                  UserDetails(
-                    obscureText: false,
-                    title: S.of(context).dateOfBirth,
-                    controller: dateOfBirthController,
-                    onTap: () {
-                      initializeDateFormatting();
-                      DatePicker(context, date: (date) {
-                        dateOfBirthController.text =
-                            getFormattedDate(date.toString());
-                      }).show();
-                    },
-                    validator: (value) => Validator.emptyValidate(
-                        value: value, message: S.of(context).enterDOB),
-                    labelStyle: TtnFlixTextStyle.defaultTextTheme.titleMedium
-                        ?.copyWith(
-                            color: TtnflixColors.cellTextColor
-                                .platformBrightnessColor(context)),
-                  ),
-                  BlocProvider(
-                    create: (context) => TextFieldCubit(),
-                    child: BlocBuilder<TextFieldCubit, TextFieldState>(
-                      builder: (context, state) {
-                        if (state is TextFieldLoadingState) {
-                          return UserDetails(
-                            obscureText:
-                                state.isShowPassword ?? false ? false : true,
-                            title: S.of(context).password,
-                            controller: passwordTextController,
-                            validator: (value) =>
-                                Validator.validatePassword(password: value),
-                            suffixIcon: Padding(
-                              padding: const EdgeInsets.fromLTRB(
-                                  TtnflixSpacing.spacing0,
-                                  TtnflixSpacing.spacing0,
-                                  TtnflixSpacing.spacing4,
-                                  TtnflixSpacing.spacing0),
-                              child: GestureDetector(
-                                  onTap: () {
-                                    BlocProvider.of<TextFieldCubit>(context)
-                                        .showAndHidePassword();
-                                  },
-                                  child: Icon(
-                                    state.isShowPassword ?? false
-                                        ? Icons.visibility_rounded
-                                        : Icons.visibility_off_rounded,
-                                    size: TtnflixSpacing.spacing24,
-                                    color: TtnflixColors.titleColor
-                                        .platformBrightnessColor(context),
-                                  )),
-                            ),
-                          );
-                        } else {
-                          return const SizedBox.shrink();
-                        }
-                      },
-                    ),
-                  ),
-                  BlocProvider(
-                    create: (context) => TextFieldCubit(),
-                    child: BlocBuilder<TextFieldCubit, TextFieldState>(
-                      builder: (context, state) {
-                        if (state is TextFieldLoadingState) {
-                          return UserDetails(
-                            obscureText: state.isShowConfrimPassword ?? false
-                                ? false
-                                : true,
-                            title: S.of(context).confirmPassword,
-                            controller: confirmPasswordTextController,
-                            validator: (value) =>
-                                Validator.isValidConfirmPassword(
-                                    password: value,
-                                    matchPassword: passwordTextController.text),
-                            suffixIcon: Padding(
-                              padding: const EdgeInsets.fromLTRB(
-                                  TtnflixSpacing.spacing0,
-                                  TtnflixSpacing.spacing0,
-                                  TtnflixSpacing.spacing4,
-                                  TtnflixSpacing.spacing0),
-                              child: GestureDetector(
-                                  onTap: () {
-                                    BlocProvider.of<TextFieldCubit>(context)
-                                        .showAndHideConfirmPassword();
-                                  },
-                                  child: Icon(
-                                    state.isShowConfrimPassword ?? false
-                                        ? Icons.visibility_rounded
-                                        : Icons.visibility_off_rounded,
-                                    size: TtnflixSpacing.spacing24,
-                                    color: TtnflixColors.titleColor
-                                        .platformBrightnessColor(context),
-                                  )),
-                            ),
-                          );
-                        } else {
-                          return const SizedBox.shrink();
-                        }
-                      },
-                    ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.only(
-                        top: TtnflixSpacing.spacing20,
-                        left: TtnflixSpacing.spacing10),
-                    child: Text(S.of(context).gender,
-                        style: TtnFlixTextStyle.defaultTextTheme.titleSmall
-                            ?.copyWith(
-                                color: TtnflixColors.titleColor
-                                    .platformBrightnessColor(context))),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.only(
-                        top: TtnflixSpacing.spacing10,
-                        right: TtnflixSpacing.spacing10),
-                    child: BlocProvider(
-                      create: (context) => TextFieldCubit(),
-                      child: BlocBuilder<TextFieldCubit, TextFieldState>(
-                        builder: (context, state) {
-                          if (state is TextFieldLoadingState) {
-                            return MultiRadioSingleSelectWidget(
-                              initialSelectedItem:
-                                  state.initialSelectedGenderTypeIndex,
-                              contentPadding: const EdgeInsets.only(
-                                  right: TtnflixSpacing.spacing10),
-                              radioTitleList: state.genderTypeRadioList,
-                              onSelectedIndex: (radioItemIndex) {
-                                BlocProvider.of<RegisterCubit>(context)
-                                    .setSelectedGenderType(
-                                        selectedIndex: radioItemIndex);
-                              },
-                            );
-                          } else {
-                            return const SizedBox.shrink();
-                          }
-                        },
-                      ),
-                    ),
-                  ),
-                  const SizedBox(
-                    height: TtnflixSpacing.spacing50,
-                  ),
-                  Center(
-                    child: Container(
-                      height: TtnflixSpacing.spacing48,
-                      width: TtnflixSpacing.spacing250,
-                      decoration: BoxDecoration(
-                          color: TtnflixColors.frozenListYellow
-                              .platformBrightnessColor(context),
-                          borderRadius:
-                              BorderRadius.circular(TtnflixSpacing.spacing20)),
-                      child: TextButton(
-                        onPressed: () {
-                          if (_formKey.currentState!.validate()) {
-                            _onSignup(context);
-                          }
-                        },
-                        child: Text(
-                          S.of(context).signup,
-                          style: TextStyle(
-                              color: TtnflixColors.textBlackColor
-                                  .platformBrightnessColor(context),
-                              fontSize: TtnflixSpacing.spacing25),
+                              );
+                            } else {
+                              return const SizedBox.shrink();
+                            }
+                          },
                         ),
                       ),
-                    ),
+                      BlocProvider(
+                        create: (context) => TextFieldCubit(),
+                        child: BlocBuilder<TextFieldCubit, TextFieldState>(
+                          builder: (context, state) {
+                            if (state is TextFieldLoadingState) {
+                              return UserDetails(
+                                obscureText:
+                                    state.isShowConfrimPassword ?? false
+                                        ? false
+                                        : true,
+                                title: S.of(context).confirmPassword,
+                                controller: confirmPasswordTextController,
+                                validator: (value) =>
+                                    Validator.isValidConfirmPassword(
+                                        password: value,
+                                        matchPassword:
+                                            passwordTextController.text),
+                                suffixIcon: Padding(
+                                  padding: const EdgeInsets.fromLTRB(
+                                      TtnflixSpacing.spacing0,
+                                      TtnflixSpacing.spacing0,
+                                      TtnflixSpacing.spacing4,
+                                      TtnflixSpacing.spacing0),
+                                  child: GestureDetector(
+                                      onTap: () {
+                                        BlocProvider.of<TextFieldCubit>(context)
+                                            .showAndHideConfirmPassword();
+                                      },
+                                      child: Icon(
+                                        state.isShowConfrimPassword ?? false
+                                            ? Icons.visibility_rounded
+                                            : Icons.visibility_off_rounded,
+                                        size: TtnflixSpacing.spacing24,
+                                        color: TtnflixColors.titleColor
+                                            .platformBrightnessColor(context),
+                                      )),
+                                ),
+                              );
+                            } else {
+                              return const SizedBox.shrink();
+                            }
+                          },
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.only(
+                            top: TtnflixSpacing.spacing20,
+                            left: TtnflixSpacing.spacing10),
+                        child: Text(S.of(context).gender,
+                            style: TtnFlixTextStyle.defaultTextTheme.titleSmall
+                                ?.copyWith(
+                                    color: TtnflixColors.titleColor
+                                        .platformBrightnessColor(context))),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.only(
+                            top: TtnflixSpacing.spacing10,
+                            right: TtnflixSpacing.spacing10),
+                        child: BlocProvider(
+                          create: (context) => TextFieldCubit(),
+                          child: BlocBuilder<TextFieldCubit, TextFieldState>(
+                            builder: (context, state) {
+                              if (state is TextFieldLoadingState) {
+                                return MultiRadioSingleSelectWidget(
+                                  initialSelectedItem:
+                                      state.initialSelectedGenderTypeIndex,
+                                  contentPadding: const EdgeInsets.only(
+                                      right: TtnflixSpacing.spacing10),
+                                  radioTitleList: state.genderTypeRadioList,
+                                  onSelectedIndex: (radioItemIndex) {
+                                    BlocProvider.of<RegisterCubit>(context)
+                                        .setSelectedGenderType(
+                                            selectedIndex: radioItemIndex);
+                                  },
+                                );
+                              } else {
+                                return const SizedBox.shrink();
+                              }
+                            },
+                          ),
+                        ),
+                      ),
+                      const SizedBox(
+                        height: TtnflixSpacing.spacing50,
+                      ),
+                      Center(
+                        child: Container(
+                          height: TtnflixSpacing.spacing48,
+                          width: TtnflixSpacing.spacing250,
+                          decoration: BoxDecoration(
+                              color: TtnflixColors.frozenListYellow
+                                  .platformBrightnessColor(context),
+                              borderRadius: BorderRadius.circular(
+                                  TtnflixSpacing.spacing20)),
+                          child: TextButton(
+                            onPressed: () {
+                              if (_formKey.currentState!.validate()) {
+                                _onSignup(context);
+                              }
+                            },
+                            child: Text(
+                              S.of(context).signup,
+                              style: TextStyle(
+                                  color: TtnflixColors.textBlackColor
+                                      .platformBrightnessColor(context),
+                                  fontSize: TtnflixSpacing.spacing25),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
                   ),
-                ],
+                ),
               ),
             ),
           );
@@ -324,10 +349,9 @@ class SignupScreen extends StatelessWidget {
     final cubit = BlocProvider.of<RegisterCubit>(context);
     ShowLoader().showAlertDialog(context);
     cubit.registerUsingEmailPassword(
-      name: nameTextController.text,
+        name: nameTextController.text,
         email: emailTextController.text,
         password: cubit.getPasswordEncrypt(
             encryptPassword: passwordTextController.text));
   }
-
 }

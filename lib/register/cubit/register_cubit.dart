@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:io';
+import 'dart:typed_data';
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -13,6 +14,7 @@ import 'package:ttn_flix/register/cubit/register_state.dart';
 import 'package:ttn_flix/register/model/user_model.dart';
 import 'package:ttn_flix/utils/encrypy.dart';
 import 'package:ttn_flix/utils/validation_helper.dart';
+import 'package:file_picker/file_picker.dart';
 
 class RegisterCubit extends Cubit<RegisterState> {
 
@@ -20,17 +22,25 @@ class RegisterCubit extends Cubit<RegisterState> {
       : _sharedPreferences = sharedPreferences ?? SL.get<SharedPreferences>(),
         super(const ImageLoadedState());
 
+  Uint8List? selectedImageInBytes;
   String? imagePath;
-  File? pickedImage;
+  File? selectedImage;
+  String? _image;
   String? gender = "0";
   final SharedPreferences _sharedPreferences;
   UserModel userLoad = UserModel();
 
-  Future<void> addImage() async {
-    final ImagePicker picker = ImagePicker();
-    final XFile? image = await picker.pickImage(source: ImageSource.gallery);
-    imagePath = image?.path;
-    emit(const ImageLoadedState().copyWith(imagePath: image?.path));
+  void addImage() async {
+    XFile? returnImage =
+    await ImagePicker().pickImage(source: ImageSource.gallery);
+    if (returnImage == null) return;
+    var imageBytes = await returnImage.readAsBytes();
+      selectedImage = File(returnImage.path);
+    String s = String.fromCharCodes(imageBytes);
+      _image = s;
+     imagePath = _image;
+
+     emit(const ImageLoadedState().copyWith(imagePath: _image));
   }
 
   void setSelectedGenderType({required int selectedIndex}) {
@@ -39,8 +49,7 @@ class RegisterCubit extends Cubit<RegisterState> {
       gender = selectedIndex.toString();
       emit(currentState.copyWith(
           genderType: currentState.genderTypeRadioList.elementAt(selectedIndex),
-          imagePath: imagePath,
-          pickedImage: pickedImage));
+          imagePath: _image));
     }
   }
 

@@ -33,7 +33,7 @@ class ProfileList extends StatelessWidget {
                       style: TtnFlixTextStyle.defaultTextTheme.titleSmall
                           ?.copyWith(color: TtnflixColors.titleColor.platformBrightnessColor(context))),
                   const SizedBox(
-                    height: TtnflixSpacing.spacing10,
+                    height: TtnflixSpacing.spacing8,
                   ),
                   Text(data ?? "",
                       style: TtnFlixTextStyle.defaultTextTheme.titleSmall

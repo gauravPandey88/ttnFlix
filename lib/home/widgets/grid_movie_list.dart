@@ -11,6 +11,7 @@ import 'package:ttn_flix/network/ttnflix_api_url.dart';
 import 'package:ttn_flix/themes/ttnflix_colors.dart';
 import 'package:ttn_flix/themes/ttnflix_spacing.dart';
 import 'package:ttn_flix/themes/ttnflix_typography.dart';
+import 'package:ttn_flix/utils/context_extension.dart';
 import 'package:ttn_flix/utils/show_snackbar.dart';
 
 class _GridMovielistConstant {
@@ -159,7 +160,7 @@ class GridMovielist extends StatelessWidget with ChangeNotifier {
                         alignment: Alignment.topRight,
                         child: Padding(
                           padding:
-                              const EdgeInsets.all(TtnflixSpacing.spacing5),
+                          const EdgeInsets.all(TtnflixSpacing.spacing5),
                           child: Container(
                             decoration: BoxDecoration(
                               color: TtnflixColors.textBlackColor
@@ -201,8 +202,9 @@ class GridMovielist extends StatelessWidget with ChangeNotifier {
                   )
                 ],
               ),
-            )
+            ),
           ],
+
         );
       },
     );

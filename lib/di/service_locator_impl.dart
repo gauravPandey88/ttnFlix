@@ -5,6 +5,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:ttn_flix/di/service_locator.dart';
 import 'package:ttn_flix/firebase_options.dart';
 import 'package:ttn_flix/utils/database_manager.dart';
+import 'package:ttn_flix/utils/shared_preferences.dart';
 
 class ServiceLocatorImpl implements ServiceLocator {
   static final serviceLocator = GetIt.instance;
@@ -26,8 +27,13 @@ class ServiceLocatorImpl implements ServiceLocator {
 
   Future<void> _initSharedPref() async {
     final sharedPreferences = await SharedPreferences.getInstance();
+    final sharedPreferencesServices = await SharedPreferencesService.getInstance();
     if (!isRegistered<SharedPreferences>()) {
       serviceLocator.registerSingleton<SharedPreferences>(sharedPreferences);
+    }
+
+    if (!isRegistered<SharedPreferencesService>()) {
+      serviceLocator.registerSingleton<SharedPreferencesService>(sharedPreferencesServices);
     }
   }
 

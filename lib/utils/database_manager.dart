@@ -3,6 +3,7 @@ import 'package:sqflite/sqflite.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:ttn_flix/home/model/ttnflix_movies.dart';
 
+
 enum FavouriteListTableColumns {
   imageUrl,
   adult,
@@ -60,7 +61,7 @@ class DBManager {
       return await _db.insert(_table, movie.toMap(movie));
     }
     return 0;
-  }
+  }//Done
 
   Future<List<Movie>> queryAllMovies() async {
     var db = _db;
@@ -71,14 +72,14 @@ class DBManager {
   Future<int> queryRowCount() async {
     final results = await _db.rawQuery('SELECT COUNT(*) FROM $_table');
     return Sqflite.firstIntValue(results) ?? 0;
-  }
+  }//Done
 
   Future<List<int>> getAllIds() async {
     var db = _db;
     List<Map> movieList = await db.query(_table,
         columns: [FavouriteListTableColumns.id.name]);
     return (movieList.isNotEmpty) ? movieList.map((e) => e['id'] as int).toList() : [];
-  }
+  }//done
 
   Future<Movie?> getMovie(int id) async {
     var db = _db;
@@ -86,7 +87,7 @@ class DBManager {
         where: '${FavouriteListTableColumns.id.name} = ?',
         whereArgs: [id]);
     return (maps.isNotEmpty) ? Movie.fromMap(maps.first as Map<String, Object?>) : null;
-  }
+  }//Done
 
   Future<int> delete(int id) async {
     return await _db.delete(
@@ -94,5 +95,5 @@ class DBManager {
         where: '${FavouriteListTableColumns.id.name} = ?',
         whereArgs: [id]
     );
-  }
+  }//Done
 }
